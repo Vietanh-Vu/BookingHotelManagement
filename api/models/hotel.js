@@ -35,10 +35,16 @@ class HotelModel {
   static async create(hotelData, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để thêm khách sạn
     var pool = await connect;
-    const sqlQuery = "INSERT INTO Hotel () VALUES (@, @, @, @)";
+    const sqlQuery =
+      "INSERT INTO Hotel (CategoryId, HotelName, IsActive, Address, HotelImg, Description) VALUES (@CategoryId, @HotelName, @IsActive, @Address, @HotelImg, @Description)";
     return await pool
       .request()
-      .input()
+      .input("CategoryId", sql.VarChar, hotelData.CategoryId)
+      .input("HotelName", sql.VarChar, hotelData.HotelName)
+      .input("isActive", sql.Bit, hotelData.isActive)
+      .input("Address", sql.Text, hotelData.Address)
+      .input("HotelImg", sql.VarChar, hotelData.HotelImg)
+      .input("Description", sql.Text, hotelData.Description)
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
@@ -53,13 +59,16 @@ class HotelModel {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để sửa khách sạn
     const pool = await connect;
     let sqlQuery =
-      "UPDATE Hotel SET Name = @name, Email = @email, Phone = @phone WHERE ID = @id";
+      "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @isActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE ID = @id";
     const result = await pool
       .request()
-      .input("id", sql.NVarChar, hotelId)
-      .input("name", sql.NVarChar, hotelData.name)
-      .input("email", sql.NVarChar, hotelData.email)
-      .input("phone", sql.VarChar, hotelData.phone)
+      .input("id", sql.VarChar, hotelId)
+      .input("CategoryId", sql.VarChar, hotelData.CategoryId)
+      .input("HotelName", sql.VarChar, hotelData.HotelName)
+      .input("isActive", sql.Bit, hotelData.isActive)
+      .input("Address", sql.Text, hotelData.Address)
+      .input("HotelImg", sql.VarChar, hotelData.HotelImg)
+      .input("Description", sql.Text, hotelData.Description)
       .query(sqlQuery, (err, data) => {
         if (err) {
           callback(true, null);
