@@ -25,7 +25,7 @@ class RoomModel {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để thêm phòng
     const pool = await connect;
     const sqlQuery = `INSERT INTO Room (HotelId, RoomTypeId, RoomName, CurrentPrice, IsAvailable, Description) VALUES 
-                      (@HotelId, @RoomTypeId, @RoomName, @CurrentPrice, @IsAvailable, @Description`;
+                      (@HotelId, @RoomTypeId, @RoomName, @CurrentPrice, @IsAvailable, @Description)`;
     return await pool
       .request()
       .input("HotelId", sql.VarChar, hotelId)
@@ -52,7 +52,7 @@ class RoomModel {
     const result = await pool
       .request()
       .input("id", sql.VarChar, roomId)
-      .input("HotelId", sql.VarChar, hotelId)
+      .input("HotelId", sql.VarChar, roomData.hotelId)
       .input("RoomTypeId", sql.VarChar, roomData.RoomTypeId)
       .input("RoomName", sql.VarChar, roomData.RoomName)
       .input("CurrentPrice", sql.Decimal, roomData.CurrentPrice)
