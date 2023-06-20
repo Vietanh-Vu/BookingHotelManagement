@@ -10,13 +10,13 @@ import {
 const router = express.Router();
 
 // get by name
-router.get("/find", getHotelsByName);
+router.get("/", getHotelsByName);
 
 // getAll
 router.get("/", getHotels);
 
 // addHotel
-router.post("/", addHotel);
+router.post("/add", addHotel);
 
 // update hotel
 router.put("/:id", updateHotel);
