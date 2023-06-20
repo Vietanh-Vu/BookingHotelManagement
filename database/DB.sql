@@ -63,7 +63,7 @@ DROP TABLE RoomType;
 CREATE TABLE RoomType (
     ID INT IDENTITY(1,1),
     RoomTypeId AS 'RT' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
-    RoomName VARCHAR(128) NOT NULL,
+    RoomTypeName VARCHAR(128) NOT NULL,
     CONSTRAINT PK_RoomType PRIMARY KEY(RoomTypeId),
 );
 
