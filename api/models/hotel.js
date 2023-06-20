@@ -5,7 +5,7 @@ class HotelModel {
   static async getByName(stringName, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
-    const sqlQuery = "SELECT * FROM Hotel WHERE HotelName Like '%@name%'";
+    const sqlQuery = "SELECT * FROM Hotel WHERE HotelName Like %@name%";
     return await pool
       .request()
       .input("name", sql.VarChar(128), stringName)
@@ -59,7 +59,7 @@ class HotelModel {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để sửa khách sạn
     const pool = await connect;
     let sqlQuery =
-      "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @isActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE ID = @id";
+      "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @isActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE HotelId = @id";
     const result = await pool
       .request()
       .input("id", sql.VarChar, hotelId)
@@ -79,13 +79,13 @@ class HotelModel {
   }
 
   // Xóa khách sạn
-  static async deleteHotel(hotelId, callback) {
+  static async delete(hotelId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
-    let sqlQuery = "DELETE FROM Hotel WHERE ID = @id";
+    let sqlQuery = "DELETE FROM Hotel WHERE HotelId = @id";
     const result = await pool
       .request()
-      .input("id", sql.Int, Number(hotelId))
+      .input("id", sql.VarChar, hotelId)
       .query(sqlQuery, (err, data) => {
         if (err) {
           callback(true, null);

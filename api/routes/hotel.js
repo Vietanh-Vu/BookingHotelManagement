@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // get by name
-router.get("/", getHotelsByName);
+router.get("/search", getHotelsByName);
 
 // getAll
 router.get("/", getHotels);

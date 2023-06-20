@@ -1,7 +1,11 @@
 import express from "express";
+import bodyParser from "body-parser";
 import HotelModel from "../models/hotel.js";
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Xem danh sách khách sạn
 export const getHotelsByName = (req, res) => {
