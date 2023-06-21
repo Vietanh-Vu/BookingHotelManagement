@@ -99,7 +99,7 @@ export const getUsers = (req, res) => {
 };
 
 // Xóa danh user
-export const deleteUser = (req, res) => {
+export const deleteUserAdmin = (req, res) => {
   // Lấy ID user từ request params
   const usersId = req.params.id;
 
@@ -108,9 +108,9 @@ export const deleteUser = (req, res) => {
     if (err) {
       return res
         .status(500)
-        .json({ error: "Đã xảy ra lỗi trong quá trình xóa khách sạn." });
+        .json({ error: "Đã xảy ra lỗi trong quá trình xóa admin." });
     }
-    res.json({ message: "Xóa khách sạn thành công." });
+    res.json({ message: "Xóa admin thành công." });
   });
 };
 
@@ -121,5 +121,5 @@ export default {
   updateHotel,
   deleteHotel,
   getUsers,
-  deleteUser,
+  deleteUserAdmin,
 };

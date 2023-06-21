@@ -6,7 +6,7 @@ import {
   updateHotel,
   deleteHotel,
   getUsers,
-  deleteUser,
+  deleteUserAdmin,
 } from "../controllers/hotel.js";
 
 const HotelRouter = express.Router();
@@ -31,6 +31,6 @@ HotelRouter.delete("/delete/:id", deleteHotel);
 UserRouter.get("/listUser", getUsers);
 
 // delete user
-UserRouter.delete("/delete/:id", deleteUser);
+UserRouter.delete("/delete/:id", deleteUserAdmin);
 
 export { HotelRouter, UserRouter };

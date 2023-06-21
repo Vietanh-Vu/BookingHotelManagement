@@ -119,7 +119,7 @@ class HotelModel {
   static async deleteUser(UsersId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
-    let sqlQuery = "DELETE FROM Users WHERE UsersId = @id";
+    let sqlQuery = "DELETE FROM Users WHERE UsersId = @id AND isAdmin = 1";
     const result = await pool
       .request()
       .input("id", sql.VarChar, UsersId)
