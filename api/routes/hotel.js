@@ -9,27 +9,28 @@ import {
   deleteUser,
 } from "../controllers/hotel.js";
 
-const router = express.Router();
+const HotelRouter = express.Router();
+const UserRouter = express.Router();
 
 // get by name
-router.get("/search/:name", getHotelsByName);
+HotelRouter.get("/search/:name", getHotelsByName);
 
 // getAll
-router.get("/", getHotels);
+HotelRouter.get("/", getHotels);
 
 // addHotel
-router.post("/add", addHotel);
+HotelRouter.post("/add", addHotel);
 
 // update hotel
-router.put("/update/:id", updateHotel);
+HotelRouter.put("/update/:id", updateHotel);
 
 // delete hotel
-router.delete("/delete/:id", deleteHotel);
+HotelRouter.delete("/delete/:id", deleteHotel);
 
 // getUsers
-router.get("/listUser", getUsers);
+UserRouter.get("/listUser", getUsers);
 
 // delete user
-router.delete("/delete/:id", deleteUser);
+UserRouter.delete("/delete/:id", deleteUser);
 
-export default router;
+export { HotelRouter, UserRouter };
