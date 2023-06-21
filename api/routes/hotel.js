@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // get by name
-router.get("/search", getHotelsByName);
+router.get("/search/:name", getHotelsByName);
 
 // getAll
 router.get("/", getHotels);
@@ -19,9 +19,9 @@ router.get("/", getHotels);
 router.post("/add", addHotel);
 
 // update hotel
-router.put("/:id", updateHotel);
+router.put("/update/:id", updateHotel);
 
 // delete hotel
-router.delete("/:id", deleteHotel);
+router.delete("/delete/:id", deleteHotel);
 
 export default router;

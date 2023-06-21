@@ -5,7 +5,8 @@ class HotelModel {
   static async getByName(stringName, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
-    const sqlQuery = "SELECT * FROM Hotel WHERE HotelName Like %@name%";
+    const sqlQuery =
+      "SELECT * FROM Hotel WHERE HotelName LIKE '%' + @name + '%'";
     return await pool
       .request()
       .input("name", sql.VarChar(128), stringName)
@@ -21,7 +22,9 @@ class HotelModel {
   static async getAll(callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
-    const sqlQuery = "SELECT * FROM Hotel";
+    const sqlQuery = `SELECT * 
+                      FROM Hotel
+                      INNER JOIN Category ON Hotel.CategoryId = Category.CategoryId`;
     return await pool.request().query(sqlQuery, function (err, data) {
       if (data.recordset.length > 0) {
         callback(null, data.recordset);
@@ -41,10 +44,10 @@ class HotelModel {
       .request()
       .input("CategoryId", sql.VarChar, hotelData.CategoryId)
       .input("HotelName", sql.VarChar, hotelData.HotelName)
-      .input("IsActive", sql.Bit, hotelData.isActive)
-      .input("Address", sql.Text, hotelData.Address)
+      .input("IsActive", sql.Binary, hotelData.IsActive)
+      .input("Address", sql.VarChar, hotelData.Address)
       .input("HotelImg", sql.VarChar, hotelData.HotelImg)
-      .input("Description", sql.Text, hotelData.Description)
+      .input("Description", sql.VarChar, hotelData.Description)
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
@@ -59,18 +62,19 @@ class HotelModel {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để sửa khách sạn
     const pool = await connect;
     let sqlQuery =
-      "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @isActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE HotelId = @id";
+      "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @IsActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE HotelId = @id";
     const result = await pool
       .request()
       .input("id", sql.VarChar, hotelId)
       .input("CategoryId", sql.VarChar, hotelData.CategoryId)
       .input("HotelName", sql.VarChar, hotelData.HotelName)
-      .input("IsActive", sql.Bit, hotelData.isActive)
-      .input("Address", sql.Text, hotelData.Address)
+      .input("IsActive", sql.Binary, hotelData.IsActive)
+      .input("Address", sql.VarChar, hotelData.Address)
       .input("HotelImg", sql.VarChar, hotelData.HotelImg)
-      .input("Description", sql.Text, hotelData.Description)
+      .input("Description", sql.VarChar, hotelData.Description)
       .query(sqlQuery, (err, data) => {
         if (err) {
+          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);
@@ -88,6 +92,7 @@ class HotelModel {
       .input("id", sql.VarChar, hotelId)
       .query(sqlQuery, (err, data) => {
         if (err) {
+          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);

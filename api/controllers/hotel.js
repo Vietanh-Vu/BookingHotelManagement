@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 // Xem danh sách khách sạn
 export const getHotelsByName = (req, res) => {
   // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
-  HotelModel.getByName(req.body, (err, hotels) => {
+  HotelModel.getByName(req.params.name, (err, hotels) => {
     if (err) {
       return res.status(500).json({
         error: "Đã xảy ra lỗi trong quá trình lấy danh sách khách sạn.",
