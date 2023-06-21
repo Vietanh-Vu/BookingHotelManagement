@@ -25,15 +25,17 @@ CREATE TABLE Hotel (
     -- CityId VARCHAR(5),
     CategoryId VARCHAR(5),
     HotelName VARCHAR(128) NOT NULL,
-    IsActive BIT NOT NULL,
+    IsActive BINARY NOT NULL,
     Address TEXT NOT NULL,
-    HotelImg VARBINARY(MAX),
+    HotelImg VARCHAR(128),
     Description TEXT,
     CONSTRAINT PK_Hotel PRIMARY KEY(HotelId),
     -- CONSTRAINT FK_CityHotel FOREIGN KEY(CityId) REFERENCES City(CityId),
     CONSTRAINT FK_CategoryHotel FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId)
 );
-ALTER TABLE Hotel
+
+
+
 DROP CONSTRAINT FK_CityHotel
 
 DROP TABLE Category;
@@ -44,6 +46,15 @@ CREATE TABLE Category (
     CONSTRAINT PK_Category PRIMARY KEY(CategoryId)
 );
 
+INSERT INTO Category (CategoryName) VALUES
+    ('Luxury'),
+    ('Boutique'),
+    ('Budget'),
+    ('Resort'),
+    ('Extended Stay');
+
+
+
 DROP TABLE Room;
 CREATE TABLE Room (
     ID INT IDENTITY(1,1),
@@ -52,12 +63,13 @@ CREATE TABLE Room (
     RoomTypeId VARCHAR(5),
     RoomName VARCHAR(128) NOT NULL,
     CurrentPrice DECIMAL(10, 2) NOT NULL,
-    IsAvailable BIT NOT NULL,
+    IsAvailable BINARY NOT NULL,
     Description TEXT,
     CONSTRAINT PK_Room PRIMARY KEY(RoomId),
     CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
     CONSTRAINT FK_RoomTypeRoom FOREIGN KEY(RoomTypeId) REFERENCES RoomType(RoomTypeId)
 );
+
 
 DROP TABLE RoomType;
 CREATE TABLE RoomType (
@@ -141,4 +153,3 @@ CREATE TABLE InvoiceUsers (
     CONSTRAINT FK_UsersInvoiceUsers FOREIGN KEY (UsersId) REFERENCES Users(UsersId),
     CONSTRAINT FK_ReservationInvoiceUsers FOREIGN KEY (ReservationId) REFERENCES Reservation(ReservationId),
 );
-
