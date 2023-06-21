@@ -5,6 +5,8 @@ import {
   addHotel,
   updateHotel,
   deleteHotel,
+  getUsers,
+  deleteUser,
 } from "../controllers/hotel.js";
 
 const router = express.Router();
@@ -23,5 +25,11 @@ router.put("/update/:id", updateHotel);
 
 // delete hotel
 router.delete("/delete/:id", deleteHotel);
+
+// getUsers
+router.get("/listUser", getUsers);
+
+// delete user
+router.delete("/delete/:id", deleteUser);
 
 export default router;

@@ -13,7 +13,8 @@ export const getHotelsByName = (req, res) => {
   HotelModel.getByName(req.params.name, (err, hotels) => {
     if (err) {
       return res.status(500).json({
-        error: "Đã xảy ra lỗi trong quá trình lấy danh sách khách sạn.",
+        error:
+          "Không tìm thấy khách sạn hoặc đã xảy ra lỗi trong quá trình lấy danh sách khách sạn.",
       });
     }
     res.json(hotels);
@@ -64,7 +65,7 @@ export const updateHotel = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình sửa khách sạn." });
     }
-    res.json(hotel);
+    res.json({ success: "Đã sửa thành công." });
   });
 };
 
@@ -84,10 +85,41 @@ export const deleteHotel = (req, res) => {
   });
 };
 
+// xem danh sách user
+export const getUsers = (req, res) => {
+  // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
+  HotelModel.getAllUsers((err, users) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Đã xảy ra lỗi trong quá trình lấy danh sách user.",
+      });
+    }
+    res.json(users);
+  });
+};
+
+// Xóa danh user
+export const deleteUser = (req, res) => {
+  // Lấy ID user từ request params
+  const usersId = req.params.id;
+
+  // Logic tìm và xóa khách sạn trong cơ sở dữ liệu
+  HotelModel.deleteUser(usersId, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Đã xảy ra lỗi trong quá trình xóa khách sạn." });
+    }
+    res.json({ message: "Xóa khách sạn thành công." });
+  });
+};
+
 export default {
   getHotelsByName,
   getHotels,
   addHotel,
   updateHotel,
   deleteHotel,
+  getUsers,
+  deleteUser,
 };

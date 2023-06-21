@@ -44,7 +44,7 @@ class HotelModel {
       .request()
       .input("CategoryId", sql.VarChar, hotelData.CategoryId)
       .input("HotelName", sql.VarChar, hotelData.HotelName)
-      .input("IsActive", sql.Binary, hotelData.IsActive)
+      .input("IsActive", sql.Bit, hotelData.IsActive)
       .input("Address", sql.VarChar, hotelData.Address)
       .input("HotelImg", sql.VarChar, hotelData.HotelImg)
       .input("Description", sql.VarChar, hotelData.Description)
@@ -68,7 +68,7 @@ class HotelModel {
       .input("id", sql.VarChar, hotelId)
       .input("CategoryId", sql.VarChar, hotelData.CategoryId)
       .input("HotelName", sql.VarChar, hotelData.HotelName)
-      .input("IsActive", sql.Binary, hotelData.IsActive)
+      .input("IsActive", sql.Bit, hotelData.IsActive)
       .input("Address", sql.VarChar, hotelData.Address)
       .input("HotelImg", sql.VarChar, hotelData.HotelImg)
       .input("Description", sql.VarChar, hotelData.Description)
@@ -90,6 +90,38 @@ class HotelModel {
     const result = await pool
       .request()
       .input("id", sql.VarChar, hotelId)
+      .query(sqlQuery, (err, data) => {
+        if (err) {
+          console.log(err);
+          callback(true, null);
+        } else {
+          callback(null, data);
+        }
+      });
+  }
+
+  // Lấy thông tin của các user
+  static async getAllUsers(callback) {
+    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
+    const pool = await connect;
+    const sqlQuery = `SELECT UsersId, FirstName, LastName, Email, Phone, Address, IsAdmin FROM Users`;
+    return await pool.request().query(sqlQuery, function (err, data) {
+      if (data.recordset.length > 0) {
+        callback(null, data.recordset);
+      } else {
+        callback(true, null);
+      }
+    });
+  }
+
+  // delete user
+  static async deleteUser(UsersId, callback) {
+    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
+    const pool = await connect;
+    let sqlQuery = "DELETE FROM Users WHERE UsersId = @id";
+    const result = await pool
+      .request()
+      .input("id", sql.VarChar, UsersId)
       .query(sqlQuery, (err, data) => {
         if (err) {
           console.log(err);
