@@ -25,7 +25,7 @@ CREATE TABLE Hotel (
     -- CityId VARCHAR(5),
     CategoryId VARCHAR(5),
     HotelName VARCHAR(128) NOT NULL,
-    IsActive BINARY NOT NULL,
+    IsActive BIT,
     Address TEXT NOT NULL,
     HotelImg VARCHAR(128),
     Description TEXT,
@@ -63,7 +63,7 @@ CREATE TABLE Room (
     RoomTypeId VARCHAR(5),
     RoomName VARCHAR(128) NOT NULL,
     CurrentPrice DECIMAL(10, 2) NOT NULL,
-    IsAvailable BINARY NOT NULL,
+    IsAvailable BIT,
     Description TEXT,
     CONSTRAINT PK_Room PRIMARY KEY(RoomId),
     CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
@@ -103,7 +103,7 @@ CREATE TABLE Users (
     Email VARCHAR(255) NOT NULL,
     Phone VARCHAR(255) NOT NULL,
     Address VARCHAR(255) NOT NULL,
-    IsAdmin BINARY NOT NULL,
+    IsAdmin BIT,
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
 
