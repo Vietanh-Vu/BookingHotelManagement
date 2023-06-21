@@ -33,7 +33,8 @@ CREATE TABLE Hotel (
     -- CONSTRAINT FK_CityHotel FOREIGN KEY(CityId) REFERENCES City(CityId),
     CONSTRAINT FK_CategoryHotel FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId)
 );
-
+ ALTER TABLE Hotel ALTER COLUMN IsActive BIT
+  ALTER TABLE Hotel ALTER COLUMN HotelImg VARCHAR(128)
 
 
 DROP CONSTRAINT FK_CityHotel
@@ -69,6 +70,8 @@ CREATE TABLE Room (
     CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
     CONSTRAINT FK_RoomTypeRoom FOREIGN KEY(RoomTypeId) REFERENCES RoomType(RoomTypeId)
 );
+
+ALTER TABLE Room ALTER COLUMN IsAvailable BIT
 
 
 DROP TABLE RoomType;
