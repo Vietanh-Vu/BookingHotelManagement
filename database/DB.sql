@@ -28,7 +28,7 @@ CREATE TABLE Hotel (
     IsActive BIT,
     Address TEXT NOT NULL,
     HotelImg VARCHAR(128),
-    Description TEXT,
+    Description VARCHAR(MAX),
     CONSTRAINT PK_Hotel PRIMARY KEY(HotelId),
     -- CONSTRAINT FK_CityHotel FOREIGN KEY(CityId) REFERENCES City(CityId),
     CONSTRAINT FK_CategoryHotel FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId)
@@ -65,7 +65,7 @@ CREATE TABLE Room (
     RoomName VARCHAR(128) NOT NULL,
     CurrentPrice DECIMAL(10, 2) NOT NULL,
     IsAvailable BIT,
-    Description TEXT,
+    Description VARCHAR(MAX),
     CONSTRAINT PK_Room PRIMARY KEY(RoomId),
     CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
     CONSTRAINT FK_RoomTypeRoom FOREIGN KEY(RoomTypeId) REFERENCES RoomType(RoomTypeId)
