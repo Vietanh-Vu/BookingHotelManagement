@@ -34,6 +34,19 @@ export const getHotels = (req, res) => {
   });
 };
 
+// gửi roomType
+export const getCategory = (req, res) => {
+  // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
+  HotelModel.getCategory((err, roomType) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Đã xảy ra lỗi trong quá trình lấy danh sách category.",
+      });
+    }
+    res.json(roomType);
+  });
+};
+
 // Thêm khách sạn
 export const addHotel = (req, res) => {
   // Lấy thông tin khách sạn từ request body
@@ -122,4 +135,5 @@ export default {
   deleteHotel,
   getUsers,
   deleteUserAdmin,
+  getCategory,
 };

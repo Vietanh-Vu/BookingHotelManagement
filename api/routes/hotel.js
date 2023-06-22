@@ -7,6 +7,7 @@ import {
   deleteHotel,
   getUsers,
   deleteUserAdmin,
+  getCategory,
 } from "../controllers/hotel.js";
 
 const HotelRouter = express.Router();
@@ -20,6 +21,7 @@ HotelRouter.get("/", getHotels);
 
 // addHotel
 HotelRouter.post("/add", addHotel);
+HotelRouter.get("/add", getCategory);
 
 // update hotel
 HotelRouter.put("/update/:id", updateHotel);

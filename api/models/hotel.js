@@ -132,6 +132,19 @@ class HotelModel {
         }
       });
   }
+
+  // get roomType
+  static async getCategory(callback) {
+    const pool = await connect;
+    const sqlQuery = `SELECT * FROM Category`;
+    return await pool.request().query(sqlQuery, function (err, data) {
+      if (data.recordset.length > 0) {
+        callback(null, data.recordset);
+      } else {
+        callback(true, null);
+      }
+    });
+  }
 }
 
 export default HotelModel;
