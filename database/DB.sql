@@ -65,6 +65,7 @@ CREATE TABLE Room (
     RoomName VARCHAR(128) NOT NULL,
     CurrentPrice DECIMAL(10, 2) NOT NULL,
     IsAvailable BIT,
+    IsActive BIT,
     Description VARCHAR(MAX),
     CONSTRAINT PK_Room PRIMARY KEY(RoomId),
     CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
