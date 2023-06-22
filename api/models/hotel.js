@@ -53,7 +53,7 @@ class HotelModel {
           console.log(err);
           callback(true, null);
         } else {
-          console.log('va');
+          console.log("va");
           callback(null, data);
         }
       });
@@ -88,8 +88,8 @@ class HotelModel {
   static async delete(hotelId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
-    let sqlQuery = `DELETE FROM Hotel WHERE HotelId = @id;
-                    DELETE FROM Room WHERE HotelId = @id`;
+    let sqlQuery = `UPDATE Hotel SET IsActive = 0 WHERE HotelId = @id;
+                    UPDATE Room SET IsActive = 0 WHERE HotelId = @id`;
     const result = await pool
       .request()
       .input("id", sql.VarChar, hotelId)
