@@ -4,3 +4,10 @@ INSERT INTO Category (CategoryName) VALUES
     ('Budget'),
     ('Resort'),
     ('Extended Stay');
+INSERT INTO RoomType (RoomTypeName) VALUES
+('Standard'),
+('Deluxe'),
+('Suite'),
+('Family'),
+('Twin'),
+('Scenic view')
