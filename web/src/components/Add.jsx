@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {Box, Typography, Button} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
@@ -12,36 +12,41 @@ function Add(props) {
   const [address, setAdress] = useState('')
   const [description, setDescription] = useState('')
   const [isActive, setIsActive] = useState(false)
-  const categories = [
-    {
-      ID: 1,
-      CategoryId: 'CA01',
-      CategoryName: 'Luxury',
-    },
-    {
-      ID: 2,
-      CategoryId: 'CA02',
-      CategoryName: 'Boutique',
-    },
-    {
-      ID: 3,
-      CategoryId: 'CA03',
-      CategoryName: 'Budget',
-    },
-    {
-      ID: 4,
-      CategoryId: 'CA04',
-      CategoryName: 'Resort',
-    },
-    {
-      ID: 5,
-      CategoryId: 'CA05',
-      CategoryName: 'Extended Stay',
-    },
-  ]
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/admin/hotel/add`)
+      .then(res => {
+        setCategories(res.data)
+        console.log(categories)
+      })
+      .catch(error => console.log(error))
+  }, [])
+
+  const postData = () => {
+    axios
+      .post('http://localhost:3000/admin/hotel/add', {
+        CategoryId: category.CategoryId,
+        HotelName: hotelName,
+        IsActive: isActive,
+        Address: address,
+        Description: description,
+        HotelImg: 'Vietannguvl'
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  const handleChange1 = (event, setValue) => {
+    setValue(categories[event.target.value])
+  }
 
   const handleChange = (event, setValue) => {
-    console.log(category.CategoryName)
     setValue(event.target.value)
   }
 
@@ -50,14 +55,10 @@ function Add(props) {
     setValue(event.target.checked)
   }
 
-  const handleSubmit = () => {}
-
-  // axios.get(`https://localhost:3000/`)
-  //     .then(res => {
-  //       const persons = res.data;
-  //       this.setState({ persons });
-  //     })
-  //     .catch(error => console.log(error));
+  const handleSubmit = async event => {
+    event.preventDefault()
+    postData()
+  }
 
   return (
     <>
@@ -73,7 +74,7 @@ function Add(props) {
           autoComplete="off">
           <Select
             items={categories}
-            handleChange={handleChange}
+            handleChange={handleChange1}
             item={category}
             setItem={setCategory}
           />

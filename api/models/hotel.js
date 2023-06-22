@@ -50,8 +50,10 @@ class HotelModel {
       .input("Description", sql.VarChar, hotelData.Description)
       .query(sqlQuery, function (err, data) {
         if (err) {
+          console.log(err);
           callback(true, null);
         } else {
+          console.log('va');
           callback(null, data);
         }
       });

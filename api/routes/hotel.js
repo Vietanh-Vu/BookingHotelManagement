@@ -22,6 +22,8 @@ HotelRouter.get("/", getHotels);
 
 // addHotel
 HotelRouter.post("/add", addHotel);
+
+// getCategory
 HotelRouter.get("/add", getCategory);
 
 // update hotel

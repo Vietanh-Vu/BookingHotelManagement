@@ -4,8 +4,11 @@ import {Link} from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import {styled, alpha} from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
+import {useState} from 'react'
 
 function NavBar(props) {
+  const [value, setValue] = useState(0)
+
   const Search = styled('div')(({theme}) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -46,14 +49,22 @@ function NavBar(props) {
     },
   }))
 
+  const handleChange = event => {
+    setValue(event.target.value)
+  }
+
   return (
     <AppBar sx={{background: '#063970'}}>
       <Toolbar>
         <HotelIcon />
-        <Tabs sx={{marginLeft: '10px'}} textColor="white">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          sx={{marginLeft: '10px'}}
+          textColor="inherit">
           {props.pages.map(({page, path}, index) => (
-            <Tab key={index} label={page} component={Link} to={path} />
-          ))}
+              <Tab key={index} label={page} component={Link} to={path} />
+            ))}
         </Tabs>
         {props.page ? (
           <Search>
