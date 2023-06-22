@@ -33,10 +33,11 @@ class RoomModel {
       .input("RoomName", sql.VarChar, roomData.RoomName)
       .input("CurrentPrice", sql.Decimal, roomData.CurrentPrice)
       .input("IsAvailable", sql.Bit, roomData.IsAvailable)
-      .input("Description", sql.Text, roomData.Description)
+      .input("Description", sql.VarChar, roomData.Description)
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
+          console.log(err);
         } else {
           callback(null, data);
         }
@@ -52,12 +53,12 @@ class RoomModel {
     const result = await pool
       .request()
       .input("id", sql.VarChar, roomId)
-      .input("HotelId", sql.VarChar, roomData.hotelId)
+      .input("HotelId", sql.VarChar, roomData.HotelId)
       .input("RoomTypeId", sql.VarChar, roomData.RoomTypeId)
       .input("RoomName", sql.VarChar, roomData.RoomName)
       .input("CurrentPrice", sql.Decimal, roomData.CurrentPrice)
       .input("IsAvailable", sql.Bit, roomData.IsAvailable)
-      .input("Description", sql.Text, roomData.Description)
+      .input("Description", sql.VarChar, roomData.Description)
       .query(sqlQuery, (err, data) => {
         if (err) {
           callback(true, null);

@@ -46,7 +46,7 @@ export const addHotel = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình thêm khách sạn." });
     }
-    res.json(hotel);
+    res.json({ status: "Đã thêm thành công." });
   });
 };
 

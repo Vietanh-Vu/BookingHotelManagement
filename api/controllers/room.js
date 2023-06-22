@@ -38,7 +38,7 @@ export const addRoom = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình thêm phòng." });
     }
-    res.json(room);
+    res.json({ status: "Đã thêm phòng thành công." });
   });
 };
 
@@ -57,7 +57,7 @@ export const updateRoom = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình sửa phòng." });
     }
-    res.json(room);
+    res.json({ status: "Đã sửa phòng thành công." });
   });
 };
 
@@ -73,7 +73,7 @@ export const deleteRoom = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình xóa phòng." });
     }
-    res.json({ message: "Xóa phòng thành công." });
+    res.json({ status: "Xóa phòng thành công." });
   });
 };
 
