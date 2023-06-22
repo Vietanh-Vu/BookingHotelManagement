@@ -7,8 +7,8 @@ import {
   deleteHotel,
   getUsers,
   deleteUserAdmin,
-  getCategory,
   getUsersByName,
+  getCategory,
 } from "../controllers/hotel.js";
 
 const HotelRouter = express.Router();
