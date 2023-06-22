@@ -8,6 +8,7 @@ import {
   getUsers,
   deleteUserAdmin,
   getCategory,
+  getUsersByName,
 } from "../controllers/hotel.js";
 
 const HotelRouter = express.Router();
@@ -31,6 +32,8 @@ HotelRouter.delete("/delete/:id", deleteHotel);
 
 // getUsers
 UserRouter.get("/listUser", getUsers);
+
+UserRouter.get("/listUser/search/:name", getUsersByName);
 
 // delete user
 UserRouter.delete("/delete/:id", deleteUserAdmin);

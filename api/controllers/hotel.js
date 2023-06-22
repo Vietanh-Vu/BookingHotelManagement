@@ -111,6 +111,20 @@ export const getUsers = (req, res) => {
   });
 };
 
+// tìm user theo tên
+export const getUsersByName = (req, res) => {
+  // Logic lấy danh sách user từ cơ sở dữ liệu
+  HotelModel.getByName(req.params.name, (err, users) => {
+    if (err) {
+      return res.status(500).json({
+        error:
+          "Không tìm thấy user hoặc đã xảy ra lỗi trong quá trình lấy danh sách user.",
+      });
+    }
+    res.json(users);
+  });
+};
+
 // Xóa danh user
 export const deleteUserAdmin = (req, res) => {
   // Lấy ID user từ request params

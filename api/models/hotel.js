@@ -115,6 +115,24 @@ class HotelModel {
     });
   }
 
+  // Tìm user theo tên
+  static async getByName(stringName, callback) {
+    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
+    const pool = await connect;
+    const sqlQuery =
+      "SELECT * FROM Users WHERE FirstName LIKE '%' + @name + '%' OR LastName LIKE '%' + @name + '%'";
+    return await pool
+      .request()
+      .input("name", sql.VarChar(128), stringName)
+      .query(sqlQuery, function (err, data) {
+        if (data.recordset.length > 0) {
+          callback(null, data.recordset);
+        } else {
+          callback(true, null);
+        }
+      });
+  }
+
   // delete user
   static async deleteUser(UsersId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
