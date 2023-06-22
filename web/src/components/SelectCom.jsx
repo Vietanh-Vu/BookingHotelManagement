@@ -6,22 +6,23 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
 function SelectCom(props) {
+  const handleChange = (event) => {
+    props.handleChange(event, props.setItem)
+  }
   return (
-    <Box sx={{minWidth: 120}}>
-      <FormControl fullWidth>
+      <FormControl fullWidth sx={{marginTop: '20px', marginLeft: '20px'}}>
         <InputLabel id="select-label">Category</InputLabel>
         <Select
           labelId="select-label"
           id="select"
-          value={props.category}
+          value={props.item}
           label="Category"
-          onChange={props.handleChange}>
-          {props.categories.map(category => (
-            <MenuItem>{category}</MenuItem>
+          onChange={handleChange}>
+          {props.items.map((item, index) => (
+            <MenuItem key={index} value={item}>{item.CategoryName}</MenuItem>
           ))}
         </Select>
       </FormControl>
-    </Box>
   )
 }
 
