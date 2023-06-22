@@ -1,21 +1,12 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Tabs,
-  Tab,
-  Button,
-} from '@mui/material';
-import HotelIcon from '@mui/icons-material/Hotel';
-import {Link} from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-
+import {AppBar, Toolbar, Typography, Tabs, Tab, Button} from '@mui/material'
+import HotelIcon from '@mui/icons-material/Hotel'
+import {Link} from 'react-router-dom'
+import SearchIcon from '@mui/icons-material/Search'
+import {styled, alpha} from '@mui/material/styles'
+import InputBase from '@mui/material/InputBase'
 
 function NavBar(props) {
-
-  const Search = styled('div')(({ theme }) => ({
+  const Search = styled('div')(({theme}) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -29,9 +20,9 @@ function NavBar(props) {
       marginLeft: theme.spacing(3),
       width: 'auto',
     },
-  }));
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
+  }))
+
+  const SearchIconWrapper = styled('div')(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -39,9 +30,9 @@ function NavBar(props) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  }))
+
+  const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
@@ -53,26 +44,32 @@ function NavBar(props) {
         width: '20ch',
       },
     },
-  }));
+  }))
 
   return (
     <AppBar sx={{background: '#063970'}}>
       <Toolbar>
         <HotelIcon />
         <Tabs sx={{marginLeft: '10px'}} textColor="white">
-          {props.pages.map(({page, path}) => (
-            <Tab key={page} label={page} component={Link} to={path} />
+          {props.pages.map(({page, path}, index) => (
+            <Tab key={index} label={page} component={Link} to={path} />
           ))}
         </Tabs>
-        {props.page ? <Search>
+        {props.page ? (
+          <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder={props.page.substring(0, props.page.length - 1) + " name"}
-              inputProps={{ 'aria-label': 'search' }}
+              placeholder={
+                props.page.substring(0, props.page.length - 1) + ' name'
+              }
+              inputProps={{'aria-label': 'search'}}
             />
-          </Search> : <></>}
+          </Search>
+        ) : (
+          <></>
+        )}
         <Button sx={{marginLeft: 'auto'}} variant="contained">
           Login
         </Button>
@@ -81,4 +78,4 @@ function NavBar(props) {
   )
 }
 
-export default NavBar;
+export default NavBar
