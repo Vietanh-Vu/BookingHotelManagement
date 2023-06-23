@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import {Box, Typography, Button, Input} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
+import FormData from 'form-data'
 import Select from './SelectCom.jsx'
 import InputCom from './InputCom.jsx'
 import CheckBox from './CheckBox.jsx'
@@ -14,6 +15,7 @@ function Add(props) {
   const [isActive, setIsActive] = useState(false)
   const [categories, setCategories] = useState([{}, {}])
   const [selectedImage, setSelectedImage] = useState(null)
+  const [hotelImg, setHotelImg] = useState('');
 
   useEffect(() => {
     axios
@@ -25,6 +27,20 @@ function Add(props) {
       .catch(error => console.log(error))
   }, [])
 
+  const postImage = () => {
+    const formData = new FormData()
+    formData.append('myImage', selectedFile)
+    axios
+      .post('', formData)
+      .then(response => {
+        console.log(response)
+        setHotelImg();
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   const postData = () => {
     const hotelData = {
       CategoryId: category.CategoryId,
@@ -32,7 +48,7 @@ function Add(props) {
       IsActive: isActive,
       Address: address,
       Description: description,
-      HotelImg: 'Vietannguvl',
+      HotelImg: hotelImg,
     }
     axios
       .post('http://localhost:3000/admin/hotel/add', hotelData)

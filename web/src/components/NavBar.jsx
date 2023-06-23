@@ -7,7 +7,7 @@ import InputBase from '@mui/material/InputBase'
 import {useState} from 'react'
 
 function NavBar(props) {
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState(props.value)
 
   const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -49,22 +49,20 @@ function NavBar(props) {
     },
   }))
 
-  const handleChange = event => {
-    setValue(event.target.value)
-  }
-
   return (
     <AppBar sx={{background: '#063970'}}>
       <Toolbar>
         <HotelIcon />
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={(event, value) => {
+            setValue(value)
+          }}
           sx={{marginLeft: '10px'}}
           textColor="inherit">
           {props.pages.map(({page, path}, index) => (
-              <Tab key={index} label={page} component={Link} to={path} />
-            ))}
+            <Tab key={index} label={page} component={Link} to={path}/>
+          ))}
         </Tabs>
         {props.page ? (
           <Search>

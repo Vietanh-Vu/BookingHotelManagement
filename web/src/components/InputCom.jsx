@@ -9,7 +9,7 @@ function InputCom(props) {
   return (
     <FormControl fullWidth sx={{marginTop: '20px', marginLeft: '20px'}}>
       <TextField
-      required
+        required
         id={props.name}
         label={props.label}
         onChange={handleChange}
@@ -20,4 +20,4 @@ function InputCom(props) {
   )
 }
 
-export default InputCom;
+export default InputCom
