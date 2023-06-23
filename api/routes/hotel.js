@@ -60,7 +60,7 @@ HotelRouter.post("/add/image", upload.single("myImage"), (req, res) => {
         console.log(err);
         return res.status(500).json({ error: "Lỗi khi lưu ảnh." });
       }
-      res.json({ targetPath: targetPath });
+      res.json({ nameFile: file.filename });
     });
   } else {
     res.json({ error: "Không có ảnh." });
