@@ -6,7 +6,7 @@ import {FormControl} from '@mui/material'
 
 function CheckBox(props) {
   const handleChange = event => {
-    props.handleChange(event, props.setChecked)
+    props.setChecked(event.target.checked)
   }
 
   return (

@@ -1,14 +1,15 @@
 import TextField from '@mui/material/TextField'
 import FormControl from '@mui/material/FormControl'
 
-function Input(props) {
+function InputCom(props) {
   const handleChange = event => {
-    props.handleChange(event, props.setItem)
+    props.setItem(event.target.value)
   }
 
   return (
     <FormControl fullWidth sx={{marginTop: '20px', marginLeft: '20px'}}>
       <TextField
+      required
         id={props.name}
         label={props.label}
         onChange={handleChange}
@@ -19,4 +20,4 @@ function Input(props) {
   )
 }
 
-export default Input
+export default InputCom;

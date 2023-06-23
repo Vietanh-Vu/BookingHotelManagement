@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react'
-import {Box, Typography, Button} from '@mui/material'
+import {Box, Typography, Button, Input} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
 import Select from './SelectCom.jsx'
-import Input from './Input.jsx'
+import InputCom from './InputCom.jsx'
 import CheckBox from './CheckBox.jsx'
 
 function Add(props) {
@@ -12,108 +12,121 @@ function Add(props) {
   const [address, setAdress] = useState('')
   const [description, setDescription] = useState('')
   const [isActive, setIsActive] = useState(false)
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState([{}, {}])
+  const [selectedImage, setSelectedImage] = useState(null)
 
   useEffect(() => {
     axios
       .get(`http://localhost:3000/admin/hotel/add`)
       .then(res => {
         setCategories(res.data)
-        console.log(categories)
+        // console.log(categories)
       })
       .catch(error => console.log(error))
   }, [])
 
   const postData = () => {
+    const hotelData = {
+      CategoryId: category.CategoryId,
+      HotelName: hotelName,
+      IsActive: isActive,
+      Address: address,
+      Description: description,
+      HotelImg: 'Vietannguvl',
+    }
     axios
-      .post('http://localhost:3000/admin/hotel/add', {
-        CategoryId: category.CategoryId,
-        HotelName: hotelName,
-        IsActive: isActive,
-        Address: address,
-        Description: description,
-        HotelImg: 'Vietannguvl'
-      })
+      .post('http://localhost:3000/admin/hotel/add', hotelData)
       .then(response => {
-        console.log(response)
+        alert(response.data.status)
       })
       .catch(error => {
         console.log(error)
       })
   }
 
-  const handleChange1 = (event, setValue) => {
-    setValue(categories[event.target.value])
-  }
-
-  const handleChange = (event, setValue) => {
-    setValue(event.target.value)
-  }
-
-  const handleChecked = (event, setValue) => {
-    console.log(isActive)
-    setValue(event.target.checked)
-  }
-
   const handleSubmit = async event => {
+    console.log(selectedImage)
     event.preventDefault()
-    postData()
+    // postData();
+    setCategory({})
+    setHotelName('')
+    setAdress('')
+    setDescription('')
+    setIsActive(false)
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <Box
-          component="form"
-          sx={{
-            width: '100wh',
-            maxWidth: '50%',
-            marginTop: '70px',
-          }}
-          noValidate
-          autoComplete="off">
-          <Select
-            items={categories}
-            handleChange={handleChange1}
-            item={category}
-            setItem={setCategory}
-          />
-          <Input
-            name="HotelName"
-            handleChange={handleChange}
-            item={hotelName}
-            setItem={setHotelName}
-            label="Hotel name"
-          />
-          <Input
-            name="Address"
-            handleChange={handleChange}
-            item={address}
-            setItem={setAdress}
-            label="Address"
-          />
-          <Input
-            name="Description"
-            handleChange={handleChange}
-            item={description}
-            setItem={setDescription}
-            label="Description"
-          />
-          <CheckBox
-            label="Is active ?"
-            checked={isActive}
-            setChecked={setIsActive}
-            handleChange={handleChecked}
+    <form
+      onSubmit={handleSubmit}
+      style={{width: '100wh', maxWidth: '50%', marginTop: '70px'}}>
+      <Select items={categories} item={category} setItem={setCategory} />
+      <InputCom
+        name="HotelName"
+        item={hotelName}
+        setItem={setHotelName}
+        label="Hotel name"
+      />
+      <InputCom
+        name="Address"
+        item={address}
+        setItem={setAdress}
+        label="Address"
+      />
+      <TextField
+        fullWidth
+        required
+        sx={{marginTop: '20px', marginLeft: '20px'}}
+        id="Description"
+        label="Description"
+        placeholder="Description"
+        multiline
+        onChange={e => setDescription(e.target.value)}
+        value={description}
+      />
+      <CheckBox
+        label="Is active ?"
+        checked={isActive}
+        setChecked={setIsActive}
+      />
+      {selectedImage && (
+        <div style={{marginTop: '20px', marginLeft: '20px'}}>
+          <img
+            alt="not found"
+            width={'600px'}
+            src={URL.createObjectURL(selectedImage)}
           />
           <Button
-            type="submit"
+            sx={{marginTop: '20px'}}
             variant="contained"
-            sx={{marginTop: '20px', marginLeft: '20px'}}>
-            Add hotel
+            onClick={() => setSelectedImage(null)}>
+            Remove
           </Button>
-        </Box>
-      </form>
-    </>
+        </div>
+      )}
+      <Button
+        fullWidth
+        sx={{marginTop: '20px', marginLeft: '20px'}}
+        variant="contained"
+        component="label">
+        Upload Photo
+        <input
+          accept="image/*"
+          type="file"
+          name="myImage"
+          onChange={event => {
+            console.log(event.target.files[0])
+            setSelectedImage(event.target.files[0])
+          }}
+          hidden
+        />
+      </Button>
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{marginTop: '20px', marginLeft: '20px'}}>
+        Add hotel
+      </Button>
+    </form>
   )
 }
 

@@ -12,6 +12,10 @@
     "not ie 11",
     "not op_mini all"
   ],
+  "browser": {
+    "zlib": false,
+    "stream": false
+  },
   "proxy": "http://localhost:3000",
   "devDependencies": {
     "@babel/core": "^7.22.5",
