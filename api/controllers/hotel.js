@@ -1,6 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import HotelModel from "../models/hotel.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import multer from "multer";
+// import { upload, imgUploadPath } from "../routes/uploadImg.js";
 
 const app = express();
 
@@ -52,12 +58,10 @@ export const addHotel = (req, res) => {
   // Lấy thông tin khách sạn từ request body
   const hotelData = req.body;
 
-  // Logic thêm khách sạn vào cơ sở dữ liệu
+  // Tiếp tục xử lý logic thêm khách sạn
   HotelModel.create(hotelData, (err, hotel) => {
     if (err) {
-      return res
-        .status(500)
-        .json({ error: "Đã xảy ra lỗi trong quá trình thêm khách sạn." });
+      return res.status(500).json({ error: "Lỗi khi thêm khách sạn." });
     }
     res.json({ status: "Đã thêm thành công." });
   });
