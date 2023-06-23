@@ -7,7 +7,7 @@ function Home() {
     {page: 'Add Hotel', path: '/admin/addhotel'},
     {page: 'Show Users', path: '/admin/showusers'},
   ]
-  return <NavBar pages={pages}/>
+  return <NavBar pages={pages} value={0}/>
 }
 
 export default Home
