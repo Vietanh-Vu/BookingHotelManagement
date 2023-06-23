@@ -63,7 +63,7 @@ export const addHotel = (req, res) => {
     if (err) {
       return res.status(500).json({ error: "Lỗi khi thêm khách sạn." });
     }
-    res.json({ status: "Đã thêm thành công." });
+    res.json({ message: "Đã thêm thành công." });
   });
 };
 
@@ -82,7 +82,7 @@ export const updateHotel = (req, res) => {
         .status(500)
         .json({ error: "Đã xảy ra lỗi trong quá trình sửa khách sạn." });
     }
-    res.json({ success: "Đã sửa thành công." });
+    res.json({ message: "Đã sửa thành công." });
   });
 };
 
