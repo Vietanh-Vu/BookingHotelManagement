@@ -3,6 +3,7 @@ import {Box, Typography, Button, Input} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
 import FormData from 'form-data'
+import {v4 as uuidv4} from 'uuid'
 import Select from './SelectCom.jsx'
 import InputCom from './InputCom.jsx'
 import CheckBox from './CheckBox.jsx'
@@ -15,7 +16,7 @@ function Add(props) {
   const [isActive, setIsActive] = useState(false)
   const [categories, setCategories] = useState([{}, {}])
   const [selectedImage, setSelectedImage] = useState(null)
-  const [hotelImg, setHotelImg] = useState('');
+  const [hotelImg, setHotelImg] = useState('')
 
   useEffect(() => {
     axios
@@ -29,12 +30,13 @@ function Add(props) {
 
   const postImage = () => {
     const formData = new FormData()
-    formData.append('myImage', selectedFile)
+    formData.append('myImage', selectedImage)
     axios
-      .post('', formData)
+      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
       .then(response => {
+        console.log(selectedImage)
         console.log(response)
-        setHotelImg();
+        setHotelImg()
       })
       .catch(error => {
         console.log(error)
@@ -61,7 +63,7 @@ function Add(props) {
   }
 
   const handleSubmit = async event => {
-    console.log(selectedImage)
+    postImage()
     event.preventDefault()
     // postData();
     setCategory({})
@@ -69,6 +71,7 @@ function Add(props) {
     setAdress('')
     setDescription('')
     setIsActive(false)
+    setSelectedImage(null)
   }
 
   return (
@@ -108,7 +111,7 @@ function Add(props) {
         <div style={{marginTop: '20px', marginLeft: '20px'}}>
           <img
             alt="not found"
-            width={'600px'}
+            width={'800px'}
             src={URL.createObjectURL(selectedImage)}
           />
           <Button
@@ -130,7 +133,6 @@ function Add(props) {
           type="file"
           name="myImage"
           onChange={event => {
-            console.log(event.target.files[0])
             setSelectedImage(event.target.files[0])
           }}
           hidden
