@@ -36,7 +36,7 @@ function Add(props) {
       .then(response => {
         console.log(selectedImage)
         console.log(response)
-        setHotelImg()
+        setHotelImg(response.data.nameFile)
       })
       .catch(error => {
         console.log(error)
@@ -55,7 +55,7 @@ function Add(props) {
     axios
       .post('http://localhost:3000/admin/hotel/add', hotelData)
       .then(response => {
-        alert(response.data.status)
+        alert(response.data.message)
       })
       .catch(error => {
         console.log(error)
@@ -65,7 +65,7 @@ function Add(props) {
   const handleSubmit = async event => {
     postImage()
     event.preventDefault()
-    // postData();
+    postData()
     setCategory({})
     setHotelName('')
     setAdress('')
