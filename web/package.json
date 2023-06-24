@@ -71,6 +71,7 @@
     "axios": "^1.4.0",
     "form-data": "^4.0.0",
     "mui": "^0.0.1",
-    "react-router-dom": "^6.13.0"
+    "react-router-dom": "^6.13.0",
+    "uuid": "^9.0.0"
   }
 }

@@ -1,4 +1,5 @@
 import express from "express";
+import {v4 as uuidv4} from 'uuid'
 import {
   getHotelsByName,
   getHotels,
@@ -42,7 +43,7 @@ const storage = multer.diskStorage({
     cb(null, imgUploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, `${uuidv4()}.jpg`);
   },
 });
 
