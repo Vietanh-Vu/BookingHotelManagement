@@ -33,7 +33,7 @@ HotelRouter.post("/add", addHotel);
 // lấy đường dẫn tới thư mục hiện tại
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = dirname(currentFilePath);
-const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh
+const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh sẽ là ./img/
 console.log(imgUploadPath);
 console.log(currentDirPath);
 // Cấu hình multer để lưu trữ tệp ảnh được tải lên
