@@ -11,7 +11,7 @@ app.use(express.json()) // To parse the incoming requests with JSON payloads
 // Xem danh sách khách sạn
 export const getHotelsByName = (req, res) => {
   // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
-  HotelModel.getByName(req.params.name, (err, hotels) => {
+  HotelModel.getHotelByName(req.params.name, (err, hotels) => {
     if (err) {
       return res.status(500).json({
         error:
@@ -113,7 +113,7 @@ export const getUsers = (req, res) => {
 // tìm user theo tên
 export const getUsersByName = (req, res) => {
   // Logic lấy danh sách user từ cơ sở dữ liệu
-  HotelModel.getByName(req.params.name, (err, users) => {
+  HotelModel.getUserByName(req.params.name, (err, users) => {
     if (err) {
       return res.status(500).json({
         error:
