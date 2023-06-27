@@ -10,6 +10,11 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import Controls from './controls/Controls'
+
+
 
 function EnhancedTableHead(props) {
   return (
@@ -26,9 +31,11 @@ function EnhancedTableHead(props) {
 }
 
 function HotelList() {
-  const [hotels, setHotels] = useState([{}]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [hotels, setHotels] = useState([{}])
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [openPopup, setOpenPopup] = useState(false)
+  const [recordForEdit, setRecordForEdit] = useState(null)
 
   useEffect(() => {
     axios
@@ -77,17 +84,11 @@ function HotelList() {
     {field: 'status', headerName: 'Status', width: 100},
   ]
 
-  const rows = [
-    {id: 1, lastName: 'Snow', firstName: 'Jon', age: 35},
-    {id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42},
-    {id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45},
-    {id: 4, lastName: 'Stark', firstName: 'Arya', age: 16},
-    {id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null},
-    {id: 6, lastName: 'Melisandre', firstName: null, age: 150},
-    {id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44},
-    {id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36},
-    {id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65},
-  ]
+  const openInPopup = item => {
+    setRecordForEdit(item)
+    setOpenPopup(true)
+  }
+
   return (
     <Box sx={{width: '100%', marginTop: '70px'}}>
       <Paper sx={{width: '100%', mb: 2}}>
@@ -109,6 +110,18 @@ function HotelList() {
                       <TableCell align="left">{hotel.Description}</TableCell>
                       <TableCell align="left">
                         {hotel.IsActive ? 'Active' : 'Inactive'}
+                      </TableCell>
+                      <TableCell>
+                        <Controls.ActionButton
+                          color="primary"
+                          onClick={() => {
+                            openInPopup(item)
+                          }}>
+                          <ModeEditOutlineIcon fontSize="small" />
+                        </Controls.ActionButton>
+                        <Controls.ActionButton color="secondary">
+                          <CloseIcon fontSize="small" />
+                        </Controls.ActionButton>
                       </TableCell>
                     </TableRow>
                   )
