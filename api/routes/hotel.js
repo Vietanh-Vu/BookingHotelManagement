@@ -1,5 +1,5 @@
 import express from "express";
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from "uuid";
 import {
   getHotelsByName,
   getHotels,
@@ -35,8 +35,8 @@ HotelRouter.post("/add", addHotel);
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = dirname(currentFilePath);
 const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh sẽ là ./img/
-console.log(imgUploadPath);
-console.log(currentDirPath);
+// console.log(imgUploadPath);
+// console.log(currentDirPath);
 // Cấu hình multer để lưu trữ tệp ảnh được tải lên
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
