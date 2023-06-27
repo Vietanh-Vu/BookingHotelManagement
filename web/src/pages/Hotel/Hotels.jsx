@@ -1,5 +1,5 @@
 import {makeStyles} from '@mui/styles'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {
   Paper,
   TableBody,
@@ -8,14 +8,19 @@ import {
   Toolbar,
   InputAdornment,
 } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios'
+import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import ApartmentIcon from '@mui/icons-material/Apartment'
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline'
+import CloseIcon from '@mui/icons-material/Close'
 import Controls from '../../components/controls/Controls.jsx'
 import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
 import HotelsForm from './HotelsForm.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import Popup from '../../components/Popup.jsx'
+import useTable from '../../components/useTable.jsx'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -27,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
   newButton: {
     position: 'absolute',
-    right: '10px',
+    left: '30px',
   },
 }))
 
@@ -62,7 +67,7 @@ const headCells = [
 export default function Hotels() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState()
+  const [records, setRecords] = useState([])
   const [filterFn, setFilterFn] = useState({
     fn: items => {
       return items
@@ -70,33 +75,138 @@ export default function Hotels() {
   })
   const [openPopup, setOpenPopup] = useState(false)
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} =
-    useTable(records, headCells, filterFn)
+  const getAllHotel = () => {
+    axios
+      .get(`http://localhost:3000/admin/hotel/`)
+      .then(res => {
+        setRecords(
+          res.data.map(hotel => ({
+            ...hotel,
+            CategoryId: hotel.CategoryId[0],
+          })),
+        )
+      })
+      .catch(error => console.log(error))
+  }
 
-  // const handleSearch = e => {
-  //   let target = e.target
-  //   setFilterFn({
-  //     fn: items => {
-  //       if (target.value == '') return items
-  //       else
-  //         return items.filter(x =>
-  //           x.hotelName.toLowerCase().includes(target.value),
-  //         )
-  //     },
-  //   })
-  // }
+  useEffect(() => {
+    getAllHotel()
+  }, [])
 
-  // const addOrEdit = (hotel, resetForm) => {
-  //   if (hotel.id == 0) employeeService.insertEmployee(employee)
-  //   else employeeService.updateEmployee(employee)
-  //   resetForm()
-  //   setRecordForEdit(null)
-  //   setOpenPopup(false)
-  //   setRecords(employeeService.getAllEmployees())
-  // }
+  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
+    records,
+    headCells,
+    filterFn,
+  )
+
+  const handleSearch = e => {
+    const target = e.target
+    setFilterFn({
+      fn: items => {
+        if (target.value == '') return items
+        else
+          return items.filter(x =>
+            x.HotelName.toLowerCase().includes(target.value),
+          )
+      },
+    })
+  }
+
+  const insertHotel = hotel => {
+    const formData = new FormData()
+    formData.append('myImage', hotel.ImgSelected)
+    axios
+      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+      .then(response => {
+        const hotelData = {
+          CategoryId: hotel.CategoryId,
+          HotelName: hotel.HotelName,
+          IsActive: hotel.IsActive ? true : false,
+          Address: hotel.Address,
+          Description: hotel.Description,
+          HotelImg: response.data.nameFile,
+        }
+        axios
+          .post('http://localhost:3000/admin/hotel/add', hotelData)
+          .then(response => {
+            alert(response.data.message)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  const updateHotel = hotel => {
+    if (hotel.ImgSelected) {
+      const formData = new FormData()
+      formData.append('myImage', hotel.ImgSelected)
+      axios
+        .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+        .then(response => {
+          const hotelData = {
+            CategoryId: hotel.CategoryId,
+            HotelName: hotel.HotelName,
+            IsActive: hotel.IsActive ? true : false,
+            Address: hotel.Address,
+            Description: hotel.Description,
+            HotelImg: response.data.nameFile,
+          }
+          console.log(hotelData)
+          axios
+            .put(
+              `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
+              hotelData,
+            )
+            .then(response => {
+              alert(response.data.message)
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    } else {
+      const hotelData = {
+        CategoryId: hotel.CategoryId,
+        HotelName: hotel.HotelName,
+        IsActive: hotel.IsActive ? true : false,
+        Address: hotel.Address,
+        Description: hotel.Description,
+        HotelImg: hotel.HotelImg,
+      }
+      console.log(hotelData)
+      axios
+        .put(
+          `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
+          hotelData,
+        )
+        .then(response => {
+          alert(response.data.message)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  }
+
+  const addOrEdit = (hotel, resetForm) => {
+    if (hotel.HotelId == '') insertHotel(hotel)
+    else updateHotel(hotel)
+    getAllHotel()
+    resetForm()
+    setRecordForEdit(null)
+    setOpenPopup(false)
+  }
 
   const openInPopup = item => {
-    // setRecordForEdit(item)
+    console.log(item)
+    setRecordForEdit(item)
     setOpenPopup(true)
   }
 
@@ -110,18 +220,18 @@ export default function Hotels() {
       />
       <Paper className={classes.pageContent}>
         <Toolbar>
-          {/* <Controls.Input
+          <Controls.Input
             label="Search Employees"
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search />
+                  <SearchIcon />
                 </InputAdornment>
               ),
             }}
             onChange={handleSearch}
-          /> */}
+          />
           <Controls.Button
             text="Add New"
             variant="outlined"
@@ -129,42 +239,44 @@ export default function Hotels() {
             className={classes.newButton}
             onClick={() => {
               setOpenPopup(true)
-              // setRecordForEdit(null)
+              setRecordForEdit(null)
             }}
           />
         </Toolbar>
-        {/* <TblContainer>
+        <TblContainer>
           <TblHead />
           <TableBody>
-            {recordsAfterPagingAndSorting().map(item => (
-              <TableRow key={item.id}>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{item.mobile}</TableCell>
-                <TableCell>{item.department}</TableCell>
-                <TableCell>
-                  <Controls.ActionButton
-                    color="primary"
-                    onClick={() => {
-                      openInPopup(item)
-                    }}>
-                    <EditOutlinedIcon fontSize="small" />
-                  </Controls.ActionButton>
-                  <Controls.ActionButton color="secondary">
-                    <CloseIcon fontSize="small" />
-                  </Controls.ActionButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {recordsAfterPaging() &&
+              recordsAfterPaging().map(item => (
+                <TableRow key={item.ID[0]}>
+                  <TableCell>{item.HotelName}</TableCell>
+                  <TableCell>{item.CategoryName}</TableCell>
+                  <TableCell>{item.Address}</TableCell>
+                  <TableCell>{item.Description}</TableCell>
+                  <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
+                  <TableCell>
+                    <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        openInPopup(item)
+                      }}>
+                      <ModeEditOutlineIcon fontSize="small" />
+                    </Controls.ActionButton>
+                    <Controls.ActionButton color="secondary">
+                      <CloseIcon fontSize="small" />
+                    </Controls.ActionButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
-        </TblContainer> */}
-        {/* <TblPagination /> */}
+        </TblContainer>
+        <TblPagination />
       </Paper>
       <Popup
         title="Hotel form"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}>
-        <HotelsForm recordForEdit={false} addOrEdit={() => {}} />
+        <HotelsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
     </>
   )

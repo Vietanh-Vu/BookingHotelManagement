@@ -99,6 +99,7 @@ module.exports = (env, argv) => ({
     http://bit.ly/2KmfoWl
     These options determine how the different types of modules within a project will be treated.
   */
+
   module: {
     /*
       An array of Rules which are matched to requests when modules are created.
@@ -142,6 +143,18 @@ module.exports = (env, argv) => ({
         * ESx => ES5
         * JSX => ES5
       */
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/jpg',
+            },
+          },
+        ],
+      },
       {
         // sideEffects: false,
         test: /\.(js|jsx)$/,
@@ -293,7 +306,7 @@ module.exports = (env, argv) => ({
       components: path.resolve(__dirname, 'src/components'),
       assets: path.resolve(__dirname, 'src/assets'),
       hooks: path.resolve(__dirname, 'src/hooks'),
-      helpers: path.resolve(__dirname, 'src/helpers')
+      helpers: path.resolve(__dirname, 'src/helpers'),
     },
 
     /*

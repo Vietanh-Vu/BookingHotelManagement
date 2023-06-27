@@ -1,4 +1,11 @@
 import { connect, sql } from "../connectDB.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+// const currentFilePath = fileURLToPath(import.meta.url);
+// const currentDirPath = dirname(currentFilePath);
+// const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh
 
 class HotelModel {
   // Tìm khách sạn theo tên

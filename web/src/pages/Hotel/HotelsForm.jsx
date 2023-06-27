@@ -5,12 +5,13 @@ import {useForm, Form} from '../../components/useForm'
 import axios from 'axios'
 
 const initialFValues = {
-  category: {},
-  hotelName: '',
-  isActive: false,
-  address: '',
-  description: '',
-  hotelImg: null,
+  HotelId: '',
+  HotelName: '',
+  IsActive: false,
+  Address: '',
+  Description: '',
+  ImgSelected: null,
+  CategoryId: '',
 }
 
 export default function HotelsForm(props) {
@@ -35,129 +36,112 @@ export default function HotelsForm(props) {
       .catch(error => console.log(error))
   }, [])
 
-  const postData = () => {
-    const formData = new FormData()
-    formData.append('myImage', values.hotelImg)
-    axios
-      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
-      .then(response => {
-        const hotelData = {
-          CategoryId: values.category.CategoryId,
-          HotelName: values.hotelName,
-          IsActive: values.isActive ? true : false,
-          Address: values.address,
-          Description: values.description,
-          HotelImg: response.data.nameFile,
-        }
-        axios
-          .post('http://localhost:3000/admin/hotel/add', hotelData)
-          .then(response => {
-            alert(response.data.message)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  useEffect(() => {
+    if (recordForEdit != null) setValues(recordForEdit)
+  }, [recordForEdit])
 
   const handleSubmit = e => {
     e.preventDefault()
-    postData()
-    resetForm()
+    addOrEdit(values, resetForm)
   }
-
-  useEffect(() => {
-    if (recordForEdit != null)
-      setValues({
-        ...recordForEdit,
-      })
-  }, [recordForEdit])
 
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={4}>
           <Controls.Input
-            name="hotelName"
+            name="HotelName"
             label="Hotel Name"
-            value={values.hotelName}
+            value={values.HotelName}
             onChange={handleInputChange}
-            error={errors.hotelName}
+            error={errors.HotelName}
           />
           <Controls.Input
             label="Address"
-            name="address"
-            value={values.address}
+            name="Address"
+            value={values.Address}
             onChange={handleInputChange}
-            error={errors.address}
+            error={errors.Address}
           />
           <TextField
             required
             variant="outlined"
             label="Description"
-            name="description"
+            name="Description"
             multiline
             onChange={handleInputChange}
-            value={values.description}
-          />
-          <Controls.Input
-            label="City"
-            name="city"
-            value={values.city}
-            onChange={handleInputChange}
+            value={values.Description}
           />
         </Grid>
         <Grid item xs={4}>
-          {values.hotelImg && (
+          {values.ImgSelected ? (
             <div>
               <img
                 alt="not found"
                 width={'230px'}
-                src={URL.createObjectURL(values.hotelImg)}
+                src={URL.createObjectURL(values.ImgSelected)}
               />
               <Controls.Button
                 text="Remove"
                 onClick={() => {
                   setValues({
                     ...values,
-                    hotelImg: null,
+                    ImgSelected: null,
                   })
                 }}
               />
             </div>
+          ) : (
+            values.HotelImg && (
+              <div>
+                <img
+                  alt="not found"
+                  width={'230px'}
+                  src={require(`../../../../img/${values.HotelImg}`).default}
+                />
+                <Controls.Button
+                  text="Remove"
+                  onClick={() => {
+                    setValues({
+                      ...values,
+                      ImgSelected: null,
+                    })
+                  }}
+                />
+              </div>
+            )
           )}
-          <Button
-            sx={{marginTop: '10px'}}
-            variant="contained"
-            component="label">
-            Upload Photo
-            <input
-              required={true}
-              accept="image/jpg"
-              type="file"
-              name="myImage"
-              onChange={event => {
-                setValues({...values, hotelImg: event.target.files[0]})
-              }}
-              hidden
-            />
-          </Button>
+          {!values.ImgSelected && !values.HotelImg && (
+            <Button
+              sx={{marginTop: '10px'}}
+              variant="contained"
+              component="label">
+              Upload Photo
+              <input
+                required={true}
+                accept="image/jpg"
+                type="file"
+                name="myImage"
+                onChange={event => {
+                  setValues({...values, ImgSelected: event.target.files[0]})
+                }}
+                hidden
+              />
+            </Button>
+          )}
         </Grid>
         <Grid item xs={4}>
           <Controls.Select
-            name="category"
+            name="CategoryId"
             label="Category"
-            value={values.category}
+            value={values.CategoryId}
             onChange={handleInputChange}
             options={categories}
           />
           <Controls.Checkbox
-            name="isActive"
+            name="IsActive"
             label="Active"
-            value={values.isActive}
+            value={values.IsActive}
             onChange={handleInputChange}
           />
           <div>

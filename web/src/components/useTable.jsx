@@ -4,11 +4,11 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  makeStyles,
   TablePagination,
 } from '@mui/material'
+import {makeStyles} from '@mui/styles'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   table: {
     marginTop: '16px',
     '& thead th': {
@@ -64,14 +64,14 @@ export default function useTable(records, headCells, filterFn) {
       page={page}
       rowsPerPageOptions={pages}
       rowsPerPage={rowsPerPage}
-      count={records.length}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
+      count={records ? records.length : 0}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
     />
   )
 
   const recordsAfterPaging = () => {
-    return filterFn.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+    return records ? filterFn.fn(records).slice(page * rowsPerPage, (page + 1) * rowsPerPage) : filterFn.fn(records)
   }
 
   return {
