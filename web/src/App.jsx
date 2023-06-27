@@ -1,19 +1,31 @@
 import * as React from 'react'
 import {Routes, Route} from 'react-router-dom'
+import {
+  makeStyles,
+  CssBaseline,
+  createMuiTheme,
+  ThemeProvider,
+} from '@mui/styles'
 import Home from './pages/Home.jsx'
-import Hotels from './pages/Hotels.jsx'
+import Hotels from './pages/Hotel/Hotels.jsx'
 import Users from './pages/Users.jsx'
-import AddHotel from './pages/AddHotel.jsx'
+
+const useStyles = makeStyles({
+  appMain: {
+    width: '100%',
+  },
+})
 
 function App() {
+  const classes = useStyles()
+
   return (
-    <div>
+    <div className={classes.appMain}>
       <Routes>
         <Route path="/admin">
           <Route index element={<Home />} />
-          <Route path="showhotels/" element={<Hotels />} />
-          <Route path="showusers" element={<Users />} />
-          <Route path="addhotel" element={<AddHotel />} />
+          <Route path="hotels" element={<Hotels />} />
+          <Route path="users" element={<Users />} />
         </Route>
       </Routes>
     </div>

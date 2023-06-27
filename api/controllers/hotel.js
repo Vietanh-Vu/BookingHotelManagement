@@ -1,17 +1,12 @@
 import express from "express";
-import bodyParser from "body-parser";
 import HotelModel from "../models/hotel.js";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import multer from "multer";
+import bodyParser from "body-parser";
 // import { upload, imgUploadPath } from "../routes/uploadImg.js";
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()) // To parse the incoming requests with JSON payloads
 
 // Xem danh sách khách sạn
 export const getHotelsByName = (req, res) => {

@@ -1,13 +1,19 @@
 import NavBar from '../components/NavBar.jsx'
+import {pages} from './Var.jsx'
+import PageHeader from '../components/PageHeader.jsx'
+import HomeIcon from '@mui/icons-material/Home'
 
 function Home() {
-  const pages = [
-    {page: 'Home', path: '/admin'},
-    {page: 'Show Hotels', path: '/admin/showhotels'},
-    {page: 'Add Hotel', path: '/admin/addhotel'},
-    {page: 'Show Users', path: '/admin/showusers'},
-  ]
-  return <NavBar pages={pages} value={0}/>
+  return (
+    <>
+      <NavBar pages={pages} value={0} />
+      <PageHeader
+        title="Home"
+        subTitle="Home page"
+        icon={<HomeIcon fontSize="medium" />}
+      />
+    </>
+  )
 }
 
 export default Home
