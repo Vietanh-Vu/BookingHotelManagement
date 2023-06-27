@@ -2,14 +2,14 @@ import { connect, sql } from "../connectDB.js";
 
 class HotelModel {
   // Tìm khách sạn theo tên
-  static async getByName(stringName, callback) {
+  static async getHotelByName(stringName, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
     const sqlQuery =
       "SELECT * FROM Hotel WHERE HotelName LIKE '%' + @name + '%'";
     return await pool
       .request()
-      .input("name", sql.VarChar(128), stringName)
+      .input("name", sql.VarChar, stringName)
       .query(sqlQuery, function (err, data) {
         if (data.recordset.length > 0) {
           callback(null, data.recordset);
@@ -116,14 +116,14 @@ class HotelModel {
   }
 
   // Tìm user theo tên
-  static async getByName(stringName, callback) {
+  static async getUserByName(stringName, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
     const pool = await connect;
     const sqlQuery =
       "SELECT * FROM Users WHERE FirstName LIKE '%' + @name + '%' OR LastName LIKE '%' + @name + '%'";
     return await pool
       .request()
-      .input("name", sql.VarChar(128), stringName)
+      .input("name", sql.VarChar, stringName)
       .query(sqlQuery, function (err, data) {
         if (data.recordset.length > 0) {
           callback(null, data.recordset);
