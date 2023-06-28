@@ -1,11 +1,6 @@
 import React from 'react'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-} from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import {Dialog, DialogTitle, DialogContent, Typography} from '@mui/material'
+import {makeStyles} from '@mui/styles'
 import Controls from './controls/Controls'
 import CloseIcon from '@mui/icons-material/Close'
 
@@ -27,7 +22,7 @@ export default function Popup(props) {
   return (
     <Dialog
       open={openPopup}
-      maxWidth="md"
+      fullScreen
       classes={{paper: classes.dialogWrapper}}>
       <DialogTitle className={classes.dialogTitle}>
         <div style={{display: 'flex'}}>
