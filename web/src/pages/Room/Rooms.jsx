@@ -97,7 +97,7 @@ export default function Rooms() {
     },
   })
   const navigate = useNavigate()
-  const {hotelId} = useParams()
+  const {hotelId, hotelName} = useParams()
 
   const getAllRoom = () => {
     axios
@@ -144,6 +144,8 @@ export default function Rooms() {
       },
     })
   }
+
+  console.log(records)
 
   const insertRoom = room => {
     const roomData = {
@@ -235,7 +237,7 @@ export default function Rooms() {
     <>
       <NavBar page="Hotels" pages={pages} value={1} />
       <PageHeader
-        title="Rooms"
+        title={`Rooms of ${hotelName}`}
         subTitle="List of rooms"
         icon={<BedroomChildIcon fontSize="medium" />}
       />
