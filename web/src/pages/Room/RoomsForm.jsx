@@ -5,16 +5,16 @@ import {useForm, Form} from '../../components/useForm'
 import axios from 'axios'
 
 const initialFValues = {
-  HotelId: '',
-  HotelName: '',
+  RoomId: '',
+  RoomName: '',
   IsActive: false,
-  Address: '',
+  CurrentPrice: 0,
   Description: '',
-  ImgSelected: null,
-  CategoryId: '',
+  IsAvailable: false,
+  RoomTypeId: '',
 }
 
-export default function HotelsForm(props) {
+export default function RoomsForm(props) {
   const {addOrEdit, recordForEdit} = props
 
   const {values, setValues, errors, setErrors, handleInputChange, resetForm} =

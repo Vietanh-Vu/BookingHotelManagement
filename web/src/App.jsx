@@ -9,6 +9,7 @@ import {
 import Home from './pages/Home.jsx'
 import Hotels from './pages/Hotel/Hotels.jsx'
 import Users from './pages/Users.jsx'
+import Rooms from './pages/Room/Rooms.jsx'
 
 const useStyles = makeStyles({
   appMain: {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/admin">
           <Route index element={<Home />} />
           <Route path="hotels" element={<Hotels />} />
+          <Route path="hotels/rooms/:hotelId" element={<Rooms />} />
           <Route path="users" element={<Users />} />
         </Route>
       </Routes>

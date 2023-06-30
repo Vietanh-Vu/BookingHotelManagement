@@ -1,6 +1,6 @@
 import {makeStyles} from '@mui/styles'
 import {useEffect, useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {
   Paper,
   TableBody,
@@ -15,13 +15,13 @@ import {
 import axios from 'axios'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
-import ApartmentIcon from '@mui/icons-material/Apartment'
+import BedroomChildIcon from '@mui/icons-material/BedroomChild'
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline'
 import CloseIcon from '@mui/icons-material/Close'
 import Controls from '../../components/controls/Controls.jsx'
 import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
-import HotelsForm from './HotelsForm.jsx'
+import RoomsForm from './RoomsForm.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import Popup from '../../components/Popup.jsx'
 import useTable from '../../components/useTable.jsx'
@@ -45,24 +45,29 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
   {
-    id: 'hotelName',
+    id: 'roomName',
     disablePadding: false,
-    label: 'Hotel Name',
+    label: 'Room Name',
   },
   {
-    id: 'category',
+    id: 'roomType',
     disablePadding: false,
-    label: 'Category',
+    label: 'Room Type',
   },
   {
-    id: 'address',
+    id: 'price',
     disablePadding: false,
-    label: 'Address',
+    label: 'Current Price',
   },
   {
     id: 'description',
     disablePadding: false,
     label: 'Description',
+  },
+  {
+    id: 'available',
+    disablePadding: false,
+    label: 'Available',
   },
   {
     id: 'status',
@@ -71,7 +76,7 @@ const headCells = [
   },
 ]
 
-export default function Hotels() {
+export default function Rooms() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [records, setRecords] = useState([])
@@ -83,16 +88,17 @@ export default function Hotels() {
       else return items.filter(item => item.IsActive)
     },
   })
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const {hotelId} = useParams()
 
-  const getAllHotel = () => {
+  const getAllRoom = () => {
     axios
-      .get(`http://localhost:3000/admin/hotel/`)
+      .get(`http://localhost:3000/admin/hotel/rooms/${hotelId}`)
       .then(res => {
         setRecords(
-          res.data.map(hotel => ({
-            ...hotel,
-            CategoryId: hotel.CategoryId[0],
+          res.data.map(room => ({
+            ...room,
+            RoomTypeId: room.RoomTypeId[0],
           })),
         )
       })
@@ -119,99 +125,58 @@ export default function Hotels() {
         } else {
           if (!filterActive)
             return items.filter(x =>
-              x.HotelName.toLowerCase().includes(target.value),
+              x.RoomName.toLowerCase().includes(target.value),
             )
           else
             return items.filter(
               x =>
-                x.HotelName.toLowerCase().includes(target.value) && x.IsActive,
+                x.RoomName.toLowerCase().includes(target.value) && x.IsActive,
             )
         }
       },
     })
   }
 
-  const insertHotel = hotel => {
-    const formData = new FormData()
-    formData.append('myImage', hotel.ImgSelected)
+  const insertRoom = room => {
+    const roomData = {
+      RoomTypeId: room.RoomTypeId,
+      RoomName: room.RoomName,
+      CurrentPrice: room.CurrentPrice,
+      IsAvailable: room.IsAvailable ? true : false,
+      Description: room.Description,
+      IsActive: room.IsActive ? true : false,
+    }
     axios
-      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+      .post(`http://localhost:3000/admin/hotel/rooms/${hotelId}`, hotelData)
       .then(response => {
-        const hotelData = {
-          CategoryId: hotel.CategoryId,
-          HotelName: hotel.HotelName,
-          IsActive: hotel.IsActive ? true : false,
-          Address: hotel.Address,
-          Description: hotel.Description,
-          HotelImg: response.data.nameFile,
-        }
-        axios
-          .post('http://localhost:3000/admin/hotel/add', hotelData)
-          .then(response => {
-            alert(response.data.message)
-          })
-          .catch(error => {
-            console.log(error)
-          })
+        alert(response.data.message)
       })
       .catch(error => {
         console.log(error)
       })
   }
 
-  const updateHotel = hotel => {
-    if (hotel.ImgSelected) {
-      const formData = new FormData()
-      formData.append('myImage', hotel.ImgSelected)
-      axios
-        .post(`http://localhost:3000/admin/hotel/add/image`, formData)
-        .then(response => {
-          const hotelData = {
-            CategoryId: hotel.CategoryId,
-            HotelName: hotel.HotelName,
-            IsActive: hotel.IsActive ? true : false,
-            Address: hotel.Address,
-            Description: hotel.Description,
-            HotelImg: response.data.nameFile,
-          }
-          console.log(hotelData)
-          axios
-            .put(
-              `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
-              hotelData,
-            )
-            .then(response => {
-              alert(response.data.message)
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    } else {
-      const hotelData = {
-        CategoryId: hotel.CategoryId,
-        HotelName: hotel.HotelName,
-        IsActive: hotel.IsActive ? true : false,
-        Address: hotel.Address,
-        Description: hotel.Description,
-        HotelImg: hotel.HotelImg,
-      }
-      console.log(hotelData)
-      axios
-        .put(
-          `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
-          hotelData,
-        )
-        .then(response => {
-          alert(response.data.message)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+  const updateRoom = room => {
+    const roomData = {
+      HotelId: hotelId,
+      RoomTypeId: room.RoomTypeId,
+      RoomName: room.RoomName,
+      CurrentPrice: room.CurrentPrice,
+      IsAvailable: room.IsAvailable ? true : false,
+      Description: room.Description,
+      IsActive: room.IsActive ? true : false,
     }
+    axios
+      .put(
+        `http://localhost:3000/admin/hotel/room/update/${hotel.HotelId}`,
+        hotelData,
+      )
+      .then(response => {
+        alert(response.data.message)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   const HandleFilterActive = e => {
@@ -227,10 +192,10 @@ export default function Hotels() {
     })
   }, [filterActive])
 
-  const addOrEdit = (hotel, resetForm) => {
-    if (hotel.HotelId == '') insertHotel(hotel)
-    else updateHotel(hotel)
-    getAllHotel()
+  const addOrEdit = (room, resetForm) => {
+    if (room.RoomId == '') insertRoom(room)
+    else updateRoom(room)
+    getAllRoom()
     resetForm()
     setRecordForEdit(null)
     setOpenPopup(false)
@@ -246,14 +211,14 @@ export default function Hotels() {
     <>
       <NavBar page="Hotels" pages={pages} value={1} />
       <PageHeader
-        title="Hotels"
-        subTitle="List of hotels"
-        icon={<ApartmentIcon fontSize="medium" />}
+        title="Rooms"
+        subTitle="List of rooms"
+        icon={<BedroomChildIcon fontSize="medium" />}
       />
       <Paper className={classes.pageContent}>
         <Toolbar>
           <Controls.Input
-            label="Search Hotels"
+            label="Search Rooms"
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
@@ -294,11 +259,12 @@ export default function Hotels() {
             {recordsAfterPaging() &&
               recordsAfterPaging().map(item => (
                 <TableRow key={item.ID[0]}>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.HotelName}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.CategoryName}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.Address}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.Description}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
+                  <TableCell>{item.RoomName}</TableCell>
+                  <TableCell>{item.RoomType}</TableCell>
+                  <TableCell>{item.CurrentPrice}</TableCell>
+                  <TableCell>{item.Description}</TableCell>
+                  <TableCell>{item.IsAvailable ? 'Available' : 'Unavailable'}</TableCell>
+                  <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
@@ -318,10 +284,10 @@ export default function Hotels() {
         <TblPagination />
       </Paper>
       <Popup
-        title="Hotel form"
+        title="Room form"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}>
-        <HotelsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+        <RoomsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
     </>
   )

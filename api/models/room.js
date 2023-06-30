@@ -24,8 +24,8 @@ class RoomModel {
   static async create(hotelId, roomData, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để thêm phòng
     const pool = await connect;
-    const sqlQuery = `INSERT INTO Room (HotelId, RoomTypeId, RoomName, CurrentPrice, IsAvailable, Description) VALUES 
-                      (@HotelId, @RoomTypeId, @RoomName, @CurrentPrice, @IsAvailable, @Description)`;
+    const sqlQuery = `INSERT INTO Room (HotelId, RoomTypeId, RoomName, CurrentPrice, IsAvailable, Description, IsActive) VALUES 
+                      (@HotelId, @RoomTypeId, @RoomName, @CurrentPrice, @IsAvailable, @Description, @IsActive)`;
     return await pool
       .request()
       .input("HotelId", sql.VarChar, hotelId)
@@ -34,6 +34,7 @@ class RoomModel {
       .input("CurrentPrice", sql.Decimal, roomData.CurrentPrice)
       .input("IsAvailable", sql.Bit, roomData.IsAvailable)
       .input("Description", sql.VarChar, roomData.Description)
+      .input("IsActive", sql.Bit, roomData.IsActive)
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
@@ -49,7 +50,7 @@ class RoomModel {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để sửa phòng
     const pool = await connect;
     let sqlQuery =
-      "UPDATE Room SET HotelId = @HotelId, RoomTypeId = @RoomTypeId, RoomName = @RoomName, CurrentPrice = @CurrentPrice, IsAvailable = @IsAvailable, Description = @Description WHERE RoomId = @id";
+      "UPDATE Room SET HotelId = @HotelId, RoomTypeId = @RoomTypeId, RoomName = @RoomName, CurrentPrice = @CurrentPrice, IsAvailable = @IsAvailable, Description = @Description, IsActive = @IsActive WHERE RoomId = @id";
     const result = await pool
       .request()
       .input("id", sql.VarChar, roomId)
@@ -59,6 +60,7 @@ class RoomModel {
       .input("CurrentPrice", sql.Decimal, roomData.CurrentPrice)
       .input("IsAvailable", sql.Bit, roomData.IsAvailable)
       .input("Description", sql.VarChar, roomData.Description)
+      .input("IsActive", sql.Bit, roomData.IsActive)
       .query(sqlQuery, (err, data) => {
         if (err) {
           callback(true, null);
