@@ -7,6 +7,19 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// gui roomType
+export const getRoomType = (req, res) => {
+  // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
+  RoomModel.getRoomType((err, roomType) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Đã xảy ra lỗi trong quá trình lấy danh sách room type.",
+      });
+    }
+    res.json(roomType);
+  });
+};
+
 // Xem danh sách phòng trong một khách sạn
 export const getRoomsByHotel = (req, res) => {
   // Lấy ID khách sạn từ request params
@@ -82,4 +95,5 @@ export default {
   addRoom,
   updateRoom,
   deleteRoom,
+  getRoomType,
 };
