@@ -305,31 +305,41 @@ export default function Hotels() {
                 <TableRow key={item.ID[0]}>
                   <TableCell
                     onClick={() =>
-                      navigate(`/admin/hotels/rooms/${item.HotelId}`)
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
                     }>
                     {item.HotelName}
                   </TableCell>
                   <TableCell
                     onClick={() =>
-                      navigate(`/admin/hotels/rooms/${item.HotelId}`)
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
                     }>
                     {item.CategoryName}
                   </TableCell>
                   <TableCell
                     onClick={() =>
-                      navigate(`/admin/hotels/rooms/${item.HotelId}`)
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
                     }>
                     {item.Address}
                   </TableCell>
                   <TableCell
                     onClick={() =>
-                      navigate(`/admin/hotels/rooms/${item.HotelId}`)
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
                     }>
                     {item.Description}
                   </TableCell>
                   <TableCell
                     onClick={() =>
-                      navigate(`/admin/hotels/rooms/${item.HotelId}`)
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
                     }>
                     {item.IsActive ? 'Active' : 'Inactive'}
                   </TableCell>
