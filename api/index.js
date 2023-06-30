@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { HotelRouter, UserRouter } from "./routes/hotel.js";
+import HotelRouter from "./routes/hotel.js";
+import UserRouter from "./routes/user.js";
 import RoomRouter from "./routes/room.js";
 import cors from "cors";
 
