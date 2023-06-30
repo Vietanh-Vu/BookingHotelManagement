@@ -76,16 +76,24 @@ const headCells = [
   },
 ]
 
+const initialFilters = {
+  filterActive: true,
+  filterAvailable: false,
+}
+
 export default function Rooms() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [records, setRecords] = useState([])
   const [openPopup, setOpenPopup] = useState(false)
-  const [filterActive, setFilterActive] = useState(false)
+  const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
-      if (!filterActive) return items
-      else return items.filter(item => item.IsActive)
+      return items.filter(
+        item =>
+          (item.IsActive || !filter.filterActive) &&
+          (item.IsAvailable || !filter.filterAvailable),
+      )
     },
   })
   const navigate = useNavigate()
@@ -120,18 +128,18 @@ export default function Rooms() {
     setFilterFn({
       fn: items => {
         if (target.value == '') {
-          if (!filterActive) return items
-          else return items.filter(item => item.IsActive)
+          return items.filter(
+            item =>
+              (item.IsActive || !filter.filterActive) &&
+              (item.IsAvailable || !filter.filterAvailable),
+          )
         } else {
-          if (!filterActive)
-            return items.filter(x =>
-              x.RoomName.toLowerCase().includes(target.value),
-            )
-          else
-            return items.filter(
-              x =>
-                x.RoomName.toLowerCase().includes(target.value) && x.IsActive,
-            )
+          return items.filter(
+            x =>
+              x.RoomName.toLowerCase().includes(target.value) &&
+              (x.IsActive || !filter.filterActive) &&
+              (x.IsAvailable || !filter.filterAvailable),
+          )
         }
       },
     })
@@ -147,7 +155,7 @@ export default function Rooms() {
       IsActive: room.IsActive ? true : false,
     }
     axios
-      .post(`http://localhost:3000/admin/hotel/rooms/${hotelId}`, hotelData)
+      .post(`http://localhost:3000/admin/hotel/rooms/${hotelId}`, roomData)
       .then(response => {
         alert(response.data.message)
       })
@@ -168,8 +176,8 @@ export default function Rooms() {
     }
     axios
       .put(
-        `http://localhost:3000/admin/hotel/room/update/${hotel.HotelId}`,
-        hotelData,
+        `http://localhost:3000/admin/hotel/rooms/update/${room.RoomId}`,
+        roomData,
       )
       .then(response => {
         alert(response.data.message)
@@ -179,18 +187,25 @@ export default function Rooms() {
       })
   }
 
-  const HandleFilterActive = e => {
-    setFilterActive(e.target.checked)
+  const handleFilter = e => {
+    const {name, checked} = e.target
+    setFilter({
+      ...filter,
+      [name]: checked,
+    })
   }
 
   useEffect(() => {
     setFilterFn({
       fn: items => {
-        if (!filterActive) return items
-        else return items.filter(item => item.IsActive)
+        return items.filter(
+          item =>
+            (item.IsActive || !filter.filterActive) &&
+            (item.IsAvailable || !filter.filterAvailable),
+        )
       },
     })
-  }, [filterActive])
+  }, [filter])
 
   const addOrEdit = (room, resetForm) => {
     if (room.RoomId == '') insertRoom(room)
@@ -205,6 +220,15 @@ export default function Rooms() {
     console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
+  }
+
+  const deleteRoom = room => {
+    axios
+      .delete(`http://localhost:3000/admin/hotel/rooms/delete/${room.RoomId}`)
+      .then(res => {
+        alert(res.data.message)
+      })
+      .catch(error => console.log(error))
   }
 
   return (
@@ -248,11 +272,22 @@ export default function Rooms() {
                 <Checkbox
                   name="filterActive"
                   color="primary"
-                  checked={filterActive}
-                  onChange={HandleFilterActive}
+                  checked={filter.filterActive}
+                  onChange={handleFilter}
                 />
               }
               label="Show Active"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="filterAvailable"
+                  color="primary"
+                  checked={filter.filterAvailable}
+                  onChange={handleFilter}
+                />
+              }
+              label="Show Available"
             />
           </FormControl>
           <TableBody>
@@ -260,10 +295,12 @@ export default function Rooms() {
               recordsAfterPaging().map(item => (
                 <TableRow key={item.ID[0]}>
                   <TableCell>{item.RoomName}</TableCell>
-                  <TableCell>{item.RoomType}</TableCell>
+                  <TableCell>{item.RoomTypeName}</TableCell>
                   <TableCell>{item.CurrentPrice}</TableCell>
                   <TableCell>{item.Description}</TableCell>
-                  <TableCell>{item.IsAvailable ? 'Available' : 'Unavailable'}</TableCell>
+                  <TableCell>
+                    {item.IsAvailable ? 'Available' : 'Unavailable'}
+                  </TableCell>
                   <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
@@ -273,7 +310,11 @@ export default function Rooms() {
                       }}>
                       <ModeEditOutlineIcon fontSize="small" />
                     </Controls.ActionButton>
-                    <Controls.ActionButton color="secondary">
+                    <Controls.ActionButton
+                      color="secondary"
+                      onClick={() => {
+                        deleteRoom(item)
+                      }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
                   </TableCell>

@@ -30,6 +30,7 @@ export default function HotelsForm(props) {
           res.data.map(category => ({
             ...category,
             title: category.CategoryName,
+            id: category.CategoryId,
           })),
         )
       })
