@@ -83,6 +83,9 @@ CREATE TABLE RoomType (
     CONSTRAINT PK_RoomType PRIMARY KEY(RoomTypeId),
 );
 
+ALTER TABLE RoomType DROP COLUMN RoomName
+ALTER TABLE RoomType ADD RoomTypeName VARCHAR(128) NOT NULL
+
 DROP TABLE Reservation;
 CREATE TABLE Reservation (
     ID INT IDENTITY(1,1),
