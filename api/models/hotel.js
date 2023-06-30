@@ -108,56 +108,6 @@ class HotelModel {
       });
   }
 
-  // Lấy thông tin của các user
-  static async getAllUsers(callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
-    const pool = await connect;
-    const sqlQuery = `SELECT UsersId, FirstName, LastName, Email, Phone, Address, IsAdmin FROM Users`;
-    return await pool.request().query(sqlQuery, function (err, data) {
-      if (data.recordset.length > 0) {
-        callback(null, data.recordset);
-      } else {
-        callback(true, null);
-      }
-    });
-  }
-
-  // Tìm user theo tên
-  static async getUserByName(stringName, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
-    const pool = await connect;
-    const sqlQuery =
-      "SELECT * FROM Users WHERE FirstName LIKE '%' + @name + '%' OR LastName LIKE '%' + @name + '%'";
-    return await pool
-      .request()
-      .input("name", sql.VarChar, stringName)
-      .query(sqlQuery, function (err, data) {
-        if (data.recordset.length > 0) {
-          callback(null, data.recordset);
-        } else {
-          callback(true, null);
-        }
-      });
-  }
-
-  // delete user
-  static async deleteUser(UsersId, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
-    const pool = await connect;
-    let sqlQuery = "DELETE FROM Users WHERE UsersId = @id AND isAdmin = 1";
-    const result = await pool
-      .request()
-      .input("id", sql.VarChar, UsersId)
-      .query(sqlQuery, (err, data) => {
-        if (err) {
-          console.log(err);
-          callback(true, null);
-        } else {
-          callback(null, data);
-        }
-      });
-  }
-
   // get Category
   static async getCategory(callback) {
     const pool = await connect;
