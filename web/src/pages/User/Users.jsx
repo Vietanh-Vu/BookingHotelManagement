@@ -14,9 +14,10 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import SearchIcon from '@mui/icons-material/Search'
-import BedroomChildIcon from '@mui/icons-material/BedroomChild'
+import GroupIcon from '@mui/icons-material/Group'
 import CloseIcon from '@mui/icons-material/Close'
 import Controls from '../../components/controls/Controls.jsx'
+import AddIcon from '@mui/icons-material/Add'
 import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
@@ -85,7 +86,7 @@ export default function Rooms() {
 
   const getAllUser = () => {
     axios
-      .get(`http://localhost:3000/admin/users/listUser`)
+      .get(`http://localhost:3000/admin/users/`)
       .then(res => {
         setRecords(res.data)
       })
@@ -137,7 +138,16 @@ export default function Rooms() {
 
   const deleteAdmin = user => {
     axios
-      .delete(`http://localhost:3000/admin/hotel/rooms/delete/${room.RoomId}`)
+      .put(`http://localhost:3000/admin/users/delete/${user.UsersId}`)
+      .then(res => {
+        alert(res.data.message)
+      })
+      .catch(error => console.log(error))
+  }
+
+  const setAdmin = user => {
+    axios
+      .put(`http://localhost:3000/admin/users/set/${user.UsersId}`)
       .then(res => {
         alert(res.data.message)
       })
@@ -146,16 +156,16 @@ export default function Rooms() {
 
   return (
     <>
-      <NavBar page="Hotels" pages={pages} value={1} />
+      <NavBar page="Users" pages={pages} value={2} />
       <PageHeader
-        title="Rooms"
-        subTitle="List of rooms"
-        icon={<BedroomChildIcon fontSize="medium" />}
+        title="Users"
+        subTitle="List of users"
+        icon={<GroupIcon fontSize="medium" />}
       />
       <Paper className={classes.pageContent}>
         <Toolbar>
           <Controls.Input
-            label="Search Rooms"
+            label="Search Users"
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
@@ -166,16 +176,6 @@ export default function Rooms() {
             }}
             onChange={handleSearch}
           />
-          <Controls.Button
-            text="Add New"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setOpenPopup(true)
-              setRecordForEdit(null)
-            }}
-          />
         </Toolbar>
         <TblContainer>
           <TblHead />
@@ -183,50 +183,36 @@ export default function Rooms() {
             <FormControlLabel
               control={
                 <Checkbox
-                  name="filterActive"
+                  name="filterAdmin"
                   color="primary"
-                  checked={filter.filterActive}
+                  checked={filter.filterAdmin}
                   onChange={handleFilter}
                 />
               }
-              label="Show Active"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="filterAvailable"
-                  color="primary"
-                  checked={filter.filterAvailable}
-                  onChange={handleFilter}
-                />
-              }
-              label="Show Available"
+              label="Show Admin"
             />
           </FormControl>
           <TableBody>
             {recordsAfterPaging() &&
               recordsAfterPaging().map(item => (
-                <TableRow key={item.ID[0]}>
-                  <TableCell>{item.RoomName}</TableCell>
-                  <TableCell>{item.RoomTypeName}</TableCell>
-                  <TableCell>{item.CurrentPrice}</TableCell>
-                  <TableCell>{item.Description}</TableCell>
-                  <TableCell>
-                    {item.IsAvailable ? 'Available' : 'Unavailable'}
-                  </TableCell>
-                  <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
+                <TableRow key={item.UsersId}>
+                  <TableCell>{item.FirstName + ' ' + item.LastName}</TableCell>
+                  <TableCell>{item.Email}</TableCell>
+                  <TableCell>{item.Phone}</TableCell>
+                  <TableCell>{item.Address}</TableCell>
+                  <TableCell>{item.IsAdmin ? 'Admin' : 'Client'}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
                       onClick={() => {
-                        openInPopup(item)
+                        setAdmin(item)
                       }}>
-                      <ModeEditOutlineIcon fontSize="small" />
+                      <AddIcon fontSize="small" />
                     </Controls.ActionButton>
                     <Controls.ActionButton
-                      color="secondary"
+                      color="primary"
                       onClick={() => {
-                        deleteRoom(item)
+                        deleteAdmin(item)
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
@@ -237,12 +223,6 @@ export default function Rooms() {
         </TblContainer>
         <TblPagination />
       </Paper>
-      <Popup
-        title="Room form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}>
-        <RoomsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
-      </Popup>
     </>
   )
 }
