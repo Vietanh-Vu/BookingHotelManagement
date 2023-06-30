@@ -1,18 +1,22 @@
 import express from "express";
 import {
   getUsers,
-  deleteUserAdmin,
   getUsersByName,
+  deleteUserAdmin,
+  setUserAdmin,
 } from "../controllers/user.js";
 
 const UserRouter = express.Router();
 
 // getUsers
-UserRouter.get("/listUser", getUsers);
+UserRouter.get("/", getUsers);
 
-UserRouter.get("/listUser/search/:name", getUsersByName);
+UserRouter.get("/search/:name", getUsersByName);
 
 // delete user
-UserRouter.delete("/delete/:id", deleteUserAdmin);
+UserRouter.put("/delete/:id", deleteUserAdmin);
+
+// set user admin
+UserRouter.put("/set/:id", setUserAdmin);
 
 export default UserRouter;

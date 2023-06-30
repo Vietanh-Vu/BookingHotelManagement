@@ -10,11 +10,13 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+///////////////////////////////////////////////////////////////////////////
 // admin route
 app.use("/admin/hotel", HotelRouter);
 app.use("/admin/users", UserRouter);
 app.use("/admin/hotel/rooms", RoomRouter);
 
+///////////////////////////////////////////////////////////////////////////
 // user route
 // hien thi hotel, tim hotel theo ten
 app.use("/user/hotel", (req, res, next) => {
