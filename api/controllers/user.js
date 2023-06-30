@@ -33,13 +33,13 @@ export const getUsersByName = (req, res) => {
   });
 };
 
-// Xóa danh user
+// Xóa user admin
 export const deleteUserAdmin = (req, res) => {
   // Lấy ID user từ request params
   const usersId = req.params.id;
 
   // Logic tìm và xóa khách sạn trong cơ sở dữ liệu
-  UserModel.deleteUser(usersId, (err, result) => {
+  UserModel.deleteUserAdmin(usersId, (err, result) => {
     if (err) {
       return res
         .status(500)
@@ -49,4 +49,20 @@ export const deleteUserAdmin = (req, res) => {
   });
 };
 
-export default { getUsers, deleteUserAdmin, getUsersByName };
+// set user to admin
+export const setUserAdmin = (req, res) => {
+  // Lấy ID user từ request params
+  const usersId = req.params.id;
+
+  // Logic tìm và xóa khách sạn trong cơ sở dữ liệu
+  UserModel.setUserAdmin(usersId, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Đã xảy ra lỗi trong quá trình set admin." });
+    }
+    res.json({ message: "Set admin thành công." });
+  });
+};
+
+export default { getUsers, getUsersByName, deleteUserAdmin, setUserAdmin };

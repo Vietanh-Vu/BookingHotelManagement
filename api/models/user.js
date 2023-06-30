@@ -33,11 +33,29 @@ class UserModel {
       });
   }
 
-  // delete user
-  static async deleteUser(UsersId, callback) {
+  // delete user admin
+  static async deleteUserAdmin(UsersId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
-    let sqlQuery = "DELETE FROM Users WHERE UsersId = @id AND isAdmin = 1";
+    let sqlQuery = "UPDATE Users SET IsAdmin = 0 WHERE UsersId = @id";
+    const result = await pool
+      .request()
+      .input("id", sql.VarChar, UsersId)
+      .query(sqlQuery, (err, data) => {
+        if (err) {
+          console.log(err);
+          callback(true, null);
+        } else {
+          callback(null, data);
+        }
+      });
+  }
+
+  // set user to admin
+  static async setUserAdmin(UsersId, callback) {
+    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
+    const pool = await connect;
+    let sqlQuery = "UPDATE Users SET IsAdmin = 1 WHERE UsersId = @id";
     const result = await pool
       .request()
       .input("id", sql.VarChar, UsersId)
