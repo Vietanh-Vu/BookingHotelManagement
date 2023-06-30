@@ -4,9 +4,13 @@ import {
   addRoom,
   updateRoom,
   deleteRoom,
+  getRoomType,
 } from "../controllers/room.js";
 
 const router = express.Router();
+
+// get room type
+router.get("/", getRoomType);
 
 // get room by hotel
 router.get("/:hotelId", getRoomsByHotel);

@@ -5,8 +5,8 @@ import bodyParser from "body-parser";
 
 const app = express();
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json()) // To parse the incoming requests with JSON payloads
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 // Xem danh sách khách sạn
 export const getHotelsByName = (req, res) => {
@@ -35,7 +35,7 @@ export const getHotels = (req, res) => {
   });
 };
 
-// gửi roomType
+// gửi category
 export const getCategory = (req, res) => {
   // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
   HotelModel.getCategory((err, roomType) => {

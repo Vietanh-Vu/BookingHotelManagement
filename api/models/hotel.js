@@ -158,7 +158,7 @@ class HotelModel {
       });
   }
 
-  // get roomType
+  // get Category
   static async getCategory(callback) {
     const pool = await connect;
     const sqlQuery = `SELECT * FROM Category`;
