@@ -106,7 +106,7 @@ export default function Rooms() {
   }
 
   useEffect(() => {
-    getAllHotel()
+    getAllRoom()
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
