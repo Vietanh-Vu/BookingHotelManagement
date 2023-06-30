@@ -112,7 +112,8 @@ export default function Rooms() {
         } else {
           return items.filter(
             x =>
-              x.RoomName.toLowerCase().includes(target.value) &&
+              (x.FirstName.toLowerCase().includes(target.value) ||
+                x.LastName.toLowerCase().includes(target.value)) &&
               (x.IsAdmin || !filter.filterAdmin),
           )
         }
