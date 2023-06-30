@@ -41,40 +41,34 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
   {
-    id: 'roomName',
+    id: 'fullName',
     disablePadding: false,
-    label: 'Room Name',
+    label: 'Full Name',
   },
   {
-    id: 'roomType',
+    id: 'email',
     disablePadding: false,
-    label: 'Room Type',
+    label: 'Email',
   },
   {
-    id: 'price',
+    id: 'phone',
     disablePadding: false,
-    label: 'Current Price',
+    label: 'Phone',
   },
   {
-    id: 'description',
+    id: 'address',
     disablePadding: false,
-    label: 'Description',
+    label: 'Address',
   },
   {
-    id: 'available',
+    id: 'role',
     disablePadding: false,
-    label: 'Available',
-  },
-  {
-    id: 'status',
-    disablePadding: false,
-    label: 'Status',
+    label: 'Role',
   },
 ]
 
 const initialFilters = {
-  filterActive: true,
-  filterAvailable: false,
+  filterAdmin: false,
 }
 
 export default function Rooms() {
@@ -85,32 +79,21 @@ export default function Rooms() {
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
-      return items.filter(
-        item =>
-          (item.IsActive || !filter.filterActive) &&
-          (item.IsAvailable || !filter.filterAvailable),
-      )
+      return items.filter(item => item.IsAdmin || !filter.filterAdmin)
     },
   })
-  const navigate = useNavigate()
-  const {hotelId} = useParams()
 
-  const getAllRoom = () => {
+  const getAllUser = () => {
     axios
-      .get(`http://localhost:3000/admin/hotel/rooms/${hotelId}`)
+      .get(`http://localhost:3000/admin/users/listUser`)
       .then(res => {
-        setRecords(
-          res.data.map(room => ({
-            ...room,
-            RoomTypeId: room.RoomTypeId[0],
-          })),
-        )
+        setRecords(res.data)
       })
       .catch(error => console.log(error))
   }
 
   useEffect(() => {
-    getAllRoom()
+    getAllUser()
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
@@ -124,63 +107,16 @@ export default function Rooms() {
     setFilterFn({
       fn: items => {
         if (target.value == '') {
-          return items.filter(
-            item =>
-              (item.IsActive || !filter.filterActive) &&
-              (item.IsAvailable || !filter.filterAvailable),
-          )
+          return items.filter(item => item.IsAdmin || !filter.filterAdmin)
         } else {
           return items.filter(
             x =>
               x.RoomName.toLowerCase().includes(target.value) &&
-              (x.IsActive || !filter.filterActive) &&
-              (x.IsAvailable || !filter.filterAvailable),
+              (x.IsAdmin || !filter.filterAdmin),
           )
         }
       },
     })
-  }
-
-  const insertRoom = room => {
-    const roomData = {
-      RoomTypeId: room.RoomTypeId,
-      RoomName: room.RoomName,
-      CurrentPrice: room.CurrentPrice,
-      IsAvailable: room.IsAvailable ? true : false,
-      Description: room.Description,
-      IsActive: room.IsActive ? true : false,
-    }
-    axios
-      .post(`http://localhost:3000/admin/hotel/rooms/${hotelId}`, roomData)
-      .then(response => {
-        alert(response.data.message)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  const updateRoom = room => {
-    const roomData = {
-      HotelId: hotelId,
-      RoomTypeId: room.RoomTypeId,
-      RoomName: room.RoomName,
-      CurrentPrice: room.CurrentPrice,
-      IsAvailable: room.IsAvailable ? true : false,
-      Description: room.Description,
-      IsActive: room.IsActive ? true : false,
-    }
-    axios
-      .put(
-        `http://localhost:3000/admin/hotel/rooms/update/${room.RoomId}`,
-        roomData,
-      )
-      .then(response => {
-        alert(response.data.message)
-      })
-      .catch(error => {
-        console.log(error)
-      })
   }
 
   const handleFilter = e => {
@@ -194,31 +130,12 @@ export default function Rooms() {
   useEffect(() => {
     setFilterFn({
       fn: items => {
-        return items.filter(
-          item =>
-            (item.IsActive || !filter.filterActive) &&
-            (item.IsAvailable || !filter.filterAvailable),
-        )
+        return items.filter(item => item.IsAdmin || !filter.filterAdmin)
       },
     })
   }, [filter])
 
-  const addOrEdit = (room, resetForm) => {
-    if (room.RoomId == '') insertRoom(room)
-    else updateRoom(room)
-    getAllRoom()
-    resetForm()
-    setRecordForEdit(null)
-    setOpenPopup(false)
-  }
-
-  const openInPopup = item => {
-    console.log(item)
-    setRecordForEdit(item)
-    setOpenPopup(true)
-  }
-
-  const deleteRoom = room => {
+  const deleteAdmin = user => {
     axios
       .delete(`http://localhost:3000/admin/hotel/rooms/delete/${room.RoomId}`)
       .then(res => {
