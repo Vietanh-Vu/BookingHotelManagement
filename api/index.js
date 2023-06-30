@@ -17,11 +17,8 @@ app.use("/admin/hotel/rooms", RoomRouter);
 // user route
 // hien thi hotel, tim hotel theo ten
 app.use("/user/hotel", (req, res, next) => {
-  if (
-    req.method === "GET" &&
-    (req.path.startsWith("/search/") || req.path.startsWith("/"))
-  ) {
-    // Chỉ cho phép người dùng truy cập vào các route getHotelsByName và getHotels
+  if (req.method === "GET") {
+    // Chỉ cho phép người dùng truy cập vào route getHotels của HotelRouter
     HotelRouter(req, res, next);
   } else {
     res.status(403).json({ error: "Forbidden" });
@@ -30,7 +27,7 @@ app.use("/user/hotel", (req, res, next) => {
 
 // tim room trong khach san
 app.use("/user/hotel/room", (req, res, next) => {
-  if (req.method === "GET" && req.url === "/:hotelId") {
+  if (req.method === "GET") {
     // Chỉ cho phép người dùng truy cập vào các route getRoomsByHotel
     RoomRouter(req, res, next);
   } else {
