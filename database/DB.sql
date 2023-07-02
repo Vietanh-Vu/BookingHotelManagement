@@ -113,6 +113,9 @@ CREATE TABLE Users (
     IsAdmin BIT,
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
+-- set gia tri cua IsAdmin mac dinh la 0
+ALTER TABLE Users
+ALTER COLUMN IsAdmin SET DEFAULT 0;
 
 DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (
