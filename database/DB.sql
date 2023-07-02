@@ -110,12 +110,10 @@ CREATE TABLE Users (
     Email VARCHAR(255) NOT NULL,
     Phone VARCHAR(255) NOT NULL,
     Address VARCHAR(255) NOT NULL,
-    IsAdmin BIT,
+    IsAdmin BIT DEFAULT 0,,
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
--- set gia tri cua IsAdmin mac dinh la 0
-ALTER TABLE Users
-ALTER COLUMN IsAdmin SET DEFAULT 0;
+
 
 DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (
