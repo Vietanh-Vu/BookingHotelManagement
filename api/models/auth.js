@@ -1,13 +1,13 @@
 import { connect, sql } from "../connectDB.js";
 
 class AuthModels {
-  static async checkDupEmail(userData, hashPassword, callback) {
+  static async checkDupEmail(Email, callback) {
     const pool = await connect;
     // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
     const sqlQueryCheckEmail = `SELECT * FROM Users WHERE Email = @Email`;
     await pool
       .request()
-      .input("Email", sql.VarChar, userData.Email)
+      .input("Email", sql.VarChar, Email)
       .query(sqlQueryCheckEmail, function (err, data) {
         if (err) {
           callback(true, null);
