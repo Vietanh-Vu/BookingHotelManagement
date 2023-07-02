@@ -110,9 +110,11 @@ CREATE TABLE Users (
     Email VARCHAR(255) NOT NULL,
     Phone VARCHAR(255) NOT NULL,
     Address VARCHAR(255) NOT NULL,
-    IsAdmin BIT,
+    IsAdmin BIT DEFAULT 0,
+    Password VARCHAR(128) NOT NULL,
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
+
 
 DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (
