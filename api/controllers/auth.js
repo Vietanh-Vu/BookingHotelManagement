@@ -140,7 +140,7 @@ export const requestRefreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("refreshToken");
+  localStorage.removeItem("refreshToken");
   refreshTokens = refreshTokens.filter(
     (token) => token !== req.cookies.refreshToken
   );
