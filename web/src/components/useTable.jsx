@@ -71,7 +71,9 @@ export default function useTable(records, headCells, filterFn) {
   )
 
   const recordsAfterPaging = () => {
-    return records ? filterFn.fn(records).slice(page * rowsPerPage, (page + 1) * rowsPerPage) : filterFn.fn(records)
+    return records
+      ? filterFn.fn(records).slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+      : filterFn.fn(records)
   }
 
   return {

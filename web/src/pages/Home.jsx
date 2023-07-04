@@ -13,7 +13,6 @@ function Home() {
         subTitle="Home page"
         icon={<HomeIcon fontSize="medium" />}
       />
-      <SignIn />
     </>
   )
 }

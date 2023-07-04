@@ -1,13 +1,22 @@
 import {AppBar, Toolbar, Typography, Tabs, Tab, Button} from '@mui/material'
 import HotelIcon from '@mui/icons-material/Hotel'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import {styled, alpha} from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
 import {useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import { logOut } from '../redux/apiRequest'
+import { createAxios } from '../createInstance'
+import { logOutSuccess } from '../redux/authSlice'
 
 function NavBar(props) {
   const [value, setValue] = useState(props.value)
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.login.currentUser)
+  const accessToken = user?.accessToken;
+  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   // const Search = styled('div')(({theme}) => ({
   //   position: 'relative',
@@ -49,6 +58,10 @@ function NavBar(props) {
   //   },
   // }))
 
+  const handleLogOut = () => {
+    logOut(dispatch, navigate, accessToken, axiosJWT);
+  }
+
   return (
     <AppBar sx={{background: '#063970'}}>
       <Toolbar>
@@ -61,7 +74,7 @@ function NavBar(props) {
           sx={{marginLeft: '10px'}}
           textColor="inherit">
           {props.pages.map(({page, path}, index) => (
-            <Tab key={index} label={page} component={Link} to={path}/>
+            <Tab key={index} label={page} component={Link} to={path} />
           ))}
         </Tabs>
         {/* {props.page ? (
@@ -79,9 +92,38 @@ function NavBar(props) {
         ) : (
           <></>
         )} */}
-        <Button sx={{marginLeft: 'auto'}} variant="contained">
-          Login
-        </Button>
+        {user ? (
+          <>
+            <Typography
+              sx={{
+                marginLeft: 'auto',
+              }}
+              variant="contained">
+              {`Hi, ${user.returnData.FirstName} ${user.returnData.LastName}`}
+            </Typography>
+            <Button
+              sx={{marginLeft: '10px'}}
+              variant="contained"
+              onClick={handleLogOut}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              sx={{marginLeft: 'auto'}}
+              variant="contained"
+              onClick={() => navigate(`/admin/login`)}>
+              Login
+            </Button>
+            <Button
+              sx={{marginLeft: '10px'}}
+              variant="contained"
+              onClick={() => navigate(`/admin/register`)}>
+              Register
+            </Button>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   )

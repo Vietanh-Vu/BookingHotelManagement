@@ -115,6 +115,8 @@ CREATE TABLE Users (
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
 
+ALTER TABLE Users ADD Password VARCHAR(128) NOT NULL
+
 
 DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (

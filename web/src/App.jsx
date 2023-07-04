@@ -10,6 +10,8 @@ import Home from './pages/Home.jsx'
 import Hotels from './pages/Hotel/Hotels.jsx'
 import Users from './pages/User/Users.jsx'
 import Rooms from './pages/Room/Rooms.jsx'
+import SignIn from './pages/Login/SignIn.jsx'
+import Register from './pages/Login/Register.jsx'
 
 const useStyles = makeStyles({
   appMain: {
@@ -28,6 +30,8 @@ function App() {
           <Route path="hotels" element={<Hotels />} />
           <Route path="hotels/rooms/:hotelId/:hotelName" element={<Rooms />} />
           <Route path="users" element={<Users />} />
+          <Route path='login' element={<SignIn />} />
+          <Route path='register' element={<Register />} />
         </Route>
       </Routes>
     </div>
