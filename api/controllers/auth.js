@@ -96,8 +96,8 @@ export const login = async (req, res) => {
 };
 
 export const requestRefreshToken = async (req, res) => {
-  // lay refresh token tu user
-  const refreshToken = req.cookies.refreshToken;
+  // lay refresh token tu localStorage
+  const refreshToken = localStorage.getItem("refreshToken");
   // console.log(req.cookies);
   if (!refreshToken) {
     return res.status(401).json({ status: "You are not authenticated!" });
@@ -140,10 +140,9 @@ export const requestRefreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
   localStorage.removeItem("refreshToken");
-  refreshTokens = refreshTokens.filter(
-    (token) => token !== req.cookies.refreshToken
-  );
   res.status(200).json({ status: "Successful Logout!" });
 };
 
