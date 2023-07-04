@@ -24,7 +24,7 @@ export default function RoomsForm(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/admin/hotel/rooms`)
+      .get(`http://localhost:8000/admin/hotel/rooms`)
       .then(res => {
         setRoomTypes(
           res.data.map(roomType => ({

@@ -13,6 +13,7 @@ import {
   FormControl,
 } from '@mui/material'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 import SearchIcon from '@mui/icons-material/Search'
 import GroupIcon from '@mui/icons-material/Group'
 import CloseIcon from '@mui/icons-material/Close'
@@ -22,6 +23,10 @@ import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import useTable from '../../components/useTable.jsx'
+import {getAllUsers} from '../../redux/apiRequest.js'
+import {useDispatch, useSelector} from 'react-redux'
+import {loginSuccess} from '../../redux/authSlice.js'
+import { createAxios } from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -80,22 +85,26 @@ export default function Rooms() {
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
-      return items.filter(item => item.IsAdmin || !filter.filterAdmin)
+      return items?.filter(item => item.IsAdmin || !filter.filterAdmin)
     },
   })
-
-  const getAllUser = () => {
-    axios
-      .get(`http://localhost:3000/admin/users/`)
-      .then(res => {
-        setRecords(res.data)
-      })
-      .catch(error => console.log(error))
-  }
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.auth.login?.currentUser)
+  const userList = useSelector(state => state.users.users?.allUsers)
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   useEffect(() => {
-    getAllUser()
+    if (!user) {
+      navigate('/admin/login')
+    }
+    getAllUsers(user?.accessToken, dispatch, axiosJWT);
+    setRecords(userList);
   }, [])
+
+  useEffect(() => {
+    setRecords(userList)
+  }, [userList])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
     records,
@@ -108,9 +117,9 @@ export default function Rooms() {
     setFilterFn({
       fn: items => {
         if (target.value == '') {
-          return items.filter(item => item.IsAdmin || !filter.filterAdmin)
+          return items?.filter(item => item.IsAdmin || !filter.filterAdmin)
         } else {
-          return items.filter(
+          return items?.filter(
             x =>
               (x.FirstName.toLowerCase().includes(target.value) ||
                 x.LastName.toLowerCase().includes(target.value)) &&
@@ -132,14 +141,14 @@ export default function Rooms() {
   useEffect(() => {
     setFilterFn({
       fn: items => {
-        return items.filter(item => item.IsAdmin || !filter.filterAdmin)
+        return items?.filter(item => item.IsAdmin || !filter.filterAdmin)
       },
     })
   }, [filter])
 
   const deleteAdmin = user => {
     axios
-      .put(`http://localhost:3000/admin/users/delete/${user.UsersId}`)
+      .put(`http://localhost:8000/admin/users/delete/${user.UsersId}`)
       .then(res => {
         alert(res.data.message)
       })
@@ -148,7 +157,7 @@ export default function Rooms() {
 
   const setAdmin = user => {
     axios
-      .put(`http://localhost:3000/admin/users/set/${user.UsersId}`)
+      .put(`http://localhost:8000/admin/users/set/${user.UsersId}`)
       .then(res => {
         alert(res.data.message)
       })
@@ -201,7 +210,7 @@ export default function Rooms() {
                   <TableCell>{item.Email}</TableCell>
                   <TableCell>{item.Phone}</TableCell>
                   <TableCell>{item.Address}</TableCell>
-                  <TableCell>{item.IsAdmin ? 'Admin' : 'Client'}</TableCell>
+                  <TableCell>{item.IsAdmin ? 'Admin' : 'User'}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"

@@ -18,15 +18,23 @@ import ReactDOM from 'react-dom'
 
 // Import our top-level component.
 import App from './App.jsx'
+import {Provider} from 'react-redux'
+import {PersistGate} from 'redux-persist/integration/react'
+import {store, persistor} from './redux/store'
 
 // Mount our app.
 ReactDOM.render(
-  <React.StrictMode>
-    <React.Fragment>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.Fragment>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <React.StrictMode>
+        <React.Fragment>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </React.Fragment>
+      </React.StrictMode>
+    </PersistGate>
+  </Provider>,
+
   document.querySelector('#app'),
 )

@@ -20,7 +20,7 @@ function Add(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/admin/hotel/add`)
+      .get(`http://localhost:8000/admin/hotel/add`)
       .then(res => {
         setCategories(res.data)
         // console.log(categories)
@@ -32,7 +32,7 @@ function Add(props) {
     const formData = new FormData()
     formData.append('myImage', selectedImage)
     axios
-      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+      .post(`http://localhost:8000/admin/hotel/add/image`, formData)
       .then(response => {
         console.log(selectedImage)
         console.log(response)
@@ -53,7 +53,7 @@ function Add(props) {
       HotelImg: hotelImg,
     }
     axios
-      .post('http://localhost:3000/admin/hotel/add', hotelData)
+      .post('http://localhost:8000/admin/hotel/add', hotelData)
       .then(response => {
         alert(response.data.message)
       })
