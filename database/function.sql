@@ -1,5 +1,5 @@
-------------------OVER VIEW
--- Doanh thu theo tháng
+------------------------OVERVIEW
+---------------- Doanh thu theo tháng
 
 CREATE FUNCTION Doanhthu_month
 (@months INT, @year INT)
@@ -11,7 +11,7 @@ BEGIN
   WHERE YEAR(EndDate) = @year AND MONTH(EndDate) = @months)
 END;
 
--- Doanh thu theo năm
+---------------- Doanh thu theo năm
 
 CREATE FUNCTION Doanhthu_year
 (@year INT)
@@ -25,7 +25,7 @@ END;
 
 SELECT dbo.Doanhthu_year(2021)
 
---Tổng users theo tháng
+-----------------   Tổng users theo tháng
 CREATE FUNCTION USERS_month
 (@months INT, @year INT)
 RETURNS INT
@@ -39,7 +39,7 @@ END;
 
 SELECT dbo.USERS_month(2,2021)
 
---Tổng users theo năm
+--------------------- Tổng users theo năm
 CREATE FUNCTION USERS_year
 (@year INT)
 RETURNS INT
@@ -53,8 +53,9 @@ END;
 
 SELECT dbo.USERS_year(2021)
 
--------------- KHÁCH SẠN
---Tổng khách sạn theo loại
+------------------------ KHÁCH SẠN ----------------------------
+
+-----------------Tổng khách sạn theo loại
 CREATE FUNCTION CA_Hotel
 (@id_Cat VARCHAR(5))
 RETURNS INT
@@ -67,7 +68,7 @@ END;
 
 SELECT dbo.CA_Hotel('CA01') AS NumberofHotel
 
---Tổng khách sạn hệ thống
+----------------Tổng khách sạn hệ thống
 CREATE FUNCTION CA_Hotel_all
 ()
 RETURNS INT
@@ -79,8 +80,8 @@ END;
 
 SELECT dbo.CA_Hotel_all() AS 
 
--------------- PHÒNG
---Tổng phòng sạn theo loại
+-------------- ----------------- PHÒNG -----------------------
+---------------------Tổng phòng sạn theo loại
 drop function Type_room
 CREATE FUNCTION Type_room
 (@id_tp VARCHAR(5))
@@ -94,7 +95,7 @@ END;
 
 SELECT dbo.Type_room('RT01') AS NumberofRoom
 
---Tổng phòng hệ thống
+-----------------------Tổng phòng hệ thống
 CREATE FUNCTION Type_Room_all
 ()
 RETURNS INT
@@ -106,9 +107,10 @@ END;
 
 SELECT dbo.Type_Room_all() AS NumberofRoom
 
----------------DOANH THU THEO LOẠI PHÒNG/KHÁCH SẠN
+-----------------------DOANH THU THEO LOẠI PHÒNG/KHÁCH SẠN
 
--- Doanh thu theo loại khách sạn theo tháng 
+------ Doanh thu theo loại khách sạn theo tháng 
+
 CREATE FUNCTION Doanhthu_CA
 (@months INT, @year INT, @CA VARCHAR(5))
 RETURNS INT
@@ -125,6 +127,7 @@ END;
 SELECT dbo.Doanhthu_CA(6,2021,'CA01')
 
 -- Doanh thu loại khách sạn theo năm
+
 CREATE FUNCTION Doanhthu_CA_year
 (@year INT, @CA VARCHAR(5))
 RETURNS INT
@@ -140,7 +143,8 @@ END;
 
 SELECT dbo.Doanhthu_CA_year(2021,'CA02')
 
--- Doanh thu theo khách sạn theo tháng
+------------------ Doanh thu theo khách sạn theo tháng
+
 drop function Doanhthu_Hotel
 CREATE FUNCTION Doanhthu_Hotel
 (@months INT, @year INT, @HID VARCHAR(7))
@@ -157,7 +161,8 @@ END;
 
 SELECT dbo.Doanhthu_Hotel(6,2021,'HO01')
 
--- Doanh thu loại khách sạn theo năm
+--------------------- Doanh thu loại khách sạn theo năm
+
 drop function Doanhthu_Hotel_year
 
 CREATE FUNCTION Doanhthu_Hotel_year
@@ -174,7 +179,7 @@ BEGIN
 END;
 SELECT dbo.Doanhthu_Hotel_year(2021,'HO01')
 
--- Doanh thu theo loại phòng theo tháng 
+------------------- Doanh thu theo loại phòng theo tháng 
 CREATE FUNCTION Doanhthu_RT
 (@months INT, @year INT, @RTID VARCHAR(5))
 RETURNS INT
@@ -189,7 +194,7 @@ END;
 
 SELECT dbo.Doanhthu_RT(6,2021,'RT01')
 
--- Doanh thu loại phòng theo năm
+----------------------- Doanh thu loại phòng theo năm
 CREATE FUNCTION Doanhthu_RT_year
 (@year INT, @RTID VARCHAR(5))
 RETURNS INT
@@ -335,40 +340,3 @@ END;
 
 SELECT dbo.Doanhthu_RT_year(2021,'RT01')
 
---###########TRIGGER XÓA KHÁCH SẠN
-
-CREATE TRIGGER UpdateRoomInactive
-ON Hotel
-AFTER UPDATE
-AS
-BEGIN
-    IF UPDATE(isActive)
-    BEGIN
-        UPDATE Room
-        SET isActive = 0
-        FROM Room
-        INNER JOIN inserted ON Room.HotelId = inserted.HotelId
-        WHERE inserted.isActive= 0;
-    END;
-END;
-
-CREATE TRIGGER UpdateRoomActive
-ON Hotel
-AFTER UPDATE
-AS
-BEGIN
-    IF UPDATE(isActive)
-    BEGIN
-        UPDATE Room
-        SET isActive = 1
-        FROM Room
-        INNER JOIN inserted ON Room.HotelId = inserted.HotelId
-        WHERE inserted.isActive= 1;
-    END;
-END;
-
---TEST CASE
-UPDATE Hotel
-SET IsActive = 1 where Hotel.HotelId = 'HO01'
-
-select * from Room where Room.HotelId = 'HO01'
