@@ -8,15 +8,14 @@ import {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { logOut } from '../redux/apiRequest'
 import { createAxios } from '../createInstance'
-import { logOutSuccess } from '../redux/authSlice'
+import { logOutSuccess, loginSuccess } from '../redux/authSlice'
 
 function NavBar(props) {
   const [value, setValue] = useState(props.value)
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.login.currentUser)
-  const accessToken = user?.accessToken;
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   // const Search = styled('div')(({theme}) => ({
   //   position: 'relative',
@@ -59,7 +58,7 @@ function NavBar(props) {
   // }))
 
   const handleLogOut = () => {
-    logOut(dispatch, navigate, accessToken, axiosJWT);
+    logOut(dispatch, navigate, user?.accessToken, user?.refreshToken, axiosJWT);
   }
 
   return (
@@ -92,7 +91,7 @@ function NavBar(props) {
         ) : (
           <></>
         )} */}
-        {user ? (
+        {user?.accessToken ? (
           <>
             <Typography
               sx={{

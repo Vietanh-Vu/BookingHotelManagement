@@ -94,16 +94,12 @@ export default function Rooms() {
   const userList = useSelector(state => state.users.users?.allUsers)
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
-  const getAllUser = () => {
-    getAllUsers(user?.accessToken, dispatch, axiosJWT);
-    setRecords(userList);
-  }
-
   useEffect(() => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllUser()
+    getAllUsers(user?.accessToken, dispatch, axiosJWT);
+    setRecords(userList);
   }, [])
 
   useEffect(() => {
@@ -152,7 +148,7 @@ export default function Rooms() {
 
   const deleteAdmin = user => {
     axios
-      .put(`http://localhost:3000/admin/users/delete/${user.UsersId}`)
+      .put(`http://localhost:8000/admin/users/delete/${user.UsersId}`)
       .then(res => {
         alert(res.data.message)
       })
@@ -161,7 +157,7 @@ export default function Rooms() {
 
   const setAdmin = user => {
     axios
-      .put(`http://localhost:3000/admin/users/set/${user.UsersId}`)
+      .put(`http://localhost:8000/admin/users/set/${user.UsersId}`)
       .then(res => {
         alert(res.data.message)
       })

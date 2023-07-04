@@ -478,32 +478,13 @@ module.exports = (env, argv) => ({
       Unrecognized urls (non-API calls) will be directed to '/'.
       404's will be served `index.html` by `historyApiFallback` above.
     */
-    proxy: API_WEBPACK
-      ? {
-          [API_WEBPACK]: {
-            target: `http://localhost:${API_PORT}`,
-            bypass(req, res, proxyOptions) {
-              // Direct all non-get requests to the API server.
-              if (req.method.toLowerCase() !== 'get') return
 
-              /*
-            Proxy url (browser) requests back to '/'
-            and let the front end do all the routing.
-            For all others, let the API server respond.
-          */
-
-              /*
-            http://bit.ly/2XlEOXN
-            Url / browser request - allow front end routing to handle all the things.
-          */
-              if ((req.headers.accept || '').includes('html')) return '/'
-
-              // Let the API server respond by implicitly returning here.
-            },
-          },
-        }
-      : {},
-
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        pathRewrite: {'^/api': ''},
+      },
+    },
     // https://bit.ly/3nM4mL0
     watchContentBase: true,
 

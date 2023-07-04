@@ -87,7 +87,7 @@ export default function Hotels() {
 
   const getAllHotel = () => {
     axios
-      .get(`http://localhost:3000/admin/hotel/`)
+      .get(`http://localhost:8000/admin/hotel/`)
       .then(res => {
         setRecords(
           res.data.map(hotel => ({
@@ -135,7 +135,7 @@ export default function Hotels() {
     const formData = new FormData()
     formData.append('myImage', hotel.ImgSelected)
     axios
-      .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+      .post(`http://localhost:8000/admin/hotel/add/image`, formData)
       .then(response => {
         const hotelData = {
           CategoryId: hotel.CategoryId,
@@ -146,7 +146,7 @@ export default function Hotels() {
           HotelImg: response.data.nameFile,
         }
         axios
-          .post('http://localhost:3000/admin/hotel/add', hotelData)
+          .post('http://localhost:8000/admin/hotel/add', hotelData)
           .then(response => {
             alert(response.data.message)
           })
@@ -164,7 +164,7 @@ export default function Hotels() {
       const formData = new FormData()
       formData.append('myImage', hotel.ImgSelected)
       axios
-        .post(`http://localhost:3000/admin/hotel/add/image`, formData)
+        .post(`http://localhost:8000/admin/hotel/add/image`, formData)
         .then(response => {
           const hotelData = {
             CategoryId: hotel.CategoryId,
@@ -177,7 +177,7 @@ export default function Hotels() {
           console.log(hotelData)
           axios
             .put(
-              `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
+              `http://localhost:8000/admin/hotel/update/${hotel.HotelId}`,
               hotelData,
             )
             .then(response => {
@@ -202,7 +202,7 @@ export default function Hotels() {
       console.log(hotelData)
       axios
         .put(
-          `http://localhost:3000/admin/hotel/update/${hotel.HotelId}`,
+          `http://localhost:8000/admin/hotel/update/${hotel.HotelId}`,
           hotelData,
         )
         .then(response => {
@@ -244,7 +244,7 @@ export default function Hotels() {
 
   const deleteHotel = hotel => {
     axios
-      .delete(`http://localhost:3000/admin/hotel/delete/${hotel.HotelId}`)
+      .delete(`http://localhost:8000/admin/hotel/delete/${hotel.HotelId}`)
       .then(res => {
         alert(res.data.message)
       })

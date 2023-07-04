@@ -101,7 +101,7 @@ export default function Rooms() {
 
   const getAllRoom = () => {
     axios
-      .get(`http://localhost:3000/admin/hotel/rooms/${hotelId}`)
+      .get(`http://localhost:8000/admin/hotel/rooms/${hotelId}`)
       .then(res => {
         setRecords(
           res.data.map(room => ({
@@ -157,7 +157,7 @@ export default function Rooms() {
       IsActive: room.IsActive ? true : false,
     }
     axios
-      .post(`http://localhost:3000/admin/hotel/rooms/${hotelId}`, roomData)
+      .post(`http://localhost:8000/admin/hotel/rooms/${hotelId}`, roomData)
       .then(response => {
         alert(response.data.message)
       })
@@ -178,7 +178,7 @@ export default function Rooms() {
     }
     axios
       .put(
-        `http://localhost:3000/admin/hotel/rooms/update/${room.RoomId}`,
+        `http://localhost:8000/admin/hotel/rooms/update/${room.RoomId}`,
         roomData,
       )
       .then(response => {
@@ -226,7 +226,7 @@ export default function Rooms() {
 
   const deleteRoom = room => {
     axios
-      .delete(`http://localhost:3000/admin/hotel/rooms/delete/${room.RoomId}`)
+      .delete(`http://localhost:8000/admin/hotel/rooms/delete/${room.RoomId}`)
       .then(res => {
         alert(res.data.message)
       })

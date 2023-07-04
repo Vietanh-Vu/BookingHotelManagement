@@ -78,13 +78,13 @@ export const login = async (req, res) => {
           // });
 
           // luu refresh token vao localStorage
-          localStorage.setItem("refreshToken", refreshToken);
+          // localStorage.setItem("refreshToken", refreshToken);
 
           // access token key
           const accessToken = jwt.sign(returnData, process.env.JWT_ACCESS_KEY, {
             expiresIn: "30s",
           });
-          res.json({ returnData, accessToken });
+          return res.json({ returnData, accessToken, refreshToken });
         } else {
           return res.status(401).json({
             message: "Invalid username or password or you are not admin.",
@@ -100,7 +100,7 @@ export const requestRefreshToken = async (req, res) => {
   // const refreshToken = req.cookies.refreshToken;
   // console.log(req);
   // lay refresh token tu localStorage
-  const refreshToken = localStorage.getItem("refreshToken");
+  const refreshToken = req.body.refreshToken;
   // console.log(req.cookies);
   if (!refreshToken) {
     return res.status(401).json({ status: "You are not authenticated!" });
@@ -136,22 +136,14 @@ export const requestRefreshToken = async (req, res) => {
     //   sameSite: "strict",
     // });
     // luu refresh token vao localStorage
-    localStorage.setItem("refreshToken", newRefreshToken);
-
-    return res.status(200).json({ accessToken: newAccessToken });
+    return res.status(200).json({ newAccessToken, newRefreshToken });
   });
 };
 
 export const logout = async (req, res) => {
-  // refresh cookies store in localStorage
-  // const refreshToken = localStorage.getItem("refreshToken");
-  // refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
-  // localStorage.removeItem("refreshToken");
-
-  // refresh cookies store in cookies
-  res.clearCookie("refreshToken");
+  // res.clearCookie("refreshToken");
   refreshTokens = refreshTokens.filter(
-    (token) => token !== req.cookies.refreshToken
+    (token) => token !== req.body.refreshToken
   );
   res.status(200).json({ status: "Successful Logout!" });
 };

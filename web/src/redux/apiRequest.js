@@ -15,7 +15,7 @@ import {getUserStart, getUserSuccess, getUserFailed} from './userSlice'
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart())
   try {
-    const res = await axios.post(`http://localhost:3000/login`, user)
+    const res = await axios.post('http://localhost:8000/login', user)
     dispatch(loginSuccess(res.data))
     navigate('/admin')
   } catch (error) {
@@ -26,7 +26,7 @@ export const loginUser = async (user, dispatch, navigate) => {
 export const registerUser = async (newUser, dispatch, navigate) => {
   dispatch(registerStart())
   try {
-    await axios.post(`http://localhost:3000/register`, newUser)
+    await axios.post(`http://localhost:8000/register`, newUser)
     dispatch(registerSuccess())
     navigate('/admin/login')
   } catch (error) {
@@ -37,7 +37,7 @@ export const registerUser = async (newUser, dispatch, navigate) => {
 export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
   dispatch(getUserStart())
   try {
-    const res = await axiosJWT.get(`http://localhost:3000/admin/users/`, {
+    const res = await axiosJWT.get(`http://localhost:8000/admin/users/`, {
       headers: {
         token: `Bearer ${accessToken}`,
       },
@@ -48,17 +48,29 @@ export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
   }
 }
 
-export const logOut = async (dispatch, navigate, accessToken, axiosJWT) => {
+export const logOut = async (
+  dispatch,
+  navigate,
+  accessToken,
+  refreshToken,
+  axiosJWT,
+) => {
   dispatch(logOutStart())
-  await axiosJWT
-    .post(`http://localhost:3000/logout`, {
-      headers: {token: `Bearer ${accessToken}`},
-    })
-    .then(res => {
-      dispatch(logOutSuccess())
-      navigate('/admin/login')
-    })
-    .catch(err => {
-      dispatch(logOutFailed())
-    })
+  try {
+    const res = await axiosJWT.post(
+      `http://localhost:8000/logout`,
+      {
+        refreshToken: refreshToken,
+      },
+      {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      },
+    )
+    dispatch(logOutSuccess())
+    navigate('/admin/login')
+  } catch (error) {
+    dispatch(logOutFailed())
+  }
 }
