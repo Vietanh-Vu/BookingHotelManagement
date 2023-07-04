@@ -143,9 +143,16 @@ export const requestRefreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
-  localStorage.removeItem("refreshToken");
+  // refresh cookies store in localStorage
+  // const refreshToken = localStorage.getItem("refreshToken");
+  // refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  // localStorage.removeItem("refreshToken");
+
+  // refresh cookies store in cookies
+  res.clearCookie("refreshToken");
+  refreshTokens = refreshTokens.filter(
+    (token) => token !== req.cookies.refreshToken
+  );
   res.status(200).json({ status: "Successful Logout!" });
 };
 
