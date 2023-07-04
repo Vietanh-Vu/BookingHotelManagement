@@ -4,20 +4,24 @@ import {
   addRoom,
   updateRoom,
   deleteRoom,
+  getRoomType,
 } from "../controllers/room.js";
 
-const router = express.Router();
+const RoomRouter = express.Router();
+
+// get room type
+RoomRouter.get("/", getRoomType);
 
 // get room by hotel
-router.get("/:hotelId", getRoomsByHotel);
+RoomRouter.get("/:hotelId", getRoomsByHotel);
 
 // add room
-router.post("/:hotelId", addRoom);
+RoomRouter.post("/:hotelId", addRoom);
 
 // update room
-router.put("/update/:roomId", updateRoom);
+RoomRouter.put("/update/:roomId", updateRoom);
 
 // delete room
-router.delete("/delete/:roomId", deleteRoom);
+RoomRouter.delete("/delete/:roomId", deleteRoom);
 
-export default router;
+export default RoomRouter;

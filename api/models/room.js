@@ -1,6 +1,18 @@
 import { connect, sql } from "../connectDB.js";
 
 class RoomModel {
+  // Lấy tất cả các room type
+  static async getRoomType(callback) {
+    const pool = await connect;
+    const sqlQuery = `SELECT * FROM RoomType`;
+    return await pool.request().query(sqlQuery, function (err, data) {
+      if (data.recordset.length > 0) {
+        callback(null, data.recordset);
+      } else {
+        callback(true, null);
+      }
+    });
+  }
   // Lấy danh sách phòng trong một khách sạn
   static async getByHotel(hotelId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách phòng

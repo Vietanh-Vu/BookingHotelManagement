@@ -1,6 +1,6 @@
 import {makeStyles} from '@mui/styles'
 import {useEffect, useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {
   Paper,
   TableBody,
@@ -76,14 +76,14 @@ export default function Hotels() {
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [records, setRecords] = useState([])
   const [openPopup, setOpenPopup] = useState(false)
-  const [filterActive, setFilterActive] = useState(false)
+  const [filterActive, setFilterActive] = useState(true)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
       if (!filterActive) return items
       else return items.filter(item => item.IsActive)
     },
   })
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const getAllHotel = () => {
     axios
@@ -242,6 +242,15 @@ export default function Hotels() {
     setOpenPopup(true)
   }
 
+  const deleteHotel = hotel => {
+    axios
+      .delete(`http://localhost:3000/admin/hotel/delete/${hotel.HotelId}`)
+      .then(res => {
+        alert(res.data.message)
+      })
+      .catch(error => console.log(error))
+  }
+
   return (
     <>
       <NavBar page="Hotels" pages={pages} value={1} />
@@ -294,11 +303,46 @@ export default function Hotels() {
             {recordsAfterPaging() &&
               recordsAfterPaging().map(item => (
                 <TableRow key={item.ID[0]}>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.HotelName}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.CategoryName}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.Address}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.Description}</TableCell>
-                  <TableCell onClick={() => navigate(`/admin/hotels/rooms/${item.HotelId}`)}>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
+                    }>
+                    {item.HotelName}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
+                    }>
+                    {item.CategoryName}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
+                    }>
+                    {item.Address}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
+                    }>
+                    {item.Description}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${item.HotelId}/${item.HotelName}`,
+                      )
+                    }>
+                    {item.IsActive ? 'Active' : 'Inactive'}
+                  </TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
@@ -307,7 +351,11 @@ export default function Hotels() {
                       }}>
                       <ModeEditOutlineIcon fontSize="small" />
                     </Controls.ActionButton>
-                    <Controls.ActionButton color="secondary">
+                    <Controls.ActionButton
+                      color="secondary"
+                      onClick={() => {
+                        deleteHotel(item)
+                      }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
                   </TableCell>
