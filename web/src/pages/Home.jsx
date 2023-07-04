@@ -1,6 +1,7 @@
 import NavBar from '../components/NavBar.jsx'
 import {pages} from './Var.jsx'
 import PageHeader from '../components/PageHeader.jsx'
+import SignIn from './Login/SignIn.jsx'
 import HomeIcon from '@mui/icons-material/Home'
 
 function Home() {

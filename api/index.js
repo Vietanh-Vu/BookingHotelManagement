@@ -12,7 +12,7 @@ import middlewareController from "./controllers/middleware.js";
 
 const app = express();
 app.use(cookieParser());
-app.use(cors());
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -25,6 +25,6 @@ app.use("/admin/hotel", middlewareController.verifyToken, HotelRouter);
 app.use("/admin/users", middlewareController.verifyToken, UserRouter);
 app.use("/admin/hotel/rooms", middlewareController.verifyToken, RoomRouter);
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });

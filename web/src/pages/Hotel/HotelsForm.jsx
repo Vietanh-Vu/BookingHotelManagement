@@ -24,7 +24,7 @@ export default function HotelsForm(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/admin/hotel/add`)
+      .get(`http://localhost:8000/admin/hotel/add`)
       .then(res => {
         setCategories(
           res.data.map(category => ({
