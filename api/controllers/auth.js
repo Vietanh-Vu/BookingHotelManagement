@@ -71,11 +71,14 @@ export const login = async (req, res) => {
           refreshTokens.push(refreshToken);
 
           // luu refresh token vao cookies
-          res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: false, // deploy chuyen thanh true
-            sameSite: "strict",
-          });
+          // res.cookie("refreshToken", refreshToken, {
+          //   httpOnly: true,
+          //   secure: false, // deploy chuyen thanh true
+          //   sameSite: "strict",
+          // });
+
+          // luu refresh token vao localStorage
+          localStorage.setItem("refreshToken", refreshToken);
 
           // access token key
           const accessToken = jwt.sign(returnData, process.env.JWT_ACCESS_KEY, {
@@ -94,8 +97,11 @@ export const login = async (req, res) => {
 
 export const requestRefreshToken = async (req, res) => {
   // lay refresh token tu user
-  const refreshToken = req.cookies.refreshToken;
+  // const refreshToken = req.cookies.refreshToken;
   // console.log(req);
+  // lay refresh token tu localStorage
+  const refreshToken = localStorage.getItem("refreshToken");
+  // console.log(req.cookies);
   if (!refreshToken) {
     return res.status(401).json({ status: "You are not authenticated!" });
   }
@@ -124,21 +130,22 @@ export const requestRefreshToken = async (req, res) => {
     });
 
     // luu refresh token vao cookies
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: false, // deploy chuyen thanh true
-      sameSite: "strict",
-    });
+    // res.cookie("refreshToken", newRefreshToken, {
+    //   httpOnly: true,
+    //   secure: false, // deploy chuyen thanh true
+    //   sameSite: "strict",
+    // });
+    // luu refresh token vao localStorage
+    localStorage.setItem("refreshToken", newRefreshToken);
 
     return res.status(200).json({ accessToken: newAccessToken });
   });
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("refreshToken");
-  refreshTokens = refreshTokens.filter(
-    (token) => token !== req.cookies.refreshToken
-  );
+  const refreshToken = localStorage.getItem("refreshToken");
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  localStorage.removeItem("refreshToken");
   res.status(200).json({ status: "Successful Logout!" });
 };
 
