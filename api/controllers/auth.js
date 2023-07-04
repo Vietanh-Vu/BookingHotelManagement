@@ -71,11 +71,14 @@ export const login = async (req, res) => {
           refreshTokens.push(refreshToken);
 
           // luu refresh token vao cookies
-          res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: false, // deploy chuyen thanh true
-            sameSite: "strict",
-          });
+          // res.cookie("refreshToken", refreshToken, {
+          //   httpOnly: true,
+          //   secure: false, // deploy chuyen thanh true
+          //   sameSite: "strict",
+          // });
+
+          // luu refresh token vao localStorage
+          localStorage.setItem("refreshToken", refreshToken);
 
           // access token key
           const accessToken = jwt.sign(returnData, process.env.JWT_ACCESS_KEY, {
@@ -124,11 +127,13 @@ export const requestRefreshToken = async (req, res) => {
     });
 
     // luu refresh token vao cookies
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: false, // deploy chuyen thanh true
-      sameSite: "strict",
-    });
+    // res.cookie("refreshToken", newRefreshToken, {
+    //   httpOnly: true,
+    //   secure: false, // deploy chuyen thanh true
+    //   sameSite: "strict",
+    // });
+    // luu refresh token vao localStorage
+    localStorage.setItem("refreshToken", newRefreshToken);
 
     return res.status(200).json({ accessToken: newAccessToken });
   });
