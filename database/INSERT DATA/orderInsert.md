@@ -1,0 +1,9 @@
+1. HotelCategory
+2. Hotel
+3. RoomType
+4. Room
+5. Users
+6. Reservation
+7. RoomReserved
+8. ReservationStatus
+9. RoomEvent
