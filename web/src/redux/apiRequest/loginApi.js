@@ -57,7 +57,6 @@ export const logOut = async (
       },
     )
     dispatch(logOutSuccess())
-    navigate('/admin')
   } catch (error) {
     dispatch(logOutFailed())
   }
