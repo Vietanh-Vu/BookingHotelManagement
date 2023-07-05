@@ -622,3 +622,5 @@ END
 GO
 
 -- sau khi insert xong data nho xoa trigger di 
+DROP TRIGGER trg_HashPassword
+DROP FUNCTION dbo.HashPassword
