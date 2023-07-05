@@ -3,10 +3,10 @@ import {Grid, Button, TextField} from '@mui/material'
 import Controls from '../../components/controls/Controls'
 import {useForm, Form} from '../../components/useForm'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { getCategories } from '../../redux/apiRequest/hotelApi'
-import { createAxios } from '../../createInstance'
+import {useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {getCategories} from '../../redux/apiRequest/hotelApi'
+import {createAxios} from '../../createInstance'
 
 const initialFValues = {
   HotelId: '',
@@ -26,9 +26,9 @@ export default function HotelsForm(props) {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.auth.login?.currentUser);
-  const categories = useSelector(state =>
-    state.hotels.categories?.allCategories
+  const user = useSelector(state => state.auth.login?.currentUser)
+  const categories = useSelector(
+    state => state.hotels.categories?.allCategories,
   )
   let axiosJWT = createAxios(user, dispatch)
 
@@ -36,7 +36,7 @@ export default function HotelsForm(props) {
     if (!user) {
       navigate('/admin/login')
     }
-    getCategories(user?.accessToken, dispatch, axiosJWT);
+    getCategories(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   useEffect(() => {

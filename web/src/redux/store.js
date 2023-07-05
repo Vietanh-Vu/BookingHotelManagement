@@ -13,6 +13,7 @@ import storage from 'redux-persist/lib/storage'
 import authReducer from './authSlice'
 import userReducer from './userSlice'
 import hotelReducer from './hotelSlice'
+import roomReducer from './roomSlice'
 
 const persistConfig = {
   key: 'root',
@@ -24,11 +25,11 @@ const appReducer = combineReducers({
   auth: authReducer,
   users: userReducer,
   hotels: hotelReducer,
+  rooms: roomReducer,
 })
 
 const rootReducer = (state, action) => {
   if (action.type === 'auth/logOutSuccess') {
-    console.log('succes')
     storage.removeItem('persist:root')
     return appReducer(undefined, action)
   }

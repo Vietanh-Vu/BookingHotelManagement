@@ -25,6 +25,14 @@ import RoomsForm from './RoomsForm.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import Popup from '../../components/Popup.jsx'
 import useTable from '../../components/useTable.jsx'
+import {
+  deleteRoom,
+  getAllRoom,
+  insertRoom,
+  updateRoom,
+} from '../../redux/apiRequest/roomApi.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { createAxios } from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -84,7 +92,6 @@ const initialFilters = {
 export default function Rooms() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
   const [openPopup, setOpenPopup] = useState(false)
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
@@ -99,27 +106,15 @@ export default function Rooms() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
-  const userList = useSelector(state => state.users.users?.allUsers)
-  let axiosJWT = createAxios(user, dispatch);
-
+  const records = useSelector(state => state.rooms.rooms?.allRooms)
+  let axiosJWT = createAxios(user, dispatch)
   const {hotelId, hotelName} = useParams()
 
-  const getAllRoom = () => {
-    axios
-      .get(`http://localhost:8000/admin/hotel/rooms/${hotelId}`)
-      .then(res => {
-        setRecords(
-          res.data.map(room => ({
-            ...room,
-            RoomTypeId: room.RoomTypeId[0],
-          })),
-        )
-      })
-      .catch(error => console.log(error))
-  }
-
   useEffect(() => {
-    getAllRoom()
+    if (!user) {
+      navigate('/admin/login')
+    }
+    getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
@@ -150,50 +145,6 @@ export default function Rooms() {
     })
   }
 
-  console.log(records)
-
-  const insertRoom = room => {
-    const roomData = {
-      RoomTypeId: room.RoomTypeId,
-      RoomName: room.RoomName,
-      CurrentPrice: room.CurrentPrice,
-      IsAvailable: room.IsAvailable ? true : false,
-      Description: room.Description,
-      IsActive: room.IsActive ? true : false,
-    }
-    axios
-      .post(`http://localhost:8000/admin/hotel/rooms/${hotelId}`, roomData)
-      .then(response => {
-        alert(response.data.message)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  const updateRoom = room => {
-    const roomData = {
-      HotelId: hotelId,
-      RoomTypeId: room.RoomTypeId,
-      RoomName: room.RoomName,
-      CurrentPrice: room.CurrentPrice,
-      IsAvailable: room.IsAvailable ? true : false,
-      Description: room.Description,
-      IsActive: room.IsActive ? true : false,
-    }
-    axios
-      .put(
-        `http://localhost:8000/admin/hotel/rooms/update/${room.RoomId}`,
-        roomData,
-      )
-      .then(response => {
-        alert(response.data.message)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
   const handleFilter = e => {
     const {name, checked} = e.target
     setFilter({
@@ -214,10 +165,26 @@ export default function Rooms() {
     })
   }, [filter])
 
-  const addOrEdit = (room, resetForm) => {
-    if (room.RoomId == '') insertRoom(room)
-    else updateRoom(room)
-    getAllRoom()
+  const addOrEdit = async (room, resetForm) => {
+    if (room.RoomId == '') {
+      const resMsg = await insertRoom(
+        user?.accessToken,
+        dispatch,
+        axiosJWT,
+        room,
+        hotelId,
+      )
+      alert(resMsg)
+    } else {
+      const resMsg = await updateRoom(
+        user?.accessToken,
+        dispatch,
+        axiosJWT,
+        room,
+        hotelId,
+      )
+      alert(resMsg)
+    }
     resetForm()
     setRecordForEdit(null)
     setOpenPopup(false)
@@ -227,15 +194,6 @@ export default function Rooms() {
     console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
-  }
-
-  const deleteRoom = room => {
-    axios
-      .delete(`http://localhost:8000/admin/hotel/rooms/delete/${room.RoomId}`)
-      .then(res => {
-        alert(res.data.message)
-      })
-      .catch(error => console.log(error))
   }
 
   return (
@@ -319,8 +277,9 @@ export default function Rooms() {
                     </Controls.ActionButton>
                     <Controls.ActionButton
                       color="secondary"
-                      onClick={() => {
-                        deleteRoom(item)
+                      onClick={async () => {
+                        const resMsg = await deleteRoom(user?.accessToken, dispatch, axiosJWT, item);
+                        alert(resMsg)
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
