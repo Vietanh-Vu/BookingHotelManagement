@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
-import { registerUser } from '../../redux/apiRequest'
+import { registerUser } from '../../redux/apiRequest/loginApi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -152,7 +152,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={() => navigate('/admin/login')}>
                   Already have an account? Sign in
                 </Link>
               </Grid>

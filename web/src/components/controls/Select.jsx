@@ -18,7 +18,7 @@ function Select(props) {
         label={label}
         onChange={onChange}>
         <MenuItem value="">None</MenuItem>
-        {options.map(item => (
+        {options?.map(item => (
           <MenuItem key={item.id} value={item.id}>
             {item.title}
           </MenuItem>

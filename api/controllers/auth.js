@@ -87,7 +87,7 @@ export const login = async (req, res) => {
           return res.json({ returnData, accessToken, refreshToken });
         } else {
           return res.status(401).json({
-            message: "Invalid username or password or you are not admin.",
+            error: "Invalid username or password or you are not admin.",
           });
         }
       }

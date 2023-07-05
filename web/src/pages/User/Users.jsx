@@ -23,9 +23,8 @@ import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import useTable from '../../components/useTable.jsx'
-import {getAllUsers} from '../../redux/apiRequest.js'
+import {getAllUsers, deleteAdmin, setAdmin} from '../../redux/apiRequest/userApi.js'
 import {useDispatch, useSelector} from 'react-redux'
-import {loginSuccess} from '../../redux/authSlice.js'
 import { createAxios } from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
@@ -80,7 +79,6 @@ const initialFilters = {
 export default function Rooms() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
   const [openPopup, setOpenPopup] = useState(false)
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
@@ -91,20 +89,15 @@ export default function Rooms() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
-  const userList = useSelector(state => state.users.users?.allUsers)
-  let axiosJWT = createAxios(user, dispatch, loginSuccess);
+  const records = useSelector(state => state.users.users?.allUsers)
+  let axiosJWT = createAxios(user, dispatch);
 
   useEffect(() => {
     if (!user) {
       navigate('/admin/login')
     }
     getAllUsers(user?.accessToken, dispatch, axiosJWT);
-    setRecords(userList);
   }, [])
-
-  useEffect(() => {
-    setRecords(userList)
-  }, [userList])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
     records,
@@ -145,24 +138,6 @@ export default function Rooms() {
       },
     })
   }, [filter])
-
-  const deleteAdmin = user => {
-    axios
-      .put(`http://localhost:8000/admin/users/delete/${user.UsersId}`)
-      .then(res => {
-        alert(res.data.message)
-      })
-      .catch(error => console.log(error))
-  }
-
-  const setAdmin = user => {
-    axios
-      .put(`http://localhost:8000/admin/users/set/${user.UsersId}`)
-      .then(res => {
-        alert(res.data.message)
-      })
-      .catch(error => console.log(error))
-  }
 
   return (
     <>
@@ -215,14 +190,14 @@ export default function Rooms() {
                     <Controls.ActionButton
                       color="primary"
                       onClick={() => {
-                        setAdmin(item)
+                        setAdmin(user?.accessToken, dispatch, axiosJWT, item);
                       }}>
                       <AddIcon fontSize="small" />
                     </Controls.ActionButton>
                     <Controls.ActionButton
                       color="primary"
                       onClick={() => {
-                        deleteAdmin(item)
+                        deleteAdmin(user?.accessToken, dispatch, axiosJWT, item)
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>

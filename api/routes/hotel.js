@@ -46,6 +46,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 HotelRouter.post("/add/image", upload.single("myImage"), (req, res) => {
+  const newAccessToken = req.headers.token;
   if (req.file) {
     const file = req.file;
     const targetPath = path.join(imgUploadPath, file.filename);
@@ -57,7 +58,7 @@ HotelRouter.post("/add/image", upload.single("myImage"), (req, res) => {
         console.log(err);
         return res.status(500).json({ error: "Lỗi khi lưu ảnh." });
       }
-      res.json({ nameFile: file.filename });
+      res.json({ nameFile: file.filename, newAccessToken: newAccessToken });
     });
   } else {
     res.json({ error: "Không có ảnh." });

@@ -9,8 +9,7 @@ import {
   logOutStart,
   logOutSuccess,
   logOutFailed,
-} from './authSlice'
-import {getUserStart, getUserSuccess, getUserFailed} from './userSlice'
+} from '../authSlice'
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart())
@@ -20,31 +19,20 @@ export const loginUser = async (user, dispatch, navigate) => {
     navigate('/admin')
   } catch (error) {
     dispatch(loginFailed())
+    alert(error.response.data.error)
   }
 }
 
 export const registerUser = async (newUser, dispatch, navigate) => {
   dispatch(registerStart())
   try {
-    await axios.post(`http://localhost:8000/register`, newUser)
+    const res = await axios.post(`http://localhost:8000/register`, newUser)
     dispatch(registerSuccess())
     navigate('/admin/login')
+    alert(res.data.message)
   } catch (error) {
     dispatch(registerFailed())
-  }
-}
-
-export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
-  dispatch(getUserStart())
-  try {
-    const res = await axiosJWT.get(`http://localhost:8000/admin/users/`, {
-      headers: {
-        token: `Bearer ${accessToken}`,
-      },
-    })
-    dispatch(getUserSuccess(res.data))
-  } catch (error) {
-    dispatch(getUserFailed())
+    alert(error.response.data.error)
   }
 }
 
@@ -69,8 +57,10 @@ export const logOut = async (
       },
     )
     dispatch(logOutSuccess())
-    // navigate('/admin/login')
+    navigate('/admin')
   } catch (error) {
     dispatch(logOutFailed())
   }
 }
+
+

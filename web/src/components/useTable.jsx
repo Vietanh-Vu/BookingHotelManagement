@@ -58,6 +58,12 @@ export default function useTable(records, headCells, filterFn) {
     setPage(0)
   }
 
+  const recordsAfterPaging = () => {
+    return records
+      ? filterFn.fn(records).slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+      : records
+  }
+
   const TblPagination = () => (
     <TablePagination
       component="div"
@@ -69,12 +75,6 @@ export default function useTable(records, headCells, filterFn) {
       onRowsPerPageChange={handleChangeRowsPerPage}
     />
   )
-
-  const recordsAfterPaging = () => {
-    return records
-      ? filterFn.fn(records).slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-      : filterFn.fn(records)
-  }
 
   return {
     TblContainer,
