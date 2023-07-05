@@ -22,9 +22,41 @@ const userSlice = createSlice({
       state.users.isFetching = false
       state.users.error = true
     },
+    deleteAdminStart: state => {
+      state.users.isFetching = true
+    },
+    deleteAdminSuccess: (state) => {
+      state.users.isFetching = false
+      state.users.error = false
+    },
+    deleteAdminFailed: state => {
+      state.users.isFetching = false
+      state.users.error = true
+    },
+    setAdminStart: state => {
+      state.users.isFetching = true
+    },
+    setAdminSuccess: (state) => {
+      state.users.isFetching = false
+      state.users.error = false
+    },
+    setAdminFailed: state => {
+      state.users.isFetching = false
+      state.users.error = true
+    },
   },
 })
 
-export const {getUserStart, getUserSuccess, getUserFailed} = userSlice.actions
+export const {
+  getUserStart,
+  getUserSuccess,
+  getUserFailed,
+  deleteAdminStart,
+  deleteAdminFailed,
+  deleteAdminSuccess,
+  setAdminFailed,
+  setAdminSuccess,
+  setAdminStart
+} = userSlice.actions
 
 export default userSlice.reducer

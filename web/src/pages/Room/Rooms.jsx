@@ -97,6 +97,11 @@ export default function Rooms() {
     },
   })
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.auth.login?.currentUser)
+  const userList = useSelector(state => state.users.users?.allUsers)
+  let axiosJWT = createAxios(user, dispatch);
+
   const {hotelId, hotelName} = useParams()
 
   const getAllRoom = () => {

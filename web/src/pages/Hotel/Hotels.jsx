@@ -25,6 +25,14 @@ import HotelsForm from './HotelsForm.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import Popup from '../../components/Popup.jsx'
 import useTable from '../../components/useTable.jsx'
+import {useDispatch, useSelector} from 'react-redux'
+import {
+  deleteHotel,
+  getAllHotels,
+  insertHotel,
+  updateHotel,
+} from '../../redux/apiRequest/hotelApi.js'
+import {createAxios} from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -74,7 +82,6 @@ const headCells = [
 export default function Hotels() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
-  const [records, setRecords] = useState([])
   const [openPopup, setOpenPopup] = useState(false)
   const [filterActive, setFilterActive] = useState(true)
   const [filterFn, setFilterFn] = useState({
@@ -84,23 +91,16 @@ export default function Hotels() {
     },
   })
   const navigate = useNavigate()
-
-  const getAllHotel = () => {
-    axios
-      .get(`http://localhost:8000/admin/hotel/`)
-      .then(res => {
-        setRecords(
-          res.data.map(hotel => ({
-            ...hotel,
-            CategoryId: hotel.CategoryId[0],
-          })),
-        )
-      })
-      .catch(error => console.log(error))
-  }
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.auth.login?.currentUser)
+  const records = useSelector(state => state.hotels.hotels?.allHotels)
+  let axiosJWT = createAxios(user, dispatch)
 
   useEffect(() => {
-    getAllHotel()
+    if (!user) {
+      navigate('/admin/login')
+    }
+    getAllHotels(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
@@ -131,89 +131,6 @@ export default function Hotels() {
     })
   }
 
-  const insertHotel = hotel => {
-    const formData = new FormData()
-    formData.append('myImage', hotel.ImgSelected)
-    axios
-      .post(`http://localhost:8000/admin/hotel/add/image`, formData)
-      .then(response => {
-        const hotelData = {
-          CategoryId: hotel.CategoryId,
-          HotelName: hotel.HotelName,
-          IsActive: hotel.IsActive ? true : false,
-          Address: hotel.Address,
-          Description: hotel.Description,
-          HotelImg: response.data.nameFile,
-        }
-        axios
-          .post('http://localhost:8000/admin/hotel/add', hotelData)
-          .then(response => {
-            alert(response.data.message)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  const updateHotel = hotel => {
-    if (hotel.ImgSelected) {
-      const formData = new FormData()
-      formData.append('myImage', hotel.ImgSelected)
-      axios
-        .post(`http://localhost:8000/admin/hotel/add/image`, formData)
-        .then(response => {
-          const hotelData = {
-            CategoryId: hotel.CategoryId,
-            HotelName: hotel.HotelName,
-            IsActive: hotel.IsActive ? true : false,
-            Address: hotel.Address,
-            Description: hotel.Description,
-            HotelImg: response.data.nameFile,
-          }
-          console.log(hotelData)
-          axios
-            .put(
-              `http://localhost:8000/admin/hotel/update/${hotel.HotelId}`,
-              hotelData,
-            )
-            .then(response => {
-              alert(response.data.message)
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    } else {
-      const hotelData = {
-        CategoryId: hotel.CategoryId,
-        HotelName: hotel.HotelName,
-        IsActive: hotel.IsActive ? true : false,
-        Address: hotel.Address,
-        Description: hotel.Description,
-        HotelImg: hotel.HotelImg,
-      }
-      console.log(hotelData)
-      axios
-        .put(
-          `http://localhost:8000/admin/hotel/update/${hotel.HotelId}`,
-          hotelData,
-        )
-        .then(response => {
-          alert(response.data.message)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
-  }
-
   const HandleFilterActive = e => {
     setFilterActive(e.target.checked)
   }
@@ -227,10 +144,19 @@ export default function Hotels() {
     })
   }, [filterActive])
 
-  const addOrEdit = (hotel, resetForm) => {
-    if (hotel.HotelId == '') insertHotel(hotel)
-    else updateHotel(hotel)
-    getAllHotel()
+  const addOrEdit = async (hotel, resetForm) => {
+    if (hotel.HotelId == '') {
+      const resMsg = await insertHotel(
+        user?.accessToken,
+        dispatch,
+        axiosJWT,
+        hotel,
+      )
+      alert(resMsg)
+    } else {
+      const resMsg = await updateHotel(user?.accessToken, dispatch, axiosJWT, hotel)
+      alert(resMsg)
+    }
     resetForm()
     setRecordForEdit(null)
     setOpenPopup(false)
@@ -240,15 +166,6 @@ export default function Hotels() {
     console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
-  }
-
-  const deleteHotel = hotel => {
-    axios
-      .delete(`http://localhost:8000/admin/hotel/delete/${hotel.HotelId}`)
-      .then(res => {
-        alert(res.data.message)
-      })
-      .catch(error => console.log(error))
   }
 
   return (
@@ -353,8 +270,9 @@ export default function Hotels() {
                     </Controls.ActionButton>
                     <Controls.ActionButton
                       color="secondary"
-                      onClick={() => {
-                        deleteHotel(item)
+                      onClick={async () => {
+                        const resMsg = await deleteHotel(user?.accessToken, dispatch, axiosJWT, item);
+                        alert(resMsg);
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>

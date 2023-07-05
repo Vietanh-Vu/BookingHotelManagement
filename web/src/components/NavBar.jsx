@@ -6,16 +6,15 @@ import {styled, alpha} from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
 import {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import { logOut } from '../redux/apiRequest'
+import { logOut } from '../redux/apiRequest/loginApi'
 import { createAxios } from '../createInstance'
-import { logOutSuccess, loginSuccess } from '../redux/authSlice'
 
 function NavBar(props) {
   const [value, setValue] = useState(props.value)
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.login.currentUser)
-  let axiosJWT = createAxios(user, dispatch, loginSuccess);
+  let axiosJWT = createAxios(user, dispatch);
 
   // const Search = styled('div')(({theme}) => ({
   //   position: 'relative',
@@ -72,9 +71,9 @@ function NavBar(props) {
           }}
           sx={{marginLeft: '10px'}}
           textColor="inherit">
-          {props.pages.map(({page, path}, index) => (
+          {user?.accessToken ? props.pages.map(({page, path}, index) => (
             <Tab key={index} label={page} component={Link} to={path} />
-          ))}
+          )): <Tab key={0} label={'Home'} component={Link} to={'/admin'} />}
         </Tabs>
         {/* {props.page ? (
           <Search>
