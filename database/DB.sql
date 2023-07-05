@@ -710,6 +710,20 @@ BEGIN
 END
 GO
 
+-- Tạo trigger cho sự kiện INSERT trên bảng Users
+CREATE TRIGGER trg_HashPassword
+ON Users
+AFTER INSERT
+AS
+BEGIN
+    -- Cập nhật mật khẩu đã mã hóa cho các bản ghi vừa chèn
+    UPDATE Users
+    SET Password = dbo.HashPassword(i.Password)
+    FROM Users
+    INNER JOIN inserted AS i ON Users.ID = i.ID;
+END
+GO
+
 -- Sau đó, cập nhật bảng Users để mã hóa mật khẩu
 UPDATE Users
 SET Password = dbo.HashPassword(Password);
