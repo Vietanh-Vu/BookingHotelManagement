@@ -3,6 +3,10 @@ import {Grid, Button, TextField, InputAdornment} from '@mui/material'
 import Controls from '../../components/controls/Controls'
 import {useForm, Form} from '../../components/useForm'
 import axios from 'axios'
+import {useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {createAxios} from '../../createInstance'
+import {getRoomTypes} from '../../redux/apiRequest/roomApi'
 
 const initialFValues = {
   RoomId: '',
@@ -20,21 +24,17 @@ export default function RoomsForm(props) {
   const {values, setValues, errors, setErrors, handleInputChange, resetForm} =
     useForm(initialFValues)
 
-  const [roomTypes, setRoomTypes] = useState([{}])
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.auth.login?.currentUser)
+  const roomTypes = useSelector(state => state.rooms.roomTypes?.allRoomTypes)
+  let axiosJWT = createAxios(user, dispatch)
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/admin/hotel/rooms`)
-      .then(res => {
-        setRoomTypes(
-          res.data.map(roomType => ({
-            ...roomType,
-            title: roomType.RoomTypeName,
-            id: roomType.RoomTypeId,
-          })),
-        )
-      })
-      .catch(error => console.log(error))
+    if (!user) {
+      navigate('/admin/login')
+    }
+    getRoomTypes(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   useEffect(() => {
