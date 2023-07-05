@@ -17,7 +17,9 @@ BEGIN
     END;
 END;
 
---------------------TEST CASE---------------------
+
+----------------------------------------------------
+--------------------TEST CASE-----------------------
 INSERT INTO Reservation (UsersId, StartDate, EndDate, TsCreated, TsUpdated, DiscountPercent)
 VALUES
 --user 1-50 đi tháng 1/2021
