@@ -6,4 +6,4 @@
 6. Reservation
 7. RoomReserved
 8. ReservationStatus
-9. RoomEvent
+9. ReservationEvent
