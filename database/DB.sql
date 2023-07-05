@@ -39,7 +39,7 @@ CREATE TABLE Room (
     ID INT IDENTITY(1,1),
 	-- sửa lại đoạn này RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
     RoomId AS 'RO' + RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) PERSISTED,
-    HotelId VARCHAR(5),
+    HotelId VARCHAR(7),
     RoomTypeId VARCHAR(5),
     RoomName VARCHAR(128) NOT NULL,
     CurrentPrice DECIMAL(10, 2) NOT NULL,
@@ -100,18 +100,9 @@ CREATE TABLE Users (
     CONSTRAINT PK_Users PRIMARY KEY(UsersId)
 );
 
-
-
-
--- Sau đó, cập nhật bảng Users để mã hóa mật khẩu
-UPDATE Users
-SET Password = dbo.HashPassword(Password);
-
 --######################## RESERVATION ###############
 
-select * from Reservation
-UPDATE Reservation
-     SET TotalPrice = 0
+
 DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (
     ID INT IDENTITY(1,1),
@@ -175,8 +166,8 @@ DROP TABLE InvoiceUsers;
 CREATE TABLE InvoiceUsers (
     ID INT IDENTITY(1,1),
     InvoiceId AS 'IV' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
-    UsersId VARCHAR(5),
-    ReservationId VARCHAR(5),
+    UsersId VARCHAR(7),
+    ReservationId VARCHAR(7),
     InvoiceAmount DECIMAL(10, 2) NOT NULL,
     TsIssued DATETIME NOT NULL,
     TsPaid DATETIME NOT NULL,
