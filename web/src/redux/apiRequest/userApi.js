@@ -8,6 +8,9 @@ import {
   setAdminStart,
   setAdminSuccess,
   setAdminFailed,
+  getUserHistoryStart,
+  getUserHistorySuccess,
+  getUserHistoryFailed,
 } from '../userSlice'
 
 export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
@@ -59,5 +62,26 @@ export const setAdmin = async (accessToken, dispatch, axiosJWT, user) => {
     alert(res.data.message)
   } catch (error) {
     dispatch(setAdminFailed())
+  }
+}
+
+export const getAllUserHistory = async (accessToken, dispatch, axiosJWT, userId) => {
+  dispatch(getUserHistoryStart())
+  try {
+    const res = await axiosJWT.get(
+      `http://localhost:8000/admin/users/history/${userId}`,
+      {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      },
+    )
+    dispatch(
+      getUserHistorySuccess(
+        res.data
+      ),
+    )
+  } catch (error) {
+    dispatch(getUserHistoryFailed())
   }
 }

@@ -14,7 +14,7 @@ function NavBar(props) {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.login.currentUser)
-  let axiosJWT = createAxios(user, dispatch);
+  let axiosJWT = createAxios(user, dispatch, navigate);
 
   // const Search = styled('div')(({theme}) => ({
   //   position: 'relative',

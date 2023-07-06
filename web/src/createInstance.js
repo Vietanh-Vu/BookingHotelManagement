@@ -1,6 +1,6 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-import { loginSuccess } from './redux/authSlice'
+import { loginSuccess, refreshFailed, refreshSuccess } from './redux/authSlice'
 
 const refreshTokenFunc = async user => {
   try {
@@ -13,7 +13,7 @@ const refreshTokenFunc = async user => {
   }
 }
 
-export const createAxios = (user, dispatch) => {
+export const createAxios = (user, dispatch, navigate) => {
   const newInstance = axios.create()
   newInstance.interceptors.request.use(
     async config => {
@@ -27,10 +27,12 @@ export const createAxios = (user, dispatch) => {
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
           }
-          dispatch(loginSuccess(refreshUser))
+          dispatch(refreshSuccess(refreshUser))
           config.headers['token'] = `Bearer ${newAccessToken}`
         } catch (error) {
           console.log(error)
+          dispatch(refreshFailed())
+          navigate('/admin/login')
         }
       }
       return config
