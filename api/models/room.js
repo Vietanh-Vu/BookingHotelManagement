@@ -97,6 +97,25 @@ class RoomModel {
         }
       });
   }
+
+  static async history(roomId, callback) {
+    const pool = await connect;
+    let sqlQuery = `SELECT RoomReservedId, RoomReserved.ReservationID, RoomId, Reservation.UsersId, StartDate, EndDate, DiscountPercent, TotalPrice, FirstName, LastName, Email, Phone, Address
+                    FROM RoomReserved 
+                    INNER JOIN Reservation ON RoomReserved.ReservationID = Reservation.ReservationID
+                    INNER JOIN Users ON Users.UsersId = Reservation.UsersId
+                    WHERE RoomId = @RoomId `;
+    return await pool
+      .request()
+      .input("RoomId", sql.VarChar, roomId)
+      .query(sqlQuery, function (err, data) {
+        if (data.recordset.length > 0) {
+          callback(null, data.recordset);
+        } else {
+          callback(true, null);
+        }
+      });
+  }
 }
 
 export default RoomModel;

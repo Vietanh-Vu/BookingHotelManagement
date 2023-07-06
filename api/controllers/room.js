@@ -90,6 +90,20 @@ export const deleteRoom = (req, res) => {
   });
 };
 
+// thong tin su dung phong
+export const historyRoom = (req, res) => {
+  // Lấy ID phòng từ request params
+  const roomId = req.params.roomId;
+  RoomModel.history(roomId, (err, data) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Đã xảy ra lỗi trong quá trình lay lich su phong." });
+    }
+    res.json(data);
+  });
+};
+
 export default {
   getRoomsByHotel,
   addRoom,

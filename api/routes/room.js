@@ -5,6 +5,7 @@ import {
   updateRoom,
   deleteRoom,
   getRoomType,
+  historyRoom,
 } from "../controllers/room.js";
 
 const RoomRouter = express.Router();
@@ -23,5 +24,8 @@ RoomRouter.put("/update/:roomId", updateRoom);
 
 // delete room
 RoomRouter.delete("/delete/:roomId", deleteRoom);
+
+// history room
+RoomRouter.get("/history/:roomId", historyRoom);
 
 export default RoomRouter;
