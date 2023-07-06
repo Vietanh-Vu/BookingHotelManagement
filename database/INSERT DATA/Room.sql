@@ -115,19 +115,18 @@ VALUES
 ('HO08', 'RT02', 'Room 402', 110.00, 1, 1, 'An upscale and spacious deluxe room.'),
 
 -- Hotel HO09
-
-('HO09', 'RT05', 'Room 101', 140.00, 1, 1, 'A tranquil and peaceful garden view room.'),                                
-('HO08', 'RT08', 'Room 101', 340.00, 1, 1, 'An upscale and spacious deluxe room.'),
-('HO08', 'RT011', 'Room 102', 280.00, 1, 1, 'A luxurious and sophisticated penthouse suite.'),
-('HO08', 'RT07', 'Room 201', 130.00, 1, 1, 'An upscale and spacious deluxe room.'),
-('HO08', 'RT04', 'Room 202', 440.00, 1, 1, 'A stylish and modern premium room.'),
-('HO08', 'RT02', 'Room 203', 220.00, 1, 1, 'A stylish and modern premium room.'),
-('HO08', 'RT03', 'Room 204', 310.00, 1, 1, 'A luxurious and sophisticated penthouse suite.'),
-('HO08', 'RT013', 'Room 301', 360.00, 1, 1, 'A stylish and modern premium room.'),
-('HO08', 'RT09', 'Room 302', 360.00, 1, 1, 'A charming and elegant standard room.'),
-('HO08', 'RT014', 'Room 303', 280.00, 1, 1, 'A charming and elegant standard room.'),
-('HO08', 'RT06', 'Room 401', 110.00, 1, 1, 'A tranquil and peaceful garden view room.'),
-('HO08', 'RT02', 'Room 402', 110.00, 1, 1, 'An upscale and spacious deluxe room.'),
+                              
+('HO09', 'RT08', 'Room 101', 340.00, 1, 1, 'An upscale and spacious deluxe room.'),
+('HO09', 'RT011', 'Room 102', 280.00, 1, 1, 'A luxurious and sophisticated penthouse suite.'),
+('HO09', 'RT07', 'Room 201', 130.00, 1, 1, 'An upscale and spacious deluxe room.'),
+('HO09', 'RT04', 'Room 202', 440.00, 1, 1, 'A stylish and modern premium room.'),
+('HO09', 'RT02', 'Room 203', 220.00, 1, 1, 'A stylish and modern premium room.'),
+('HO09', 'RT03', 'Room 204', 310.00, 1, 1, 'A luxurious and sophisticated penthouse suite.'),
+('HO09', 'RT013', 'Room 301', 360.00, 1, 1, 'A stylish and modern premium room.'),
+('HO09', 'RT09', 'Room 302', 360.00, 1, 1, 'A charming and elegant standard room.'),
+('HO09', 'RT014', 'Room 303', 280.00, 1, 1, 'A charming and elegant standard room.'),
+('HO09', 'RT06', 'Room 401', 110.00, 1, 1, 'A tranquil and peaceful garden view room.'),
+('HO09', 'RT02', 'Room 402', 110.00, 1, 1, 'An upscale and spacious deluxe room.'),
 
 -- Hotel HO010
 
@@ -283,4 +282,3 @@ VALUES
 ('HO020', 'RT012', 'Room 303', 180.00, 1, 1, 'A luxurious and sophisticated penthouse suite.'),
 ('HO020', 'RT06', 'Room 401', 120.00, 1, 1, 'An upscale and spacious deluxe room.'),
 ('HO020', 'RT010', 'Room 402', 320.00, 1, 1, 'A tranquil and peaceful garden view room.');
-	
