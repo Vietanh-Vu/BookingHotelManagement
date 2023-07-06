@@ -100,10 +100,11 @@ class RoomModel {
 
   static async history(roomId, callback) {
     const pool = await connect;
-    let sqlQuery = `SELECT * 
+    let sqlQuery = `SELECT RoomReservedId, RoomReserved.ReservationID, RoomId, Reservation.UsersId, StartDate, EndDate, DiscountPercent, TotalPrice, FirstName, LastName, Email, Phone, Address
                     FROM RoomReserved 
                     INNER JOIN Reservation ON RoomReserved.ReservationID = Reservation.ReservationID
-                    WHERE RoomId = @RoomId`;
+                    INNER JOIN Users ON Users.UsersId = Reservation.UsersId
+                    WHERE RoomId = @RoomId `;
     return await pool
       .request()
       .input("RoomId", sql.VarChar, roomId)
