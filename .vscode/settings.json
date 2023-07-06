@@ -1,3 +1,20 @@
 {
-  "githubPullRequests.ignoredPullRequestBranches": ["master"]
+  "githubPullRequests.ignoredPullRequestBranches": ["master"],
+  "sqltools.connections": [
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 1433,
+      "driver": "MSSQL",
+      "username": "sa",
+      "password": "vuvietanh993",
+      "name": "bookingHotelManagemenr",
+      "database": "BookingHotel"
+    }
+  ]
 }
