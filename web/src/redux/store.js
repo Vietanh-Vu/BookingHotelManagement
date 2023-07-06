@@ -33,6 +33,10 @@ const rootReducer = (state, action) => {
     storage.removeItem('persist:root')
     return appReducer(undefined, action)
   }
+  if (action.type === 'auth/refreshFailed') {
+    storage.removeItem('persist:root')
+    return appReducer(undefined, action)
+  }
   return appReducer(state, action)
 }
 

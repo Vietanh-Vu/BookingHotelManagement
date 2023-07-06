@@ -52,6 +52,15 @@ const authSlice = createSlice({
       state.login.isFetching = false
       state.login.error = true
     },
+    refreshSuccess: (state, action) => {
+      state.login.isFetching = false
+      state.login.currentUser = action.payload
+      state.login.error = false
+    },
+    refreshFailed: state => {
+      state.login.isFetching = false
+      state.login.error = true
+    },
   },
 })
 
@@ -65,6 +74,8 @@ export const {
   logOutStart,
   logOutFailed,
   logOutSuccess,
+  refreshFailed,
+  refreshSuccess
 } = authSlice.actions
 
 export default authSlice.reducer

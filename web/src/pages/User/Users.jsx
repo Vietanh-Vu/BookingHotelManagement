@@ -90,7 +90,7 @@ export default function Rooms() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.users.users?.allUsers)
-  let axiosJWT = createAxios(user, dispatch);
+  let axiosJWT = createAxios(user, dispatch, navigate);
 
   useEffect(() => {
     if (!user) {
@@ -99,7 +99,7 @@ export default function Rooms() {
     getAllUsers(user?.accessToken, dispatch, axiosJWT);
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
     records,
     headCells,
     filterFn,
@@ -178,8 +178,8 @@ export default function Rooms() {
             />
           </FormControl>
           <TableBody>
-            {recordsAfterPaging() &&
-              recordsAfterPaging().map(item => (
+            {recordsAfterPagingAndSorting() &&
+              recordsAfterPagingAndSorting().map(item => (
                 <TableRow key={item.UsersId}>
                   <TableCell>{item.FirstName + ' ' + item.LastName}</TableCell>
                   <TableCell>{item.Email}</TableCell>

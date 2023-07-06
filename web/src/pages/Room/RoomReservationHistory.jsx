@@ -12,10 +12,9 @@ import {
   FormControlLabel,
   FormControl,
 } from '@mui/material'
-import axios from 'axios'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
-import BedroomChildIcon from '@mui/icons-material/BedroomChild'
+import HistoryIcon from '@mui/icons-material/History'
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline'
 import CloseIcon from '@mui/icons-material/Close'
 import Controls from '../../components/controls/Controls.jsx'
@@ -31,8 +30,8 @@ import {
   insertRoom,
   updateRoom,
 } from '../../redux/apiRequest/roomApi.js'
-import { useDispatch, useSelector } from 'react-redux'
-import { createAxios } from '../../createInstance.js'
+import {useDispatch, useSelector} from 'react-redux'
+import {createAxios} from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -43,9 +42,6 @@ const useStyles = makeStyles(theme => ({
   searchInput: {
     width: '75%',
   },
-  newButton: {
-    left: '40px',
-  },
   filterActive: {
     left: '40px',
   },
@@ -53,62 +49,60 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
   {
-    id: 'roomName',
+    id: 'fullName',
     disablePadding: false,
-    label: 'Room Name',
+    label: 'Full Name',
   },
   {
-    id: 'roomType',
+    id: 'email',
     disablePadding: false,
-    label: 'Room Type',
+    label: 'Email',
   },
   {
-    id: 'price',
+    id: 'phone',
     disablePadding: false,
-    label: 'Current Price',
+    label: 'Phone',
   },
   {
-    id: 'description',
+    id: 'address',
     disablePadding: false,
-    label: 'Description',
+    label: 'Address',
   },
   {
-    id: 'available',
+    id: 'startDate',
     disablePadding: false,
-    label: 'Available',
+    lable: 'Start Date',
   },
   {
-    id: 'status',
+    id: 'endDate',
     disablePadding: false,
-    label: 'Status',
+    lable: 'End Date',
+  },
+  {
+    id: 'discount',
+    disablePadding: false,
+    lable: 'Discount',
   },
 ]
 
-const initialFilters = {
-  filterActive: true,
-  filterAvailable: false,
-}
+// const initialFilters = {}
 
-export default function Rooms() {
+export default function RoomReservationHistory() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
-  const [filter, setFilter] = useState(initialFilters)
+  // const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
-      return items.filter(
-        item =>
-          (item.IsActive || !filter.filterActive) &&
-          (item.IsAvailable || !filter.filterAvailable),
-      )
+      return items
     },
   })
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
-  const records = useSelector(state => state.rooms.rooms?.allRooms)
+  const records = useSelector(state => state.rooms.roomHistory?.allRoomHistory)
   let axiosJWT = createAxios(user, dispatch, navigate)
-  const {hotelId, hotelName} = useParams()
+  const {hotelId, hotelName, roomId, roomName} = useParams()
 
   useEffect(() => {
     if (!user) {
@@ -128,86 +122,81 @@ export default function Rooms() {
     setFilterFn({
       fn: items => {
         if (target.value == '') {
-          return items.filter(
-            item =>
-              (item.IsActive || !filter.filterActive) &&
-              (item.IsAvailable || !filter.filterAvailable),
-          )
+          return items
         } else {
           return items.filter(
             x =>
-              x.RoomName.toLowerCase().includes(target.value) &&
-              (x.IsActive || !filter.filterActive) &&
-              (x.IsAvailable || !filter.filterAvailable),
+              x.FirstName.toLowerCase().includes(target.value) ||
+              x.LastName.toLowerCase().includes(target.value),
           )
         }
       },
     })
   }
 
-  const handleFilter = e => {
-    const {name, checked} = e.target
-    setFilter({
-      ...filter,
-      [name]: checked,
-    })
-  }
+  // const handleFilter = e => {
+  //   const {name, checked} = e.target
+  //   setFilter({
+  //     ...filter,
+  //     [name]: checked,
+  //   })
+  // }
 
-  useEffect(() => {
-    setFilterFn({
-      fn: items => {
-        return items.filter(
-          item =>
-            (item.IsActive || !filter.filterActive) &&
-            (item.IsAvailable || !filter.filterAvailable),
-        )
-      },
-    })
-  }, [filter])
+  // useEffect(() => {
+  //   setFilterFn({
+  //     fn: items => {
+  //       return items.filter(
+  //         item =>
+  //           (item.IsActive || !filter.filterActive) &&
+  //           (item.IsAvailable || !filter.filterAvailable),
+  //       )
+  //     },
+  //   })
+  // }, [filter])
 
-  const addOrEdit = async (room, resetForm) => {
-    if (room.RoomId == '') {
-      const resMsg = await insertRoom(
-        user?.accessToken,
-        dispatch,
-        axiosJWT,
-        room,
-        hotelId,
-      )
-      alert(resMsg)
-    } else {
-      const resMsg = await updateRoom(
-        user?.accessToken,
-        dispatch,
-        axiosJWT,
-        room,
-        hotelId,
-      )
-      alert(resMsg)
-    }
-    resetForm()
-    setRecordForEdit(null)
-    setOpenPopup(false)
-  }
+  // const addOrEdit = async (room, resetForm) => {
+  //   if (room.RoomId == '') {
+  //     const resMsg = await insertRoom(
+  //       user?.accessToken,
+  //       dispatch,
+  //       axiosJWT,
+  //       room,
+  //       hotelId,
+  //     )
+  //     alert(resMsg)
+  //   } else {
+  //     const resMsg = await updateRoom(
+  //       user?.accessToken,
+  //       dispatch,
+  //       axiosJWT,
+  //       room,
+  //       hotelId,
+  //     )
+  //     alert(resMsg)
+  //   }
+  //   resetForm()
+  //   setRecordForEdit(null)
+  //   setOpenPopup(false)
+  // }
 
-  const openInPopup = item => {
-    console.log(item)
-    setRecordForEdit(item)
-    setOpenPopup(true)
-  }
+  // const openInPopup = item => {
+  //   console.log(item)
+  //   setRecordForEdit(item)
+  //   setOpenPopup(true)
+  // }
 
   return (
     <>
       <NavBar page="Hotels" pages={pages} value={1} />
       <PageHeader
-        title={`Rooms of ${hotelName}`}
-        subTitle="List of rooms"
-        icon={<BedroomChildIcon fontSize="medium" />}
+        title={`Room ${roomName} of ${hotelName}`}
+        subTitle={`List of reservations of room ${roomName}`}
+        icon={<HistoryIcon fontSize="medium" />}
       />
       <Paper className={classes.pageContent}>
         <Toolbar>
           <Controls.Input
-            label="Search Rooms"
+            label="Search Users"
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
@@ -218,43 +207,9 @@ export default function Rooms() {
             }}
             onChange={handleSearch}
           />
-          <Controls.Button
-            text="Add New"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setOpenPopup(true)
-              setRecordForEdit(null)
-            }}
-          />
         </Toolbar>
         <TblContainer>
           <TblHead />
-          <FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="filterActive"
-                  color="primary"
-                  checked={filter.filterActive}
-                  onChange={handleFilter}
-                />
-              }
-              label="Show Active"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="filterAvailable"
-                  color="primary"
-                  checked={filter.filterAvailable}
-                  onChange={handleFilter}
-                />
-              }
-              label="Show Available"
-            />
-          </FormControl>
           <TableBody>
             {recordsAfterPagingAndSorting() &&
               recordsAfterPagingAndSorting().map(item => (
@@ -278,7 +233,12 @@ export default function Rooms() {
                     <Controls.ActionButton
                       color="secondary"
                       onClick={async () => {
-                        const resMsg = await deleteRoom(user?.accessToken, dispatch, axiosJWT, item);
+                        const resMsg = await deleteRoom(
+                          user?.accessToken,
+                          dispatch,
+                          axiosJWT,
+                          item,
+                        )
                         alert(resMsg)
                       }}>
                       <CloseIcon fontSize="small" />

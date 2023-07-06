@@ -89,7 +89,7 @@ const initialFilters = {
   filterAvailable: false,
 }
 
-export default function Rooms() {
+export default function UserReservationHistory() {
   const classes = useStyles()
   const [recordForEdit, setRecordForEdit] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
@@ -117,7 +117,7 @@ export default function Rooms() {
     getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
+  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
     records,
     headCells,
     filterFn,
@@ -256,8 +256,8 @@ export default function Rooms() {
             />
           </FormControl>
           <TableBody>
-            {recordsAfterPagingAndSorting() &&
-              recordsAfterPagingAndSorting().map(item => (
+            {recordsAfterPaging() &&
+              recordsAfterPaging().map(item => (
                 <TableRow key={item.ID[0]}>
                   <TableCell>{item.RoomName}</TableCell>
                   <TableCell>{item.RoomTypeName}</TableCell>

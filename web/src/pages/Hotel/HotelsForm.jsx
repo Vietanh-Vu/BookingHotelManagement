@@ -30,7 +30,7 @@ export default function HotelsForm(props) {
   const categories = useSelector(
     state => state.hotels.categories?.allCategories,
   )
-  let axiosJWT = createAxios(user, dispatch)
+  let axiosJWT = createAxios(user, dispatch, navigate)
 
   useEffect(() => {
     if (!user) {

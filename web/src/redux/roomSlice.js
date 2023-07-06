@@ -13,6 +13,11 @@ const roomSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    roomHistory: {
+      allRoomHistory: null,
+      isFetching: null,
+      error: null,
+    }
   },
   reducers: {
     getRoomsStart: state => {
@@ -61,6 +66,18 @@ const roomSlice = createSlice({
       state.rooms.isFetching = false
       state.rooms.error = true
     },
+    getRoomHistoryStart: state => {
+      state.roomHistory.isFetching = true
+    },
+    getRoomHistorySuccess: (state, action) => {
+      state.roomHistory.isFetching = false
+      state.roomHistory.allRooms = action.payload
+      state.roomHistory.error = false
+    },
+    getRoomHistoryFailed: state => {
+      state.roomHistory.isFetching = false
+      state.roomHistory.error = true
+    },
   },
 })
 
@@ -76,7 +93,10 @@ export const {
   getRoomTypesSuccess,
   updateRoomsFailed,
   updateRoomsStart,
-  updateRoomsSuccess
+  updateRoomsSuccess,
+  getRoomHistoryFailed,
+  getRoomHistoryStart,
+  getRoomHistorySuccess,
 } = roomSlice.actions
 
 export default roomSlice.reducer

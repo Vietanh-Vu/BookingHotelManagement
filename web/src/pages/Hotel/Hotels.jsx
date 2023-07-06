@@ -11,6 +11,9 @@ import {
   Checkbox,
   FormControlLabel,
   FormControl,
+  Box,
+  Container,
+  Unstable_Grid2 as Grid,
 } from '@mui/material'
 import axios from 'axios'
 import AddIcon from '@mui/icons-material/Add'
@@ -33,11 +36,21 @@ import {
   updateHotel,
 } from '../../redux/apiRequest/hotelApi.js'
 import {createAxios} from '../../createInstance.js'
+import {Sum} from '../../components/overview/Sum.jsx'
+import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon'
+import {Circle} from '../../components/overview/Circle.jsx'
+import {ColumnChart} from '../../components/overview/ColumnChart.jsx'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
     marginLeft: '64px',
     marginRight: '64px',
+    padding: '16px',
+  },
+  overview: {
+    marginLeft: '64px',
+    marginRight: '64px',
+    marginTop: '64px',
     padding: '16px',
   },
   searchInput: {
@@ -94,7 +107,7 @@ export default function Hotels() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.hotels.hotels?.allHotels)
-  let axiosJWT = createAxios(user, dispatch)
+  let axiosJWT = createAxios(user, dispatch, navigate)
 
   useEffect(() => {
     if (!user) {
@@ -103,7 +116,7 @@ export default function Hotels() {
     getAllHotels(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
     records,
     headCells,
     filterFn,
@@ -154,7 +167,12 @@ export default function Hotels() {
       )
       alert(resMsg)
     } else {
-      const resMsg = await updateHotel(user?.accessToken, dispatch, axiosJWT, hotel)
+      const resMsg = await updateHotel(
+        user?.accessToken,
+        dispatch,
+        axiosJWT,
+        hotel,
+      )
       alert(resMsg)
     }
     resetForm()
@@ -217,8 +235,8 @@ export default function Hotels() {
             />
           </FormControl>
           <TableBody>
-            {recordsAfterPaging() &&
-              recordsAfterPaging().map(item => (
+            {recordsAfterPagingAndSorting() &&
+              recordsAfterPagingAndSorting().map(item => (
                 <TableRow key={item.ID[0]}>
                   <TableCell
                     onClick={() =>
@@ -271,8 +289,13 @@ export default function Hotels() {
                     <Controls.ActionButton
                       color="secondary"
                       onClick={async () => {
-                        const resMsg = await deleteHotel(user?.accessToken, dispatch, axiosJWT, item);
-                        alert(resMsg);
+                        const resMsg = await deleteHotel(
+                          user?.accessToken,
+                          dispatch,
+                          axiosJWT,
+                          item,
+                        )
+                        alert(resMsg)
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
@@ -289,6 +312,47 @@ export default function Hotels() {
         setOpenPopup={setOpenPopup}>
         <HotelsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
+      <Paper className={classes.overview}>
+        <Container maxWidth="xl">
+          <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 2, md: 3}}>
+            <Grid item xs={3.7}>
+              <Sum
+                difference={12}
+                positive
+                sx={{height: '100%'}}
+                value="$24k"
+                icon={<CurrencyDollarIcon />}
+              />
+            </Grid>
+            <Grid item xs={3.3}></Grid>
+            <Grid item xs={5}></Grid>
+            <Grid item xs={3.7}>
+              <Circle
+                chartSeries={[30, 15, 22, 13, 20]}
+                labels={[
+                  'Category 1',
+                  'Category 2',
+                  'Category 3',
+                  'Category 4',
+                  'Category 5',
+                ]}
+                sx={{height: '100%'}}
+              />
+            </Grid>
+            <Grid xs={8.3}>
+              <ColumnChart
+                chartSeries={[
+                  {
+                    name: 'Sales',
+                    data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20],
+                  },
+                ]}
+                sx={{height: '100%'}}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Paper>
     </>
   )
 }
