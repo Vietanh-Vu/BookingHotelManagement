@@ -8,6 +8,11 @@ const userSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    userHistory: {
+      allUserHistory: null,
+      isFetching: null,
+      error: null,
+    },
   },
   reducers: {
     getUserStart: state => {
@@ -44,6 +49,18 @@ const userSlice = createSlice({
       state.users.isFetching = false
       state.users.error = true
     },
+    getUserHistoryStart: state => {
+      state.userHistory.isFetching = true
+    },
+    getUserHistorySuccess: (state, action) => {
+      state.userHistory.isFetching = false
+      state.userHistory.allUserHistory = action.payload
+      state.userHistory.error = false
+    },
+    getUserHistoryFailed: state => {
+      state.userHistory.isFetching = false
+      state.userHistory.error = true
+    },
   },
 })
 
@@ -56,7 +73,10 @@ export const {
   deleteAdminSuccess,
   setAdminFailed,
   setAdminSuccess,
-  setAdminStart
+  setAdminStart,
+  getUserHistoryFailed,
+  getUserHistoryStart,
+  getUserHistorySuccess,
 } = userSlice.actions
 
 export default userSlice.reducer

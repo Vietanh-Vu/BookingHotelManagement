@@ -5,8 +5,11 @@ import {
   TableRow,
   TableCell,
   TablePagination,
+  TableSortLabel,
+  Box
 } from '@mui/material'
 import {makeStyles} from '@mui/styles'
+import { visuallyHidden } from "@mui/utils";
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -35,6 +38,62 @@ export default function useTable(records, headCells, filterFn) {
   const [order, setOrder] = useState()
   const [orderBy, setOrderBy] = useState()
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
+  const TblPagination = () => (
+    <TablePagination
+      component="div"
+      page={page}
+      rowsPerPageOptions={pages}
+      rowsPerPage={rowsPerPage}
+      count={records ? records.length : 0}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
+  )
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1
+    }
+    return 0
+  }
+
+  function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy)
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index])
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0])
+      if (order !== 0) return order
+      return a[1] - b[1]
+    })
+    return stabilizedThis.map(el => el[0])
+  }
+
+  const recordsAfterPagingAndSorting = () => {
+    return records
+      ? stableSort(filterFn.fn(records), getComparator(order, orderBy)).slice(
+          page * rowsPerPage,
+          (page + 1) * rowsPerPage,
+        )
+      : records
+  }
+
   const TblContainer = props => (
     <Table className={classes.table}>{props.children}</Table>
   )
@@ -62,6 +121,13 @@ export default function useTable(records, headCells, filterFn) {
                     handleSortRequest(headCell.id)
                   }}>
                   {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === 'desc'
+                        ? 'sorted descending'
+                        : 'sorted ascending'}
+                    </Box>
+                  ) : null}
                 </TableSortLabel>
               )}
             </TableCell>
@@ -69,62 +135,6 @@ export default function useTable(records, headCells, filterFn) {
         </TableRow>
       </TableHead>
     )
-  }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  const TblPagination = () => (
-    <TablePagination
-      component="div"
-      page={page}
-      rowsPerPageOptions={pages}
-      rowsPerPage={rowsPerPage}
-      count={records ? records.length : 0}
-      onPageChange={handleChangePage}
-      onRowsPerPageChange={handleChangeRowsPerPage}
-    />
-  )
-
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index])
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0])
-      if (order !== 0) return order
-      return a[1] - b[1]
-    })
-    return stabilizedThis.map(el => el[0])
-  }
-
-  function getComparator(order, orderBy) {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy)
-  }
-
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1
-    }
-    return 0
-  }
-
-  const recordsAfterPagingAndSorting = () => {
-    return records
-      ? stableSort(filterFn.fn(records), getComparator(order, orderBy)).slice(
-          page * rowsPerPage,
-          (page + 1) * rowsPerPage,
-        )
-      : records
   }
 
   return {

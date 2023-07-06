@@ -71,7 +71,7 @@ const roomSlice = createSlice({
     },
     getRoomHistorySuccess: (state, action) => {
       state.roomHistory.isFetching = false
-      state.roomHistory.allRooms = action.payload
+      state.roomHistory.allRoomHistory = action.payload
       state.roomHistory.error = false
     },
     getRoomHistoryFailed: state => {

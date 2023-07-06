@@ -23,9 +23,13 @@ import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
 import useTable from '../../components/useTable.jsx'
-import {getAllUsers, deleteAdmin, setAdmin} from '../../redux/apiRequest/userApi.js'
+import {
+  getAllUsers,
+  deleteAdmin,
+  setAdmin,
+} from '../../redux/apiRequest/userApi.js'
 import {useDispatch, useSelector} from 'react-redux'
-import { createAxios } from '../../createInstance.js'
+import {createAxios} from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -48,26 +52,31 @@ const headCells = [
   {
     id: 'fullName',
     disablePadding: false,
+    disableSorting: true,
     label: 'Full Name',
   },
   {
     id: 'email',
     disablePadding: false,
+    disableSorting: true,
     label: 'Email',
   },
   {
     id: 'phone',
     disablePadding: false,
+    disableSorting: true,
     label: 'Phone',
   },
   {
     id: 'address',
     disablePadding: false,
+    disableSorting: true,
     label: 'Address',
   },
   {
     id: 'role',
     disablePadding: false,
+    disableSorting: true,
     label: 'Role',
   },
 ]
@@ -90,20 +99,17 @@ export default function Rooms() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.users.users?.allUsers)
-  let axiosJWT = createAxios(user, dispatch, navigate);
+  let axiosJWT = createAxios(user, dispatch, navigate)
 
   useEffect(() => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllUsers(user?.accessToken, dispatch, axiosJWT);
+    getAllUsers(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
-    records,
-    headCells,
-    filterFn,
-  )
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
+    useTable(records, headCells, filterFn)
 
   const handleSearch = e => {
     const target = e.target
@@ -181,16 +187,61 @@ export default function Rooms() {
             {recordsAfterPagingAndSorting() &&
               recordsAfterPagingAndSorting().map(item => (
                 <TableRow key={item.UsersId}>
-                  <TableCell>{item.FirstName + ' ' + item.LastName}</TableCell>
-                  <TableCell>{item.Email}</TableCell>
-                  <TableCell>{item.Phone}</TableCell>
-                  <TableCell>{item.Address}</TableCell>
-                  <TableCell>{item.IsAdmin ? 'Admin' : 'User'}</TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/users/${item.UsersId}/${
+                          item.FirstName + item.LastName
+                        }`,
+                      )
+                    }>
+                    {item.FirstName + ' ' + item.LastName}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/users/${item.UsersId}/${
+                          item.FirstName + item.LastName
+                        }`,
+                      )
+                    }>
+                    {item.Email}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/users/${item.UsersId}/${
+                          item.FirstName + item.LastName
+                        }`,
+                      )
+                    }>
+                    {item.Phone}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/users/${item.UsersId}/${
+                          item.FirstName + item.LastName
+                        }`,
+                      )
+                    }>
+                    {item.Address}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/users/${item.UsersId}/${
+                          item.FirstName + item.LastName
+                        }`,
+                      )
+                    }>
+                    {item.IsAdmin ? 'Admin' : 'User'}
+                  </TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
                       onClick={() => {
-                        setAdmin(user?.accessToken, dispatch, axiosJWT, item);
+                        setAdmin(user?.accessToken, dispatch, axiosJWT, item)
                       }}>
                       <AddIcon fontSize="small" />
                     </Controls.ActionButton>

@@ -35,7 +35,7 @@ function App() {
           <Route path='login' element={<SignIn />} />
           <Route path='register' element={<Register />} />
           <Route path="hotels/rooms/:hotelId/:hotelName/:roomId/:roomName" element={<RoomReservationHistory />} />
-          <Route path="users/:userId" element={<UserReservationHistory />} />
+          <Route path="users/:userId/:userName" element={<UserReservationHistory />} />
         </Route>
       </Routes>
     </div>

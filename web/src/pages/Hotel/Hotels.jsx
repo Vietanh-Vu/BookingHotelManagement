@@ -66,28 +66,33 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
   {
-    id: 'hotelName',
+    id: 'HotelName',
     disablePadding: false,
+    disableSorting: true,
     label: 'Hotel Name',
   },
   {
-    id: 'category',
+    id: 'Category',
     disablePadding: false,
+    disableSorting: true,
     label: 'Category',
   },
   {
-    id: 'address',
+    id: 'Address',
     disablePadding: false,
+    disableSorting: true,
     label: 'Address',
   },
   {
-    id: 'description',
+    id: 'Description',
     disablePadding: false,
+    disableSorting: true,
     label: 'Description',
   },
   {
-    id: 'status',
+    id: 'Status',
     disablePadding: false,
+    disableSorting: true,
     label: 'Status',
   },
 ]

@@ -8,28 +8,16 @@ import {
   TableCell,
   Toolbar,
   InputAdornment,
-  Checkbox,
-  FormControlLabel,
-  FormControl,
+  Box,
 } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import HistoryIcon from '@mui/icons-material/History'
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline'
-import CloseIcon from '@mui/icons-material/Close'
 import Controls from '../../components/controls/Controls.jsx'
 import NavBar from '../../components/NavBar.jsx'
 import {pages} from '../Var.jsx'
-import RoomsForm from './RoomsForm.jsx'
 import PageHeader from '../../components/PageHeader.jsx'
-import Popup from '../../components/Popup.jsx'
 import useTable from '../../components/useTable.jsx'
-import {
-  deleteRoom,
-  getAllRoom,
-  insertRoom,
-  updateRoom,
-} from '../../redux/apiRequest/roomApi.js'
+import {getAllRoomHistory} from '../../redux/apiRequest/roomApi.js'
 import {useDispatch, useSelector} from 'react-redux'
 import {createAxios} from '../../createInstance.js'
 
@@ -49,49 +37,55 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
   {
-    id: 'fullName',
+    id: 'FullName',
     disablePadding: false,
+    disableSorting: true,
     label: 'Full Name',
   },
   {
-    id: 'email',
+    id: 'Email',
     disablePadding: false,
+    disableSorting: true,
     label: 'Email',
   },
   {
-    id: 'phone',
+    id: 'Phone',
     disablePadding: false,
+    disableSorting: true,
     label: 'Phone',
   },
   {
-    id: 'address',
+    id: 'Address',
     disablePadding: false,
+    disableSorting: true,
     label: 'Address',
   },
   {
-    id: 'startDate',
+    id: 'StartDate',
     disablePadding: false,
-    lable: 'Start Date',
+    disableSorting: true,
+    label: 'Start Date',
   },
   {
-    id: 'endDate',
+    id: 'EndDate',
     disablePadding: false,
-    lable: 'End Date',
+    disableSorting: true,
+    label: 'End Date',
   },
   {
-    id: 'discount',
+    id: 'DiscountPercent',
     disablePadding: false,
-    lable: 'Discount',
+    label: 'Discount',
+  },
+  {
+    id: 'TotalPrice',
+    disablePadding: false,
+    label: 'Total Price',
   },
 ]
 
-// const initialFilters = {}
-
 export default function RoomReservationHistory() {
   const classes = useStyles()
-  const [recordForEdit, setRecordForEdit] = useState(null)
-  const [openPopup, setOpenPopup] = useState(false)
-  // const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
       return items
@@ -104,18 +98,23 @@ export default function RoomReservationHistory() {
   let axiosJWT = createAxios(user, dispatch, navigate)
   const {hotelId, hotelName, roomId, roomName} = useParams()
 
+  let endTime = new Date()
+  endTime.setDate(endTime.getDate() - 2)
+  let startTime = new Date()
+  startTime.setDate(startTime.getDate() - 8)
+  startTime.setSeconds(startTime.getSeconds() - 1)
+  const [startDate, setStartDate] = useState(startTime)
+  const [endDate, setEndDate] = useState(endTime)
+
   useEffect(() => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
+    getAllRoomHistory(user?.accessToken, dispatch, axiosJWT, roomId)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
-    records,
-    headCells,
-    filterFn,
-  )
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
+    useTable(records, headCells, filterFn)
 
   const handleSearch = e => {
     const target = e.target
@@ -134,63 +133,21 @@ export default function RoomReservationHistory() {
     })
   }
 
-  // const handleFilter = e => {
-  //   const {name, checked} = e.target
-  //   setFilter({
-  //     ...filter,
-  //     [name]: checked,
-  //   })
-  // }
-
-  // useEffect(() => {
-  //   setFilterFn({
-  //     fn: items => {
-  //       return items.filter(
-  //         item =>
-  //           (item.IsActive || !filter.filterActive) &&
-  //           (item.IsAvailable || !filter.filterAvailable),
-  //       )
-  //     },
-  //   })
-  // }, [filter])
-
-  // const addOrEdit = async (room, resetForm) => {
-  //   if (room.RoomId == '') {
-  //     const resMsg = await insertRoom(
-  //       user?.accessToken,
-  //       dispatch,
-  //       axiosJWT,
-  //       room,
-  //       hotelId,
-  //     )
-  //     alert(resMsg)
-  //   } else {
-  //     const resMsg = await updateRoom(
-  //       user?.accessToken,
-  //       dispatch,
-  //       axiosJWT,
-  //       room,
-  //       hotelId,
-  //     )
-  //     alert(resMsg)
-  //   }
-  //   resetForm()
-  //   setRecordForEdit(null)
-  //   setOpenPopup(false)
-  // }
-
-  // const openInPopup = item => {
-  //   console.log(item)
-  //   setRecordForEdit(item)
-  //   setOpenPopup(true)
-  // }
+  const dateConvert = dateString => {
+    const date = new Date(dateString)
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Months are zero-based
+    const year = date.getFullYear()
+    const formattedDate = `${day}-${month}-${year}`
+    return formattedDate
+  }
 
   return (
     <>
       <NavBar page="Hotels" pages={pages} value={1} />
       <PageHeader
-        title={`Room ${roomName} of ${hotelName}`}
-        subTitle={`List of reservations of room ${roomName}`}
+        title={`${roomName} of ${hotelName}`}
+        subTitle={`List of reservations of ${roomName}`}
         icon={<HistoryIcon fontSize="medium" />}
       />
       <Paper className={classes.pageContent}>
@@ -213,49 +170,21 @@ export default function RoomReservationHistory() {
           <TableBody>
             {recordsAfterPagingAndSorting() &&
               recordsAfterPagingAndSorting().map(item => (
-                <TableRow key={item.ID[0]}>
-                  <TableCell>{item.RoomName}</TableCell>
-                  <TableCell>{item.RoomTypeName}</TableCell>
-                  <TableCell>{item.CurrentPrice}</TableCell>
-                  <TableCell>{item.Description}</TableCell>
-                  <TableCell>
-                    {item.IsAvailable ? 'Available' : 'Unavailable'}
-                  </TableCell>
-                  <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
-                  <TableCell>
-                    <Controls.ActionButton
-                      color="primary"
-                      onClick={() => {
-                        openInPopup(item)
-                      }}>
-                      <ModeEditOutlineIcon fontSize="small" />
-                    </Controls.ActionButton>
-                    <Controls.ActionButton
-                      color="secondary"
-                      onClick={async () => {
-                        const resMsg = await deleteRoom(
-                          user?.accessToken,
-                          dispatch,
-                          axiosJWT,
-                          item,
-                        )
-                        alert(resMsg)
-                      }}>
-                      <CloseIcon fontSize="small" />
-                    </Controls.ActionButton>
-                  </TableCell>
+                <TableRow key={item.UsersId}>
+                  <TableCell>{item.FirstName + ' ' + item.LastName}</TableCell>
+                  <TableCell>{item.Email}</TableCell>
+                  <TableCell>{item.Phone}</TableCell>
+                  <TableCell>{item.Address}</TableCell>
+                  <TableCell>{dateConvert(item.StartDate)}</TableCell>
+                  <TableCell>{dateConvert(item.EndDate)}</TableCell>
+                  <TableCell>{item.DiscountPercent * 100}%</TableCell>
+                  <TableCell>{item.TotalPrice}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </TblContainer>
         <TblPagination />
       </Paper>
-      <Popup
-        title="Room form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}>
-        <RoomsForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
-      </Popup>
     </>
   )
 }
