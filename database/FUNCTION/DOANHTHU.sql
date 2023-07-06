@@ -73,7 +73,7 @@ AS
 
 SELECT * FROM dbo.Doanhthu_Hotel_12months('HO01') ORDER BY MONTH
 
---5. Liệt kê doanh thu các loại phòng trong 1 THÁNG GẦN NHẤT
+--4. Liệt kê doanh thu các loại phòng trong 1 THÁNG GẦN NHẤT
 -- INPUT: NULL
 -- OUTPUT: YEAR, ROOMTYPENAME, INCOME
 
@@ -92,7 +92,7 @@ AS
 
 SELECT * FROM dbo.Doanhthu_ALL_RT_1month()
 
--6.---------Tổng users theo tháng của hệ thống khách sạn TRONG 12 THÁNG GẦN NHẤT
+--5.---------Tổng users theo tháng của hệ thống khách sạn TRONG 12 THÁNG GẦN NHẤT
 -- INPUT : 
 -- OUTPUT : TỔNG USERS(GUEST) ĐẾN ĐẶT PHÒNG TRONG 12 THÁNG 
 -- Cụ thể : Month(int), NumberofUsers(int)
