@@ -98,7 +98,7 @@ export const historyRoom = (req, res) => {
     if (err) {
       return res
         .status(500)
-        .json({ error: "Đã xảy ra lỗi trong quá trình xóa phòng." });
+        .json({ error: "Đã xảy ra lỗi trong quá trình lay lich su phong." });
     }
     res.json(data);
   });

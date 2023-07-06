@@ -65,4 +65,23 @@ export const setUserAdmin = (req, res) => {
   });
 };
 
-export default { getUsers, getUsersByName, deleteUserAdmin, setUserAdmin };
+// xem lich su user
+export const historyUser = (req, res) => {
+  const UsersId = req.params.id;
+  UserModel.history(UsersId, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Đã xảy ra lỗi trong quá trình lấy lich su user.",
+      });
+    }
+    res.json(data);
+  });
+};
+
+export default {
+  getUsers,
+  getUsersByName,
+  deleteUserAdmin,
+  setUserAdmin,
+  historyUser,
+};
