@@ -31,8 +31,8 @@ import {
   insertRoom,
   updateRoom,
 } from '../../redux/apiRequest/roomApi.js'
-import { useDispatch, useSelector } from 'react-redux'
-import { createAxios } from '../../createInstance.js'
+import {useDispatch, useSelector} from 'react-redux'
+import {createAxios} from '../../createInstance.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -55,31 +55,36 @@ const headCells = [
   {
     id: 'roomName',
     disablePadding: false,
+    disableSorting: true,
     label: 'Room Name',
   },
   {
     id: 'roomType',
     disablePadding: false,
+    disableSorting: true,
     label: 'Room Type',
   },
   {
-    id: 'price',
+    id: 'CurrentPrice',
     disablePadding: false,
     label: 'Current Price',
   },
   {
     id: 'description',
     disablePadding: false,
+    disableSorting: true,
     label: 'Description',
   },
   {
     id: 'available',
     disablePadding: false,
+    disableSorting: true,
     label: 'Available',
   },
   {
     id: 'status',
     disablePadding: false,
+    disableSorting: true,
     label: 'Status',
   },
 ]
@@ -107,7 +112,7 @@ export default function Rooms() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.rooms.rooms?.allRooms)
-  let axiosJWT = createAxios(user, dispatch)
+  let axiosJWT = createAxios(user, dispatch, navigate)
   const {hotelId, hotelName} = useParams()
 
   useEffect(() => {
@@ -117,11 +122,8 @@ export default function Rooms() {
     getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPaging} = useTable(
-    records,
-    headCells,
-    filterFn,
-  )
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
+    useTable(records, headCells, filterFn)
 
   const handleSearch = e => {
     const target = e.target
@@ -256,17 +258,57 @@ export default function Rooms() {
             />
           </FormControl>
           <TableBody>
-            {recordsAfterPaging() &&
-              recordsAfterPaging().map(item => (
+            {recordsAfterPagingAndSorting() &&
+              recordsAfterPagingAndSorting().map(item => (
                 <TableRow key={item.ID[0]}>
-                  <TableCell>{item.RoomName}</TableCell>
-                  <TableCell>{item.RoomTypeName}</TableCell>
-                  <TableCell>{item.CurrentPrice}</TableCell>
-                  <TableCell>{item.Description}</TableCell>
-                  <TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
+                    {item.RoomName}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
+                    {item.RoomTypeName}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
+                    {item.CurrentPrice}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
+                    {item.Description}
+                  </TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
                     {item.IsAvailable ? 'Available' : 'Unavailable'}
                   </TableCell>
-                  <TableCell>{item.IsActive ? 'Active' : 'Inactive'}</TableCell>
+                  <TableCell
+                    onClick={() =>
+                      navigate(
+                        `/admin/hotels/rooms/${hotelId}/${hotelName}/${item.RoomId}/${item.RoomName}`,
+                      )
+                    }>
+                    {item.IsActive ? 'Active' : 'Inactive'}
+                  </TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
@@ -278,7 +320,12 @@ export default function Rooms() {
                     <Controls.ActionButton
                       color="secondary"
                       onClick={async () => {
-                        const resMsg = await deleteRoom(user?.accessToken, dispatch, axiosJWT, item);
+                        const resMsg = await deleteRoom(
+                          user?.accessToken,
+                          dispatch,
+                          axiosJWT,
+                          item,
+                        )
                         alert(resMsg)
                       }}>
                       <CloseIcon fontSize="small" />

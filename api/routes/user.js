@@ -4,6 +4,8 @@ import {
   getUsersByName,
   deleteUserAdmin,
   setUserAdmin,
+  historyUser,
+  updateUser,
 } from "../controllers/user.js";
 
 const UserRouter = express.Router();
@@ -18,5 +20,11 @@ UserRouter.put("/delete/:id", deleteUserAdmin);
 
 // set user admin
 UserRouter.put("/set/:id", setUserAdmin);
+
+// history user
+UserRouter.get("/history/:id", historyUser);
+
+// update user
+UserRouter.put("/update/:id", updateUser);
 
 export default UserRouter;

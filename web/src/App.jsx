@@ -12,6 +12,8 @@ import Users from './pages/User/Users.jsx'
 import Rooms from './pages/Room/Rooms.jsx'
 import SignIn from './pages/Login/SignIn.jsx'
 import Register from './pages/Login/Register.jsx'
+import RoomReservationHistory from './pages/Room/RoomReservationHistory.jsx'
+import UserReservationHistory from './pages/User/UserReservationHistory.jsx'
 
 const useStyles = makeStyles({
   appMain: {
@@ -32,6 +34,8 @@ function App() {
           <Route path="users" element={<Users />} />
           <Route path='login' element={<SignIn />} />
           <Route path='register' element={<Register />} />
+          <Route path="hotels/rooms/:hotelId/:hotelName/:roomId/:roomName" element={<RoomReservationHistory />} />
+          <Route path="users/:userId/:userName" element={<UserReservationHistory />} />
         </Route>
       </Routes>
     </div>

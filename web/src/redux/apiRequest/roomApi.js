@@ -1,5 +1,8 @@
 import axios from 'axios'
 import {
+  getRoomHistoryFailed,
+  getRoomHistoryStart,
+  getRoomHistorySuccess,
   getRoomTypesFailed,
   getRoomTypesStart,
   getRoomTypesSuccess,
@@ -142,5 +145,26 @@ export const deleteRoom = async (accessToken, dispatch, axiosJWT, room) => {
     return res.data.message
   } catch (error) {
     dispatch(updateRoomsFailed())
+  }
+}
+
+export const getAllRoomHistory = async (accessToken, dispatch, axiosJWT, roomId) => {
+  dispatch(getRoomHistoryStart())
+  try {
+    const res = await axiosJWT.get(
+      `http://localhost:8000/admin/hotel/rooms/history/${roomId}`,
+      {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      },
+    )
+    dispatch(
+      getRoomHistorySuccess(
+        res.data
+      ),
+    )
+  } catch (error) {
+    dispatch(getRoomHistoryFailed())
   }
 }
