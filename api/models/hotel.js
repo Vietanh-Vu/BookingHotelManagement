@@ -8,9 +8,7 @@ import { dirname } from "path";
 // const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh
 
 class HotelModel {
-  // Tìm khách sạn theo tên
   static async getHotelByName(stringName, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
     const sqlQuery =
       "SELECT * FROM Hotel WHERE HotelName LIKE '%' + @name + '%'";
@@ -25,9 +23,8 @@ class HotelModel {
         }
       });
   }
-  // Lấy danh sách khách sạn
+
   static async getAll(callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy danh sách khách sạn
     const pool = await connect;
     const sqlQuery = `SELECT * 
                       FROM Hotel
@@ -41,9 +38,7 @@ class HotelModel {
     });
   }
 
-  // Thêm khách sạn
   static async create(hotelData, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để thêm khách sạn
     var pool = await connect;
     const sqlQuery =
       "INSERT INTO Hotel (CategoryId, HotelName, IsActive, Address, HotelImg, Description) VALUES (@CategoryId, @HotelName, @IsActive, @Address, @HotelImg, @Description)";
@@ -64,9 +59,7 @@ class HotelModel {
       });
   }
 
-  // Sửa khách sạn
   static async update(hotelId, hotelData, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để sửa khách sạn
     const pool = await connect;
     let sqlQuery =
       "UPDATE Hotel SET CategoryId = @CategoryId, HotelName = @HotelName, IsActive = @IsActive, Address = @Address, HotelImg = @HotelImg, Description = @Description WHERE HotelId = @id";
@@ -89,12 +82,10 @@ class HotelModel {
       });
   }
 
-  // Xóa khách sạn
   static async delete(hotelId, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
-    let sqlQuery = `UPDATE Hotel SET IsActive = 0 WHERE HotelId = @id;
-                    UPDATE Room SET IsActive = 0 WHERE HotelId = @id`;
+    //  The database already has the trigger which handles when HoteHotel is deleted; all the rooms belonging to that hotel are deleted.
+    let sqlQuery = `UPDATE Hotel SET IsActive = 0 WHERE HotelId = @id;`;
     const result = await pool
       .request()
       .input("id", sql.VarChar, hotelId)

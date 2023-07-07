@@ -3,7 +3,6 @@ import { connect, sql } from "../connectDB.js";
 class AuthModels {
   static async checkDupEmail(Email, callback) {
     const pool = await connect;
-    // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
     const sqlQueryCheckEmail = `SELECT * FROM Users WHERE Email = @Email`;
     await pool
       .request()
@@ -19,7 +18,6 @@ class AuthModels {
 
   static async register(userData, hashPassword, callback) {
     const pool = await connect;
-    // Thêm thông tin người dùng vào cơ sở dữ liệu
     const sqlQueryInsert = `INSERT INTO Users (FirstName, LastName, Email, Phone, Address, Password) VALUES (@FirstName, @LastName, @Email, @Phone, @Address, @Password)`;
     pool
       .request()

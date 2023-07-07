@@ -8,9 +8,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 
-// xem danh sách user
+// see list of users
 export const getUsers = (req, res) => {
-  // Logic lấy danh sách khách sạn từ cơ sở dữ liệu
   UserModel.getAllUsers((err, users) => {
     if (err) {
       return res.status(500).json({
@@ -21,9 +20,8 @@ export const getUsers = (req, res) => {
   });
 };
 
-// tìm user theo tên
+// find user by name
 export const getUsersByName = (req, res) => {
-  // Logic lấy danh sách user từ cơ sở dữ liệu
   UserModel.getUserByName(req.params.name, (err, users) => {
     if (err) {
       return res.status(500).json({
@@ -35,12 +33,11 @@ export const getUsersByName = (req, res) => {
   });
 };
 
-// Xóa user admin
+// delete user admin
 export const deleteUserAdmin = (req, res) => {
-  // Lấy ID user từ request params
+  // get ID user from request params
   const usersId = req.params.id;
 
-  // Logic tìm và xóa khách sạn trong cơ sở dữ liệu
   UserModel.deleteUserAdmin(usersId, (err, result) => {
     if (err) {
       return res
@@ -53,10 +50,9 @@ export const deleteUserAdmin = (req, res) => {
 
 // set user to admin
 export const setUserAdmin = (req, res) => {
-  // Lấy ID user từ request params
+  // get ID user from request params
   const usersId = req.params.id;
 
-  // Logic tìm và xóa khách sạn trong cơ sở dữ liệu
   UserModel.setUserAdmin(usersId, (err, result) => {
     if (err) {
       return res
@@ -67,7 +63,7 @@ export const setUserAdmin = (req, res) => {
   });
 };
 
-// xem lich su user
+// View user's history
 export const historyUser = (req, res) => {
   const UsersId = req.params.id;
   UserModel.history(UsersId, (err, data) => {
@@ -87,12 +83,12 @@ export const updateUser = async (req, res) => {
   // if user not change the email => update (not checkDupEmail)
   // else checkDupEmail then update
 
-  // kiem tra xem email user nhap vao co phai email moi hay ko
+  // Check if the email the user entered is a new email or not
   UserModel.findUserById(userData.UsersId, (err, data) => {
     if (err) {
       return res.status(500).json({ error: "Update failed" });
     } else if (data.at(0).Email === userData.Email) {
-      //  true => user khong doi mail, bo qua checkDupEmail, tien hanh update
+      //  true => user didn't changed email, skip checkDupEmail, proceed update
       UserModel.update(userData, hashPassword, (err, data) => {
         if (err) {
           return res
@@ -102,7 +98,7 @@ export const updateUser = async (req, res) => {
         res.json({ message: "Đã sửa thành công." });
       });
     } else {
-      // Kiểm tra email trùng
+      // Check for duplicate email
       AuthModels.checkDupEmail(userData.Email, (err, data) => {
         if (err) {
           return res.status(500).json({ error: "Update failed" });
@@ -110,7 +106,7 @@ export const updateUser = async (req, res) => {
           if (data.length > 0) {
             return res.status(400).json({ error: "Email already exists" });
           } else {
-            // ko trung thi tien hanh update
+            // If it doesn't match, proceed to update
             UserModel.update(userData, hashPassword, (err, data) => {
               if (err) {
                 return res

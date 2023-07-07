@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 
-// dang ra phai dung redis nhung du an nay dung tam array de luu tru refresh token
+// should use redis but this project uses temporary array to store refresh token
 let refreshTokens = [];
 let returnData = {};
 
@@ -20,7 +20,6 @@ export const register = async (req, res) => {
   const userData = req.body;
   const hashPassword = await bcrypt.hash(userData.Password, 10);
 
-  // Kiểm tra email trùng
   AuthModels.checkDupEmail(userData.Email, (err, data) => {
     if (err) {
       return res.status(500).json({ error: "Registration failed" });
@@ -56,7 +55,7 @@ export const login = async (req, res) => {
           data.at(0).Password
         );
         if (isPasswordValid && data.at(0).IsAdmin) {
-          // nếu đúng thì trả về jwt
+          // if true return jwt
           const { Password, ...dataWithoutPass } = data.at(0);
           returnData = dataWithoutPass;
           // refresh token key
@@ -67,17 +66,17 @@ export const login = async (req, res) => {
               expiresIn: "365d",
             }
           );
-          // luu refresh token vao array
+          // store refresh token into array
           refreshTokens.push(refreshToken);
 
-          // luu refresh token vao cookies
+          // store refresh token into cookies
           // res.cookie("refreshToken", refreshToken, {
           //   httpOnly: true,
           //   secure: false, // deploy chuyen thanh true
           //   sameSite: "strict",
           // });
 
-          // luu refresh token vao localStorage
+          // store refresh token into localStorage
           // localStorage.setItem("refreshToken", refreshToken);
 
           // access token key
@@ -96,10 +95,10 @@ export const login = async (req, res) => {
 };
 
 export const requestRefreshToken = async (req, res) => {
-  // lay refresh token tu user
+  // get refresh token from user
   // const refreshToken = req.cookies.refreshToken;
   // console.log(req);
-  // lay refresh token tu localStorage
+  // get refresh token from localStorage
   const refreshToken = req.body.refreshToken;
   // console.log(req.cookies);
   if (!refreshToken) {
@@ -116,12 +115,12 @@ export const requestRefreshToken = async (req, res) => {
     }
     refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
-    // tao access token va refresh token moi
+    // make new access token and refresh token
     // refresh token key
     const newRefreshToken = jwt.sign(returnData, process.env.JWT_REFRESH_KEY, {
       expiresIn: "365d",
     });
-    // luu refresh token vao array
+    // store refresh token into array
     refreshTokens.push(newRefreshToken);
 
     // access token key
@@ -129,13 +128,13 @@ export const requestRefreshToken = async (req, res) => {
       expiresIn: "30s",
     });
 
-    // luu refresh token vao cookies
+    // store refresh token into cookies
     // res.cookie("refreshToken", newRefreshToken, {
     //   httpOnly: true,
     //   secure: false, // deploy chuyen thanh true
     //   sameSite: "strict",
     // });
-    // luu refresh token vao localStorage
+    // store refresh token into localStorage
     return res.status(200).json({ newAccessToken, newRefreshToken });
   });
 };

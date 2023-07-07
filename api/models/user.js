@@ -1,9 +1,7 @@
 import { connect, sql } from "../connectDB.js";
 
 class UserModel {
-  // Lấy thông tin của các user
   static async getAllUsers(callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
     const pool = await connect;
     const sqlQuery = `SELECT UsersId, FirstName, LastName, Email, Phone, Address, IsAdmin FROM Users`;
     return await pool.request().query(sqlQuery, function (err, data) {
@@ -15,9 +13,7 @@ class UserModel {
     });
   }
 
-  // Tìm user theo tên
   static async getUserByName(stringName, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
     const pool = await connect;
     const sqlQuery =
       "SELECT * FROM Users WHERE FirstName LIKE '%' + @name + '%' OR LastName LIKE '%' + @name + '%'";
@@ -33,7 +29,6 @@ class UserModel {
       });
   }
 
-  // find user by id
   static async findUserById(UsersId, callback) {
     const pool = await connect;
     const sqlQuery = "SELECT * FROM Users WHERE UsersId = @id";
@@ -49,9 +44,7 @@ class UserModel {
       });
   }
 
-  // delete user admin
   static async deleteUserAdmin(UsersId, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
     let sqlQuery = "UPDATE Users SET IsAdmin = 0 WHERE UsersId = @id";
     const result = await pool
@@ -67,9 +60,7 @@ class UserModel {
       });
   }
 
-  // set user to admin
   static async setUserAdmin(UsersId, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
     const pool = await connect;
     let sqlQuery = "UPDATE Users SET IsAdmin = 1 WHERE UsersId = @id";
     const result = await pool
@@ -85,9 +76,7 @@ class UserModel {
       });
   }
 
-  // history
   static async history(UsersId, callback) {
-    // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để lấy user
     const pool = await connect;
     const sqlQuery = `SELECT Users.UsersId, StartDate, EndDate, DiscountPercent, TotalPrice, RoomName, CurrentPrice, RoomTypeName, HotelName, Hotel.Address AS HotelAddress, CategoryName 
                       FROM Users
@@ -110,7 +99,6 @@ class UserModel {
       });
   }
 
-  // update
   static async update(UsersData, hashPassword, callback) {
     const pool = await connect;
     const sqlQuery = `UPDATE Users SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, Address = @Address, Password = @Password

@@ -27,10 +27,10 @@ HotelRouter.get("/", getHotels);
 HotelRouter.post("/add", addHotel);
 
 // upload image
-// lấy đường dẫn tới thư mục hiện tại
+// get current directory
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = dirname(currentFilePath);
-const imgUploadPath = path.join(currentDirPath, "../../img/"); // thư mục upload ảnh sẽ là ./img/
+const imgUploadPath = path.join(currentDirPath, "../../img/"); // folder used to upload images is ./img/
 // console.log(imgUploadPath);
 // console.log(currentDirPath);
 // Cấu hình multer để lưu trữ tệp ảnh được tải lên
@@ -52,7 +52,7 @@ HotelRouter.post("/add/image", upload.single("myImage"), (req, res) => {
     const targetPath = path.join(imgUploadPath, file.filename);
     console.log(targetPath);
 
-    // Di chuyển tệp đã tải lên vào thư mục img
+    // Move uploaded file to img folder
     fs.rename(file.path, targetPath, (err) => {
       if (err) {
         console.log(err);
