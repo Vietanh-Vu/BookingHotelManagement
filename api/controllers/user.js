@@ -83,24 +83,45 @@ export const historyUser = (req, res) => {
 export const updateUser = async (req, res) => {
   const userData = req.body;
   const hashPassword = await bcrypt.hash(userData.Password, 10);
-  // Kiểm tra email trùng
-  AuthModels.checkDupEmail(userData.Email, (err, data) => {
+  // logic: check input user email,
+  // if user not change the email => update (not checkDupEmail)
+  // else checkDupEmail then update
+
+  // kiem tra xem email user nhap vao co phai email moi hay ko
+  UserModel.findUserById(userData.UsersId, (err, data) => {
     if (err) {
-      return res.status(500).json({ error: "Registration failed" });
+      return res.status(500).json({ error: "Update failed" });
+    } else if (data.at(0).Email === userData.Email) {
+      //  true => user khong doi mail, bo qua checkDupEmail, tien hanh update
+      UserModel.update(userData, hashPassword, (err, data) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+        }
+        res.json({ message: "Đã sửa thành công." });
+      });
     } else {
-      if (data.length > 0) {
-        return res.status(400).json({ error: "Email already exists" });
-      } else {
-        // ko trung thi tien hanh update
-        UserModel.update(userData, hashPassword, (err, data) => {
-          if (err) {
-            return res
-              .status(500)
-              .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+      // Kiểm tra email trùng
+      AuthModels.checkDupEmail(userData.Email, (err, data) => {
+        if (err) {
+          return res.status(500).json({ error: "Update failed" });
+        } else {
+          if (data.length > 0) {
+            return res.status(400).json({ error: "Email already exists" });
+          } else {
+            // ko trung thi tien hanh update
+            UserModel.update(userData, hashPassword, (err, data) => {
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+              }
+              res.json({ message: "Đã sửa thành công." });
+            });
           }
-          res.json({ message: "Đã sửa thành công." });
-        });
-      }
+        }
+      });
     }
   });
 };

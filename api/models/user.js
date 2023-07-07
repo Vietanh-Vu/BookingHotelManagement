@@ -33,6 +33,22 @@ class UserModel {
       });
   }
 
+  // find user by id
+  static async findUserById(UsersId, callback) {
+    const pool = await connect;
+    const sqlQuery = "SELECT * FROM Users WHERE UsersId = @id";
+    return await pool
+      .request()
+      .input("id", sql.VarChar, UsersId)
+      .query(sqlQuery, function (err, data) {
+        if (data.recordset.length > 0) {
+          callback(null, data.recordset);
+        } else {
+          callback(true, null);
+        }
+      });
+  }
+
   // delete user admin
   static async deleteUserAdmin(UsersId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa khách sạn
