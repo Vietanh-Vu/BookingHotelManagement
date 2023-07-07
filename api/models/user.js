@@ -107,6 +107,7 @@ class UserModel {
       .input("Phone", sql.VarChar, UsersData.Phone)
       .input("Address", sql.VarChar, UsersData.Address)
       .input("Password", sql.VarChar, hashPassword)
+      .input("UsersID", sql.VarChar, UsersData.UsersId)
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
