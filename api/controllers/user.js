@@ -1,5 +1,7 @@
 import express from "express";
+import bcrypt from "bcryptjs";
 import UserModel from "../models/user.js";
+import AuthModels from "../models/auth.js";
 
 const app = express();
 
@@ -78,10 +80,36 @@ export const historyUser = (req, res) => {
   });
 };
 
+export const updateUser = async (req, res) => {
+  const userData = req.body;
+  const hashPassword = await bcrypt.hash(userData.Password, 10);
+  // Kiểm tra email trùng
+  AuthModels.checkDupEmail(userData.Email, (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Registration failed" });
+    } else {
+      if (data.length > 0) {
+        return res.status(400).json({ error: "Email already exists" });
+      } else {
+        // ko trung thi tien hanh update
+        UserModel.update(userData, hashPassword, (err, data) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+          }
+          res.json({ message: "Đã sửa thành công." });
+        });
+      }
+    }
+  });
+};
+
 export default {
   getUsers,
   getUsersByName,
   deleteUserAdmin,
   setUserAdmin,
   historyUser,
+  updateUser,
 };

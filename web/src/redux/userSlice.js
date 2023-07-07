@@ -61,6 +61,17 @@ const userSlice = createSlice({
       state.userHistory.isFetching = false
       state.userHistory.error = true
     },
+    settingUserStart: state => {
+      state.users.isFetching = true
+    },
+    settingUserSuccess: (state) => {
+      state.users.isFetching = false
+      state.users.error = false
+    },
+    settingUserFailed: state => {
+      state.users.isFetching = false
+      state.users.error = true
+    },
   },
 })
 
@@ -77,6 +88,9 @@ export const {
   getUserHistoryFailed,
   getUserHistoryStart,
   getUserHistorySuccess,
+  settingUserFailed,
+  settingUserStart,
+  settingUserSuccess,
 } = userSlice.actions
 
 export default userSlice.reducer

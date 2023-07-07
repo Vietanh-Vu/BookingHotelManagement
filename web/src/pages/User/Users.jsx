@@ -12,8 +12,6 @@ import {
   FormControlLabel,
   FormControl,
 } from '@mui/material'
-import axios from 'axios'
-import jwt_decode from 'jwt-decode'
 import SearchIcon from '@mui/icons-material/Search'
 import GroupIcon from '@mui/icons-material/Group'
 import CloseIcon from '@mui/icons-material/Close'
@@ -87,8 +85,6 @@ const initialFilters = {
 
 export default function Rooms() {
   const classes = useStyles()
-  const [recordForEdit, setRecordForEdit] = useState(null)
-  const [openPopup, setOpenPopup] = useState(false)
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
     fn: items => {
