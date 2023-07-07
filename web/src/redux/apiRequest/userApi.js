@@ -11,6 +11,9 @@ import {
   getUserHistoryStart,
   getUserHistorySuccess,
   getUserHistoryFailed,
+  settingUserStart,
+  settingUserSuccess,
+  settingUserFailed,
 } from '../userSlice'
 
 export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
@@ -83,5 +86,40 @@ export const getAllUserHistory = async (accessToken, dispatch, axiosJWT, userId)
     )
   } catch (error) {
     dispatch(getUserHistoryFailed())
+  }
+}
+
+export const settingUser = async (
+  accessToken,
+  dispatch,
+  axiosJWT,
+  user,
+  userId
+) => {
+  dispatch(settingUserStart())
+  try {
+    const userData = {
+      UsersId: user.UsersId,
+      FirstName: user.FirstName,
+      LastName: user.LastName,
+      Email: user.Email,
+      Phone: user.Phone,
+      Address: user.Address,
+      Password: user.Password, 
+    }
+    const response = await axiosJWT.put(
+      `http://localhost:8000/admin/users/update/${userId}`,
+      userData,
+      {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      },
+    )
+    dispatch(settingUserSuccess())
+    return response.data.message
+  } catch (error) {
+    dispatch(settingUserFailed())
+    return error.response.data.error
   }
 }
