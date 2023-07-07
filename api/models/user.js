@@ -93,6 +93,28 @@ class UserModel {
         }
       });
   }
+
+  // update
+  static async update(UsersData, hashPassword, callback) {
+    const pool = await connect;
+    const sqlQuery = `UPDATE Users SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, Address = @Address, Password = @Password
+                      WHERE UsersId = @UsersId`;
+    return await pool
+      .request()
+      .input("FirstName", sql.VarChar, UsersData.FirstName)
+      .input("LastName", sql.VarChar, UsersData.LastName)
+      .input("Email", sql.VarChar, UsersData.Email)
+      .input("Phone", sql.VarChar, UsersData.Phone)
+      .input("Address", sql.VarChar, UsersData.Address)
+      .input("Password", sql.VarChar, hashPassword)
+      .query(sqlQuery, function (err, data) {
+        if (err) {
+          callback(true, null);
+        } else {
+          callback(null, data);
+        }
+      });
+  }
 }
 
 export default UserModel;
