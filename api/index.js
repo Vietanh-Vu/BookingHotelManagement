@@ -4,6 +4,7 @@ import HotelRouter from "./routes/hotel.js";
 import UserRouter from "./routes/user.js";
 import RoomRouter from "./routes/room.js";
 import AuthRouter from "./routes/auth.js";
+import DashboardRouter from "./routes/dashboard.js";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -24,6 +25,7 @@ app.use("", AuthRouter);
 app.use("/admin/hotel", middlewareController.verifyToken, HotelRouter);
 app.use("/admin/users", middlewareController.verifyToken, UserRouter);
 app.use("/admin/hotel/rooms", middlewareController.verifyToken, RoomRouter);
+app.use("/admin/dashboard", middlewareController.verifyToken, DashboardRouter);
 
 // app.use("/admin/hotel", HotelRouter);
 // app.use("/admin/users", UserRouter);
