@@ -84,42 +84,37 @@ export const updateUser = async (req, res) => {
   // else checkDupEmail then update
 
   // Check if the email the user entered is a new email or not
-  UserModel.findUserById(userData.UsersId, (err, data) => {
-    if (err) {
-      return res.status(500).json({ error: "Update failed" });
-    } else if (data.at(0).Email === userData.Email) {
-      //  true => user didn't changed email, skip checkDupEmail, proceed update
-      UserModel.update(userData, hashPassword, (err, data) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
-        }
-        res.json({ message: "Đã sửa thành công." });
-      });
-    } else {
-      // Check for duplicate email
-      AuthModels.checkDupEmail(userData.Email, (err, data) => {
-        if (err) {
-          return res.status(500).json({ error: "Update failed" });
+  if (userData.Email === userData.OldEmail) {
+    //  true => user didn't changed email, skip checkDupEmail, proceed update
+    UserModel.update(userData, hashPassword, (err, data) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+      }
+      res.json({ message: "Đã sửa thành công." });
+    });
+  } else {
+    AuthModels.checkDupEmail(userData.Email, (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "Update failed" });
+      } else {
+        if (data.length > 0) {
+          return res.status(400).json({ error: "Email already exists" });
         } else {
-          if (data.length > 0) {
-            return res.status(400).json({ error: "Email already exists" });
-          } else {
-            // If it doesn't match, proceed to update
-            UserModel.update(userData, hashPassword, (err, data) => {
-              if (err) {
-                return res
-                  .status(500)
-                  .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
-              }
-              res.json({ message: "Đã sửa thành công." });
-            });
-          }
+          // If it doesn't match, proceed to update
+          UserModel.update(userData, hashPassword, (err, data) => {
+            if (err) {
+              return res
+                .status(500)
+                .json({ error: "Đã xảy ra lỗi trong quá trình sửa user." });
+            }
+            res.json({ message: "Đã sửa thành công." });
+          });
         }
-      });
-    }
-  });
+      }
+    });
+  }
 };
 
 export default {
