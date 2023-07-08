@@ -343,7 +343,7 @@ INSERT INTO RoomReserved (ReservationID, RoomId) VALUES
 ('RV0188', 'RO0217'),
 ('RV0188', 'RO0218'),
 ('RV0189', 'RO0220'),
-('RV0189', 'RO0221'),
+('RV0189', 'RO0219'),
 --t4/2021
 ('RV0190', 'RO03'),
 ('RV0190', 'RO04'),
