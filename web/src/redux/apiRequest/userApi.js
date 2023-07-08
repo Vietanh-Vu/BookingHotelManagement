@@ -94,7 +94,8 @@ export const settingUser = async (
   dispatch,
   axiosJWT,
   user,
-  userId
+  userId,
+  oldEmail
 ) => {
   dispatch(settingUserStart())
   try {
@@ -105,7 +106,8 @@ export const settingUser = async (
       Email: user.Email,
       Phone: user.Phone,
       Address: user.Address,
-      Password: user.Password, 
+      Password: user.Password,
+      OldEmail: oldEmail 
     }
     const response = await axiosJWT.put(
       `http://localhost:8000/admin/users/update/${userId}`,
