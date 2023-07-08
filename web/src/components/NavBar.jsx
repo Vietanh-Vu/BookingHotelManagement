@@ -23,11 +23,12 @@ function NavBar(props) {
   }
 
   const edit = async (item, resetForm) => {
-    const resMsg = await settingUser(user?.accessToken, dispatch, axiosJWT, item, user.returnData.UsersId)
+    const resMsg = await settingUser(user?.accessToken, dispatch, axiosJWT, item, user.returnData.UsersId, user.returnData.Email)
     alert(resMsg)
     resetForm()
     setRecordForEdit(null)
     setOpenPopup(false)
+    if (item.Email != user.returnData.Email) navigate(/admin/login)
   }
 
   const openInPopup = item => {
