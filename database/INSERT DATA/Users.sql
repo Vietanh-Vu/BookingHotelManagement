@@ -1,3 +1,40 @@
+------------------ hash lại mât khau da insert
+-- Đầu tiên, hãy tạo một hàm hash bcrypt
+CREATE FUNCTION dbo.HashPassword
+(
+    @Password VARCHAR(128)
+)
+RETURNS VARCHAR(128)
+AS
+BEGIN
+    DECLARE @HashedPassword VARCHAR(128);
+
+    -- Sử dụng bcrypt để mã hóa mật khẩu
+    SET @HashedPassword = HASHBYTES('SHA2_512', @Password);
+
+    RETURN @HashedPassword;
+END
+GO
+
+-- Tạo trigger cho sự kiện INSERT trên bảng Users
+CREATE TRIGGER trg_HashPassword
+ON Users
+AFTER INSERT
+AS
+BEGIN
+    -- Cập nhật mật khẩu đã mã hóa cho các bản ghi vừa chèn
+    UPDATE Users
+    SET Password = dbo.HashPassword(i.Password)
+    FROM Users
+    INNER JOIN inserted AS i ON Users.ID = i.ID;
+END
+GO
+
+-- sau khi insert xong data nho xoa trigger di 
+DROP TRIGGER trg_HashPassword
+DROP FUNCTION dbo.HashPassword
+
+
 INSERT INTO Users (FirstName, LastName, Email, Phone, Address, IsAdmin, Password)
 VALUES
     -- User 1-10
@@ -702,38 +739,3 @@ INSERT INTO Users (FirstName, LastName, Email, Phone, Address, IsAdmin, Password
     ('Olivia', 'DAmico', 'olivia.damico@example.com', '7778889999', '123 Pine Road', 0, 'password629'),
     ('Noah', 'Sorrentino', 'noah.sorrentino@example.com', '5556667777', '456 Cedar Street', 0, 'password630');
 
------------------- hash lại mât khau da insert
--- Đầu tiên, hãy tạo một hàm hash bcrypt
-CREATE FUNCTION dbo.HashPassword
-(
-    @Password VARCHAR(128)
-)
-RETURNS VARCHAR(128)
-AS
-BEGIN
-    DECLARE @HashedPassword VARCHAR(128);
-
-    -- Sử dụng bcrypt để mã hóa mật khẩu
-    SET @HashedPassword = HASHBYTES('SHA2_512', @Password);
-
-    RETURN @HashedPassword;
-END
-GO
-
--- Tạo trigger cho sự kiện INSERT trên bảng Users
-CREATE TRIGGER trg_HashPassword
-ON Users
-AFTER INSERT
-AS
-BEGIN
-    -- Cập nhật mật khẩu đã mã hóa cho các bản ghi vừa chèn
-    UPDATE Users
-    SET Password = dbo.HashPassword(i.Password)
-    FROM Users
-    INNER JOIN inserted AS i ON Users.ID = i.ID;
-END
-GO
-
--- sau khi insert xong data nho xoa trigger di 
-DROP TRIGGER trg_HashPassword
-DROP FUNCTION dbo.HashPassword

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {logOut} from '../redux/apiRequest/loginApi'
 import {createAxios} from '../createInstance'
 import Popup from './Popup'
-import { settingUser } from '../redux/apiRequest/userApi'
+import {settingUser} from '../redux/apiRequest/userApi'
 import UsersForm from '../pages/User/UsersForm'
 
 function NavBar(props) {
@@ -23,12 +23,19 @@ function NavBar(props) {
   }
 
   const edit = async (item, resetForm) => {
-    const resMsg = await settingUser(user?.accessToken, dispatch, axiosJWT, item, user.returnData.UsersId, user.returnData.Email)
+    const resMsg = await settingUser(
+      user?.accessToken,
+      dispatch,
+      axiosJWT,
+      item,
+      user.returnData.UsersId,
+      user.returnData.Email,
+    )
     alert(resMsg)
     resetForm()
     setRecordForEdit(null)
     setOpenPopup(false)
-    if (item.Email != user.returnData.Email) navigate(/admin/login)
+    if (item.Email != user.returnData.Email) navigate('/admin/login')
   }
 
   const openInPopup = item => {
@@ -74,7 +81,6 @@ function NavBar(props) {
             </>
           ) : (
             <>
-            
               <Button
                 sx={{marginLeft: 'auto'}}
                 variant="contained"
