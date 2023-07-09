@@ -1,6 +1,12 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-import { loginSuccess, refreshFailed, refreshSuccess } from './redux/authSlice'
+import {
+  loginSuccess,
+  refreshFailed,
+  refreshStart,
+  refreshSuccess,
+} from './redux/authSlice'
+import {store} from './redux/store'
 
 const refreshTokenFunc = async user => {
   try {
@@ -13,17 +19,29 @@ const refreshTokenFunc = async user => {
   }
 }
 
+function select(state) {
+  return state.auth.login?.currentUser
+}
+
+function listener() {
+  let user = select(store.getState())
+  return user
+}
+
 export const createAxios = (user, dispatch, navigate) => {
   const newInstance = axios.create()
+  const users = select(store.getState());
   newInstance.interceptors.request.use(
     async config => {
       let date = new Date()
-      const decodedToken = jwt_decode(user?.accessToken)      
+      const decodedToken = jwt_decode(users?.accessToken)
       if (decodedToken.exp < date.getTime() / 1000) {
+        dispatch(refreshStart())
         try {
-          const {newAccessToken, newRefreshToken} = await refreshTokenFunc(user)
+          
+          const {newAccessToken, newRefreshToken} = await refreshTokenFunc(users)
           const refreshUser = {
-            ...user,
+            ...users,
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
           }

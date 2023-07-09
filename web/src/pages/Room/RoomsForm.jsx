@@ -29,12 +29,15 @@ export default function RoomsForm(props) {
   const user = useSelector(state => state.auth.login?.currentUser)
   const roomTypes = useSelector(state => state.rooms.roomTypes?.allRoomTypes)
   let axiosJWT = createAxios(user, dispatch, navigate)
-
   useEffect(() => {
+    axiosJWT = createAxios(user, dispatch, navigate)
+  }, [user])
+
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getRoomTypes(user?.accessToken, dispatch, axiosJWT)
+    await getRoomTypes(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   useEffect(() => {

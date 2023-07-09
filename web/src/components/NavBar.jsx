@@ -1,7 +1,7 @@
 import {AppBar, Toolbar, Typography, Tabs, Tab, Button} from '@mui/material'
 import HotelIcon from '@mui/icons-material/Hotel'
 import {Link, useNavigate} from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {logOut} from '../redux/apiRequest/loginApi'
 import {createAxios} from '../createInstance'
@@ -18,8 +18,8 @@ function NavBar(props) {
   const user = useSelector(state => state.auth.login.currentUser)
   let axiosJWT = createAxios(user, dispatch, navigate)
 
-  const handleLogOut = () => {
-    logOut(dispatch, navigate, user?.accessToken, user?.refreshToken, axiosJWT)
+  const handleLogOut = async () => {
+    await logOut(dispatch, navigate, user?.accessToken, user?.refreshToken, axiosJWT)
   }
 
   const edit = async (item, resetForm) => {

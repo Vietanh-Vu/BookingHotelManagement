@@ -96,6 +96,9 @@ export default function RoomReservationHistory() {
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.rooms.roomHistory?.allRoomHistory)
   let axiosJWT = createAxios(user, dispatch, navigate)
+  useEffect(() => {
+    axiosJWT = createAxios(user, dispatch, navigate)
+  }, [user])
   const {hotelId, hotelName, roomId, roomName} = useParams()
 
   let endTime = new Date()
@@ -106,11 +109,11 @@ export default function RoomReservationHistory() {
   const [startDate, setStartDate] = useState(startTime)
   const [endDate, setEndDate] = useState(endTime)
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllRoomHistory(user?.accessToken, dispatch, axiosJWT, roomId)
+    await getAllRoomHistory(user?.accessToken, dispatch, axiosJWT, roomId)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =

@@ -43,6 +43,7 @@ import {
   getLastMonthRevenueCategory,
   getRevenueLast12Month,
 } from '../../redux/apiRequest/dashBoardApi.js'
+import {store} from '../../redux/store.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -113,7 +114,7 @@ export default function Hotels() {
   })
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.auth.login?.currentUser)
+  let user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.hotels.hotels?.allHotels)
   const revenueLast12Month = useSelector(
     state => state.dashBoard.revenueLast12Month?.allValues,
@@ -123,13 +124,28 @@ export default function Hotels() {
   )
   let axiosJWT = createAxios(user, dispatch, navigate)
 
-  useEffect(() => {
+  function select(state) {
+    return state.auth.login?.currentUser
+  }
+  
+  function listener() {
+    let user = select(store.getState())
+    return user
+  }
+
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllHotels(user?.accessToken, dispatch, axiosJWT)
-    getRevenueLast12Month(user?.accessToken, dispatch, axiosJWT)
-    getLastMonthRevenueCategory(user?.accessToken, dispatch, axiosJWT)
+    await getAllHotels(user?.accessToken, dispatch, axiosJWT)
+    user = listener();
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getRevenueLast12Month(user?.accessToken, dispatch, axiosJWT);
+    user = listener();
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getLastMonthRevenueCategory(user?.accessToken, dispatch, axiosJWT);
+    user = listener();
+    axiosJWT = createAxios(user, dispatch, navigate)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =

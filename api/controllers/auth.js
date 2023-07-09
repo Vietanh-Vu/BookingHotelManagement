@@ -106,12 +106,15 @@ export const requestRefreshToken = async (req, res) => {
   }
 
   if (!refreshTokens.includes(refreshToken)) {
-    return res.status(403).json({ status: "Refresh token is not valid." });
+    console.log(refreshTokens);
+    console.log('--------------------------')
+    console.log(refreshToken)
+    return res.status(403).json({ status: "Refresh token is not valid1." });
   }
 
   jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, data) => {
     if (err) {
-      return res.status(403).json({ status: "Refresh token is not valid." });
+      return res.status(403).json({ status: "Refresh token is not valid2." });
     }
     refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
