@@ -14,7 +14,7 @@ const useChartOptions = labels => {
     chart: {
       background: 'transparent',
     },
-    colors: ['#FF6900', '#F47373', '#697689', '#37D67A', '#2CCCE4'],
+    colors: ['#FF6900', '#F47373', '#697689', '#37D67A', '#2CCCE4', '#FF9F00', '#FF5050', '#8A9CA9', '#3CBF7A', '#23B3DD', '#FFC300', '#FF7171', '#546E87', '#2ABD8E', '#0F9CD7'],
     dataLabels: {
       enabled: false,
     },
@@ -52,12 +52,12 @@ const useChartOptions = labels => {
 }
 
 export const Circle = props => {
-  const {chartSeries, labels, sx} = props
+  const {chartSeries, labels, sx, label} = props
   const chartOptions = useChartOptions(labels)
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Category Revenue" />
+      <CardHeader title={label} />
       <CardContent>
         <React.Suspense fallback={null}>
           <Chart
@@ -74,7 +74,7 @@ export const Circle = props => {
           justifyContent="left"
           spacing={2}
           sx={{mt: 2}}>
-          {chartSeries.map((item, index) => {
+          {chartSeries?.map((item, index) => {
             const label = labels[index]
 
             return (

@@ -11,7 +11,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormControl,
-  Box,
   Container,
   Unstable_Grid2 as Grid,
 } from '@mui/material'
@@ -40,6 +39,10 @@ import {Sum} from '../../components/overview/Sum.jsx'
 import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon'
 import {Circle} from '../../components/overview/Circle.jsx'
 import {ColumnChart} from '../../components/overview/ColumnChart.jsx'
+import {
+  getLastMonthRevenueCategory,
+  getRevenueLast12Month,
+} from '../../redux/apiRequest/dashBoardApi.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -112,6 +115,12 @@ export default function Hotels() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.hotels.hotels?.allHotels)
+  const revenueLast12Month = useSelector(
+    state => state.dashBoard.revenueLast12Month?.allValues,
+  )
+  const lastMonthRevenueCategory = useSelector(
+    state => state.dashBoard.lastMonthRevenueCategory?.allValues,
+  )
   let axiosJWT = createAxios(user, dispatch, navigate)
 
   useEffect(() => {
@@ -119,13 +128,12 @@ export default function Hotels() {
       navigate('/admin/login')
     }
     getAllHotels(user?.accessToken, dispatch, axiosJWT)
+    getRevenueLast12Month(user?.accessToken, dispatch, axiosJWT)
+    getLastMonthRevenueCategory(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
-  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} = useTable(
-    records,
-    headCells,
-    filterFn,
-  )
+  const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
+    useTable(records, headCells, filterFn)
 
   const handleSearch = e => {
     const target = e.target
@@ -190,6 +198,15 @@ export default function Hotels() {
     setRecordForEdit(item)
     setOpenPopup(true)
   }
+
+  let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
+  const total = lastMonthRevenueCategory
+    ?.map(item => item.Income)
+    .reduce((partialSum, a) => partialSum + a, 0)
 
   return (
     <>
@@ -320,39 +337,72 @@ export default function Hotels() {
       <Paper className={classes.overview}>
         <Container maxWidth="xl">
           <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 2, md: 3}}>
-            <Grid item xs={3.7}>
+            <Grid item xs={3}>
               <Sum
-                difference={12}
-                positive
+                difference={
+                  revenueLast12Month &&
+                  Math.round(
+                    (revenueLast12Month[11].REVENUE /
+                      revenueLast12Month[10].REVENUE -
+                      1) *
+                      100,
+                  )
+                }
+                isPositive={
+                  revenueLast12Month
+                    ? revenueLast12Month[11].REVENUE >
+                      revenueLast12Month[10].REVENUE
+                      ? true
+                      : false
+                    : true
+                }
                 sx={{height: '100%'}}
-                value="$24k"
+                value={
+                  revenueLast12Month &&
+                  USDollar.format(revenueLast12Month[11].REVENUE)
+                }
                 icon={<CurrencyDollarIcon />}
+                description="Compared with the previous month"
+                label="REVENUE"
               />
             </Grid>
-            <Grid item xs={3.3}></Grid>
-            <Grid item xs={5}></Grid>
-            <Grid item xs={3.7}>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}>
               <Circle
-                chartSeries={[30, 15, 22, 13, 20]}
-                labels={[
-                  'Category 1',
-                  'Category 2',
-                  'Category 3',
-                  'Category 4',
-                  'Category 5',
-                ]}
+                chartSeries={
+                  lastMonthRevenueCategory
+                    ? lastMonthRevenueCategory.map(item =>
+                        Math.round((item.Income / total) * 100),
+                      )
+                    : [1, 2, 3]
+                }
+                labels={
+                  lastMonthRevenueCategory
+                    ? lastMonthRevenueCategory.map(item => item.CategoryName)
+                    : [1, 2, 3]
+                }
                 sx={{height: '100%'}}
+                label="Category Revenue"
               />
             </Grid>
-            <Grid xs={8.3}>
+            <Grid xs={9}>
               <ColumnChart
                 chartSeries={[
                   {
-                    name: 'Sales',
-                    data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20],
+                    name: 'Revenue',
+                    data: revenueLast12Month
+                      ? revenueLast12Month.map(item => item.REVENUE / 1000)
+                      : [1, 2, 3],
                   },
                 ]}
                 sx={{height: '100%'}}
+                months={
+                  revenueLast12Month &&
+                  revenueLast12Month.map(item => item.MONTH)
+                }
+                label="Revenue"
               />
             </Grid>
           </Grid>

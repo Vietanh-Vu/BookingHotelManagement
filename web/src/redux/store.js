@@ -14,6 +14,7 @@ import authReducer from './authSlice'
 import userReducer from './userSlice'
 import hotelReducer from './hotelSlice'
 import roomReducer from './roomSlice'
+import dashBoardReducer from './dashBoardSlice'
 
 const persistConfig = {
   key: 'root',
@@ -26,6 +27,7 @@ const appReducer = combineReducers({
   users: userReducer,
   hotels: hotelReducer,
   rooms: roomReducer,
+  dashBoard: dashBoardReducer,
 })
 
 const rootReducer = (state, action) => {

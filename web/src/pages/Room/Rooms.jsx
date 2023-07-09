@@ -11,8 +11,9 @@ import {
   Checkbox,
   FormControlLabel,
   FormControl,
+  Container,
+  Unstable_Grid2 as Grid,
 } from '@mui/material'
-import axios from 'axios'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import BedroomChildIcon from '@mui/icons-material/BedroomChild'
@@ -33,6 +34,14 @@ import {
 } from '../../redux/apiRequest/roomApi.js'
 import {useDispatch, useSelector} from 'react-redux'
 import {createAxios} from '../../createInstance.js'
+import {
+  getHotelRevenueLast12Month,
+  getLastMonthRevenueRoomType,
+} from '../../redux/apiRequest/dashBoardApi.js'
+import {Sum} from '../../components/overview/Sum.jsx'
+import {Circle} from '../../components/overview/Circle.jsx'
+import {ColumnChart} from '../../components/overview/ColumnChart.jsx'
+import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -48,6 +57,12 @@ const useStyles = makeStyles(theme => ({
   },
   filterActive: {
     left: '40px',
+  },
+  overview: {
+    marginLeft: '64px',
+    marginRight: '64px',
+    marginTop: '64px',
+    padding: '16px',
   },
 }))
 
@@ -112,6 +127,12 @@ export default function Rooms() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.rooms.rooms?.allRooms)
+  const hotelRevenueLast12Month = useSelector(
+    state => state.dashBoard.hotelRevenueLast12Month?.allValues,
+  )
+  const lastMonthRevenueRoomType = useSelector(
+    state => state.dashBoard.lastMonthRevenueRoomType?.allValues,
+  )
   let axiosJWT = createAxios(user, dispatch, navigate)
   const {hotelId, hotelName} = useParams()
 
@@ -120,6 +141,8 @@ export default function Rooms() {
       navigate('/admin/login')
     }
     getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
+    getHotelRevenueLast12Month(user?.accessToken, dispatch, axiosJWT, hotelId)
+    getLastMonthRevenueRoomType(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
@@ -197,6 +220,15 @@ export default function Rooms() {
     setRecordForEdit(item)
     setOpenPopup(true)
   }
+
+  let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
+  const total = lastMonthRevenueRoomType
+    ?.map(item => item.Doanhthu)
+    .reduce((partialSum, a) => partialSum + a, 0)
 
   return (
     <>
@@ -336,6 +368,80 @@ export default function Rooms() {
           </TableBody>
         </TblContainer>
         <TblPagination />
+      </Paper>
+      <Paper className={classes.overview}>
+        <Container maxWidth="xl">
+          <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 2, md: 3}}>
+            <Grid item xs={3}>
+              <Sum
+                difference={
+                  hotelRevenueLast12Month &&
+                  Math.round(
+                    (hotelRevenueLast12Month[10].INCOME /
+                      hotelRevenueLast12Month[9].INCOME -
+                      1) *
+                      100,
+                  )
+                }
+                isPositive={
+                  hotelRevenueLast12Month
+                    ? hotelRevenueLast12Month[10].INCOME >
+                      hotelRevenueLast12Month[9].INCOME
+                      ? true
+                      : false
+                    : true
+                }
+                sx={{height: '100%'}}
+                value={
+                  hotelRevenueLast12Month &&
+                  USDollar.format(hotelRevenueLast12Month[10].INCOME)
+                }
+                icon={<CurrencyDollarIcon />}
+                description="Compared with the previous month"
+                label="Revenue"
+              />
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}>
+              <Circle
+                chartSeries={
+                  lastMonthRevenueRoomType
+                    ? lastMonthRevenueRoomType.map(item =>
+                        Math.round((item.Doanhthu / total) * 100),
+                      )
+                    : [1, 2, 3]
+                }
+                labels={
+                  lastMonthRevenueRoomType
+                    ? lastMonthRevenueRoomType.map(item => item.RoomTypeName)
+                    : [1, 2, 3]
+                }
+                sx={{height: '100%'}}
+                label="Room Type Revenue"
+              />
+            </Grid>
+            <Grid xs={9}>
+              <ColumnChart
+                chartSeries={[
+                  {
+                    name: 'Revenue',
+                    data: hotelRevenueLast12Month
+                      ? hotelRevenueLast12Month.map(item => item.INCOME / 1000)
+                      : [1, 2, 3],
+                  },
+                ]}
+                sx={{height: '100%'}}
+                months={
+                  hotelRevenueLast12Month &&
+                  hotelRevenueLast12Month.map(item => item.MONTH)
+                }
+                label="Revenue"
+              />
+            </Grid>
+          </Grid>
+        </Container>
       </Paper>
       <Popup
         title="Room form"
