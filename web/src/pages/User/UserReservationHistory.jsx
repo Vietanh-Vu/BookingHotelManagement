@@ -104,13 +104,16 @@ export default function UserReservationHistory() {
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.users.userHistory?.allUserHistory)
   let axiosJWT = createAxios(user, dispatch, navigate)
+  useEffect(() => {
+    axiosJWT = createAxios(user, dispatch, navigate)
+  }, [user])
   const {userId, userName} = useParams()
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllUserHistory(user?.accessToken, dispatch, axiosJWT, userId)
+    await getAllUserHistory(user?.accessToken, dispatch, axiosJWT, userId)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =

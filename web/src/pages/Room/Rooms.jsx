@@ -125,7 +125,7 @@ export default function Rooms() {
   })
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.auth.login?.currentUser)
+  let user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.rooms.rooms?.allRooms)
   const hotelRevenueLast12Month = useSelector(
     state => state.dashBoard.hotelRevenueLast12Month?.allValues,
@@ -136,13 +136,28 @@ export default function Rooms() {
   let axiosJWT = createAxios(user, dispatch, navigate)
   const {hotelId, hotelName} = useParams()
 
-  useEffect(() => {
+  function select(state) {
+    return state.auth.login?.currentUser
+  }
+  
+  function listener() {
+    let user = select(store.getState())
+    return user
+  }
+
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
-    getHotelRevenueLast12Month(user?.accessToken, dispatch, axiosJWT, hotelId)
-    getLastMonthRevenueRoomType(user?.accessToken, dispatch, axiosJWT)
+    await getAllRoom(user?.accessToken, dispatch, axiosJWT, hotelId)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getHotelRevenueLast12Month(user?.accessToken, dispatch, axiosJWT, hotelId)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getLastMonthRevenueRoomType(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =

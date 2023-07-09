@@ -40,6 +40,7 @@ import {
   getTotalOldUsersLastMonth,
 } from '../../redux/apiRequest/dashBoardApi.js'
 import {Number} from '../../components/overview/Number.jsx'
+import {store} from '../../redux/store.js'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -111,7 +112,7 @@ export default function Users() {
   })
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.auth.login?.currentUser)
+  let user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.users.users?.allUsers)
   const totalMonthlyUsersLast12Month = useSelector(
     state => state.dashBoard.totalMonthlyUsersLast12Month?.allValues,
@@ -124,14 +125,31 @@ export default function Users() {
   )
   let axiosJWT = createAxios(user, dispatch, navigate)
 
-  useEffect(() => {
+  function select(state) {
+    return state.auth.login?.currentUser
+  }
+  
+  function listener() {
+    let user = select(store.getState())
+    return user
+  }
+
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getAllUsers(user?.accessToken, dispatch, axiosJWT)
-    getTotalMonthlyUsersLast12Month(user?.accessToken, dispatch, axiosJWT)
-    getTotalNewUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
-    getTotalOldUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
+    await getAllUsers(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getTotalMonthlyUsersLast12Month(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getTotalNewUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
+    await getTotalOldUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
+    axiosJWT = createAxios(user, dispatch, navigate)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
@@ -175,10 +193,6 @@ export default function Users() {
     style: 'currency',
     currency: 'USD',
   })
-
-  console.log(totalMonthlyUsersLast12Month)
-  console.log(totalNewUsersLastMonth)
-  console.log(totalOldUsersLastMonth)
 
   const totalNew = totalNewUsersLastMonth
     ?.map(item => item.New_Users)
@@ -283,15 +297,15 @@ export default function Users() {
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
-                      onClick={() => {
-                        setAdmin(user?.accessToken, dispatch, axiosJWT, item)
+                      onClick={async () => {
+                        await setAdmin(user?.accessToken, dispatch, axiosJWT, item)
                       }}>
                       <AddIcon fontSize="small" />
                     </Controls.ActionButton>
                     <Controls.ActionButton
                       color="primary"
-                      onClick={() => {
-                        deleteAdmin(user?.accessToken, dispatch, axiosJWT, item)
+                      onClick={async () => {
+                        await deleteAdmin(user?.accessToken, dispatch, axiosJWT, item)
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>

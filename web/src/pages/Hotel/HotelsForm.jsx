@@ -31,12 +31,15 @@ export default function HotelsForm(props) {
     state => state.hotels.categories?.allCategories,
   )
   let axiosJWT = createAxios(user, dispatch, navigate)
-
   useEffect(() => {
+    axiosJWT = createAxios(user, dispatch, navigate)
+  }, [user])
+
+  useEffect(async () => {
     if (!user) {
       navigate('/admin/login')
     }
-    getCategories(user?.accessToken, dispatch, axiosJWT)
+    await getCategories(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   useEffect(() => {
