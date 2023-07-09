@@ -11,6 +11,8 @@ import {
   Checkbox,
   FormControlLabel,
   FormControl,
+  Container,
+  Unstable_Grid2 as Grid,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import GroupIcon from '@mui/icons-material/Group'
@@ -28,6 +30,16 @@ import {
 } from '../../redux/apiRequest/userApi.js'
 import {useDispatch, useSelector} from 'react-redux'
 import {createAxios} from '../../createInstance.js'
+import {Sum} from '../../components/overview/Sum.jsx'
+import {Circle} from '../../components/overview/Circle.jsx'
+import {ColumnChart} from '../../components/overview/ColumnChart.jsx'
+import PersonIcon from '@mui/icons-material/Person'
+import {
+  getTotalMonthlyUsersLast12Month,
+  getTotalNewUsersLastMonth,
+  getTotalOldUsersLastMonth,
+} from '../../redux/apiRequest/dashBoardApi.js'
+import {Number} from '../../components/overview/Number.jsx'
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
@@ -43,6 +55,12 @@ const useStyles = makeStyles(theme => ({
   },
   filterActive: {
     left: '40px',
+  },
+  overview: {
+    marginLeft: '64px',
+    marginRight: '64px',
+    marginTop: '64px',
+    padding: '16px',
   },
 }))
 
@@ -83,7 +101,7 @@ const initialFilters = {
   filterAdmin: false,
 }
 
-export default function Rooms() {
+export default function Users() {
   const classes = useStyles()
   const [filter, setFilter] = useState(initialFilters)
   const [filterFn, setFilterFn] = useState({
@@ -95,6 +113,15 @@ export default function Rooms() {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.login?.currentUser)
   const records = useSelector(state => state.users.users?.allUsers)
+  const totalMonthlyUsersLast12Month = useSelector(
+    state => state.dashBoard.totalMonthlyUsersLast12Month?.allValues,
+  )
+  const totalNewUsersLastMonth = useSelector(
+    state => state.dashBoard.totalNewUsersLastMonth?.allValues,
+  )
+  const totalOldUsersLastMonth = useSelector(
+    state => state.dashBoard.totalOldUsersLastMonth?.allValues,
+  )
   let axiosJWT = createAxios(user, dispatch, navigate)
 
   useEffect(() => {
@@ -102,6 +129,9 @@ export default function Rooms() {
       navigate('/admin/login')
     }
     getAllUsers(user?.accessToken, dispatch, axiosJWT)
+    getTotalMonthlyUsersLast12Month(user?.accessToken, dispatch, axiosJWT)
+    getTotalNewUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
+    getTotalOldUsersLastMonth(user?.accessToken, dispatch, axiosJWT)
   }, [])
 
   const {TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting} =
@@ -140,6 +170,23 @@ export default function Rooms() {
       },
     })
   }, [filter])
+
+  let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
+  console.log(totalMonthlyUsersLast12Month)
+  console.log(totalNewUsersLastMonth)
+  console.log(totalOldUsersLastMonth)
+
+  const totalNew = totalNewUsersLastMonth
+    ?.map(item => item.New_Users)
+    .reduce((partialSum, a) => partialSum + a, 0)
+
+  const totalOld = totalOldUsersLastMonth
+    ?.map(item => item.OLD_Users)
+    .reduce((partialSum, a) => partialSum + a, 0)
 
   return (
     <>
@@ -254,6 +301,80 @@ export default function Rooms() {
           </TableBody>
         </TblContainer>
         <TblPagination />
+      </Paper>
+      <Paper className={classes.overview}>
+        <Container maxWidth="xl">
+          <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 2, md: 3}}>
+            <Grid item xs={3}>
+              <Sum
+                difference={
+                  totalMonthlyUsersLast12Month &&
+                  Math.round(
+                    (totalMonthlyUsersLast12Month[11].NumberofUsers /
+                      totalMonthlyUsersLast12Month[10].NumberofUsers -
+                      1) *
+                      100,
+                  )
+                }
+                isPositive={
+                  totalMonthlyUsersLast12Month
+                    ? totalMonthlyUsersLast12Month[11].NumberofUsers >
+                      totalMonthlyUsersLast12Month[10].NumberofUsers
+                      ? true
+                      : false
+                    : true
+                }
+                sx={{height: '100%'}}
+                value={
+                  totalMonthlyUsersLast12Month &&
+                  totalMonthlyUsersLast12Month[11].NumberofUsers
+                }
+                icon={<PersonIcon />}
+                description="Compared with the previous month"
+                label="Guests"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Number
+                sx={{height: '100%'}}
+                value={totalNewUsersLastMonth && totalNew}
+                icon={<PersonIcon />}
+                description="New Guests"
+                label="Guests"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Number
+                sx={{height: '100%'}}
+                value={totalOldUsersLastMonth && totalOld}
+                icon={<PersonIcon />}
+                description="Old Guests"
+                label="Guests"
+              />
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid xs={12}>
+              <ColumnChart
+                chartSeries={[
+                  {
+                    name: 'Guests',
+                    data: totalMonthlyUsersLast12Month
+                      ? totalMonthlyUsersLast12Month.map(
+                          item => item.NumberofUsers / 1000,
+                        )
+                      : [1, 2, 3],
+                  },
+                ]}
+                sx={{height: '100%'}}
+                months={
+                  totalMonthlyUsersLast12Month &&
+                  totalMonthlyUsersLast12Month.map(item => item.Month)
+                }
+                label="Guests"
+              />
+            </Grid>
+          </Grid>
+        </Container>
       </Paper>
     </>
   )

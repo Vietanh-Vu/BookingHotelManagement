@@ -1,18 +1,13 @@
 import React from 'react'
 import {
-  Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Divider,
-  SvgIcon,
 } from '@mui/material'
 import {alpha, useTheme} from '@mui/material/styles'
 import {Chart} from '../chart'
-import {indigo, neutral} from '@mui/material/colors'
 
-const useChartOptions = () => {
+const useChartOptions = months => {
   return {
     chart: {
       background: 'transparent',
@@ -68,20 +63,22 @@ const useChartOptions = () => {
         color: '#F2F4F7',
         show: true,
       },
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
+      categories: months
+        ? months
+        : [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
       labels: {
         offsetY: 5,
         style: {
@@ -102,12 +99,20 @@ const useChartOptions = () => {
 }
 
 export const ColumnChart = props => {
-  const {chartSeries, sx} = props
-  const chartOptions = useChartOptions()
+  const {chartSeries, sx, months, label} = props
+
+  function getMonthName(monthNumber) {
+    const date = new Date()
+    date.setMonth(monthNumber - 1)
+
+    return date.toLocaleString('en-US', {month: 'short'})
+  }
+
+  const chartOptions = useChartOptions(months?.map(month => getMonthName(month)))
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Sales" />
+      <CardHeader title={label} />
       <CardContent>
         <React.Suspense fallback={null}>
           <Chart
