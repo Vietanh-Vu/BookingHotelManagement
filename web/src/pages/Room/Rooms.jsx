@@ -42,6 +42,8 @@ import {Sum} from '../../components/overview/Sum.jsx'
 import {Circle} from '../../components/overview/Circle.jsx'
 import {ColumnChart} from '../../components/overview/ColumnChart.jsx'
 import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon'
+import {store} from '../../redux/store.js'
+
 
 const useStyles = makeStyles(theme => ({
   pageContent: {
