@@ -92,9 +92,12 @@ Follow the steps below to use the Booking Hotel Management System:
      ```
 
    - Then navigate to the `web` folder and run the following command:
+
      ```
      npm run start
      ```
+
+   - Open the browser then connect to the link [http://localhost:8080/admin/login](http://localhost:8080/admin/login) to start using the web app.
 
 ## Technologies Used
 
