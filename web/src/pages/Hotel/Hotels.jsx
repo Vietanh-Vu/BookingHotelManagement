@@ -379,7 +379,7 @@ export default function Hotels() {
                 }
                 icon={<CurrencyDollarIcon />}
                 description="Compared with the previous month"
-                label="REVENUE"
+                label="Income of all hotels last month"
               />
             </Grid>
             <Grid item xs={3}></Grid>
@@ -400,7 +400,7 @@ export default function Hotels() {
                     : [1, 2, 3]
                 }
                 sx={{height: '100%'}}
-                label="Category Revenue"
+                label="Income of each category"
               />
             </Grid>
             <Grid xs={9}>
@@ -418,7 +418,7 @@ export default function Hotels() {
                   revenueLast12Month &&
                   revenueLast12Month.map(item => item.MONTH)
                 }
-                label="Revenue"
+                label="Income of all hotels last 12 months"
               />
             </Grid>
           </Grid>

@@ -394,16 +394,16 @@ export default function Rooms() {
                 difference={
                   hotelRevenueLast12Month &&
                   Math.round(
-                    (hotelRevenueLast12Month[10].INCOME /
-                      hotelRevenueLast12Month[9].INCOME -
+                    (hotelRevenueLast12Month[11].INCOME /
+                      hotelRevenueLast12Month[10].INCOME -
                       1) *
                       100,
                   )
                 }
                 isPositive={
                   hotelRevenueLast12Month
-                    ? hotelRevenueLast12Month[10].INCOME >
-                      hotelRevenueLast12Month[9].INCOME
+                    ? hotelRevenueLast12Month[11].INCOME >
+                      hotelRevenueLast12Month[10].INCOME
                       ? true
                       : false
                     : true
@@ -411,11 +411,11 @@ export default function Rooms() {
                 sx={{height: '100%'}}
                 value={
                   hotelRevenueLast12Month &&
-                  USDollar.format(hotelRevenueLast12Month[10].INCOME)
+                  USDollar.format(hotelRevenueLast12Month[11].INCOME)
                 }
                 icon={<CurrencyDollarIcon />}
                 description="Compared with the previous month"
-                label="Revenue"
+                label={`Income of  ${hotelName} last month`}
               />
             </Grid>
             <Grid item xs={3}></Grid>
@@ -436,7 +436,7 @@ export default function Rooms() {
                     : [1, 2, 3]
                 }
                 sx={{height: '100%'}}
-                label="Room Type Revenue"
+                label={`Income of each room type of ${hotelName}`}
               />
             </Grid>
             <Grid xs={9}>
@@ -454,7 +454,7 @@ export default function Rooms() {
                   hotelRevenueLast12Month &&
                   hotelRevenueLast12Month.map(item => item.MONTH)
                 }
-                label="Revenue"
+                label={`Income of ${hotelName} last 12 months`}
               />
             </Grid>
           </Grid>
