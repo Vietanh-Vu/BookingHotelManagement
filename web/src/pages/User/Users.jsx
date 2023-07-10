@@ -345,7 +345,7 @@ export default function Users() {
                 }
                 icon={<PersonIcon />}
                 description="Compared with the previous month"
-                label="Guests"
+                label="Number of guests last month"
               />
             </Grid>
             <Grid item xs={3}>
@@ -354,7 +354,7 @@ export default function Users() {
                 value={totalNewUsersLastMonth && totalNew}
                 icon={<PersonIcon />}
                 description="New Guests"
-                label="Guests"
+                label="Number of new guests last month"
               />
             </Grid>
             <Grid item xs={3}>
@@ -363,7 +363,7 @@ export default function Users() {
                 value={totalOldUsersLastMonth && totalOld}
                 icon={<PersonIcon />}
                 description="Old Guests"
-                label="Guests"
+                label="Number of old guests last month"
               />
             </Grid>
             <Grid item xs={3}></Grid>
@@ -384,7 +384,7 @@ export default function Users() {
                   totalMonthlyUsersLast12Month &&
                   totalMonthlyUsersLast12Month.map(item => item.Month)
                 }
-                label="Guests"
+                label="Number of guests last 12 month"
               />
             </Grid>
           </Grid>
