@@ -110,7 +110,7 @@ AS
 
 SELECT * FROM dbo.USERS_12months() ORDER BY NumberofUsers
 
-
+----------------------------------------------------
 --6. ----------------Tổng user mới nhất tháng trước
 -- OUTPUT: hotelname, new_users
 DROP FUNCTION GetNewUsersLastMonth
@@ -119,23 +119,25 @@ RETURNS TABLE
 AS
     -- Truy vấn để tính số người dùng mới của tháng gần nhất
     RETURN (
-        SELECT Hotel.HotelName, COUNT(DISTINCT Reservation.UsersId) AS New_Users
+        SELECT COUNT(DISTINCT Reservation.UsersId) AS New_Users
         FROM Reservation 
 		JOIN RoomReserved ON Reservation.ReservationId = RoomReserved.ReservationID
 		JOIN Room ON Room.RoomId = RoomReserved.RoomId
 		JOIN Hotel ON Hotel.HotelId = Room.HotelId
         WHERE 
-		EndDate >= DATEADD(MONTH, -1, GETDATE())
+		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
 		AND Reservation.UsersId NOT IN (
             SELECT DISTINCT UsersId
             FROM Reservation
             WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0))
         )
-		GROUP BY Hotel.HotelName
+
 	);
 
 SELECT * FROM dbo.GetNewUsersLastMonth()
 
+	
+-----------------------------------------------------
 --7.------------Tổng user cũ nhất tháng trước
 -- OUTPUT: hotelname, old_users
 DROP FUNCTION GetOLDUsersLastMonth
@@ -143,23 +145,22 @@ CREATE FUNCTION GetOLDUsersLastMonth()
 RETURNS TABLE
 AS
     -- Truy vấn để tính số người dùng mới của tháng gần nhất
-    RETURN (
-        SELECT Hotel.HotelName, COUNT(DISTINCT Reservation.UsersId) AS OLD_Users
+    RETURN (    SELECT COUNT(DISTINCT Reservation.UsersId) AS Old_Users
         FROM Reservation 
 		JOIN RoomReserved ON Reservation.ReservationId = RoomReserved.ReservationID
 		JOIN Room ON Room.RoomId = RoomReserved.RoomId
 		JOIN Hotel ON Hotel.HotelId = Room.HotelId
         WHERE 
-		EndDate >= DATEADD(MONTH, -1, GETDATE())
+		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
 		AND Reservation.UsersId IN (
             SELECT DISTINCT UsersId
             FROM Reservation
             WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0))
         )
-		GROUP BY Hotel.HotelName
-    );
+	);
 
 SELECT * FROM dbo.GetOLDUsersLastMonth()
+
 --8.---------Tổng users ĐẾN TỪNG tháng của hệ thống khách sạn TRONG 12 THÁNG GẦN NHẤT 
 -- OUTPUT : TỔNG USERS(GUEST) ĐẾN ĐẶT PHÒNG TRONG 12 THÁNG 
 -- Cụ thể : Month(int), NumberofUsers(int)
