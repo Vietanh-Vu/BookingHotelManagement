@@ -22,6 +22,7 @@ CREATE TABLE Hotel (
 );
 --ALTER TABLE Hotel ALTER COLUMN IsActive BIT
 --ALTER TABLE Hotel ALTER COLUMN HotelImg VARCHAR(128)
+--ALTER TABLE Hotel DROP ID
 
 --############################ CATEGORY SECTION ##############################
 DROP TABLE Category;

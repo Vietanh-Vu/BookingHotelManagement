@@ -19,29 +19,19 @@ const refreshTokenFunc = async user => {
   }
 }
 
-function select(state) {
-  return state.auth.login?.currentUser
-}
-
-function listener() {
-  let user = select(store.getState())
-  return user
-}
-
 export const createAxios = (user, dispatch, navigate) => {
   const newInstance = axios.create()
-  const users = select(store.getState());
   newInstance.interceptors.request.use(
     async config => {
       let date = new Date()
-      const decodedToken = jwt_decode(users?.accessToken)
+      const decodedToken = jwt_decode(user?.accessToken)
       if (decodedToken.exp < date.getTime() / 1000) {
         dispatch(refreshStart())
         try {
           
-          const {newAccessToken, newRefreshToken} = await refreshTokenFunc(users)
+          const {newAccessToken, newRefreshToken} = await refreshTokenFunc(user)
           const refreshUser = {
-            ...users,
+            ...user,
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
           }
