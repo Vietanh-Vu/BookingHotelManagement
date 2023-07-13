@@ -95,17 +95,14 @@ const useChartOptions = months => {
 }
 
 export const ColumnChart = props => {
-  const {chartSeries, sx, months, label} = props
+  const {chartSeries, sx, months, years, label} = props
 
-  function getMonthName(monthNumber) {
-    const date = new Date()
-    date.setMonth(monthNumber - 1)
-
-    return date.toLocaleString('en-US', {month: 'short'})
+  function matchMonthYear(month, year) {
+    return `${month}/${year}`
   }
 
   const chartOptions = useChartOptions(
-    months?.map(month => getMonthName(month)),
+    months?.map((month, index) => matchMonthYear(month, years.at(index))),
   )
 
   return (

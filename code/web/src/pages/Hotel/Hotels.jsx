@@ -127,7 +127,7 @@ export default function Hotels() {
   function select(state) {
     return state.auth.login?.currentUser
   }
-  
+
   function listener() {
     let user = select(store.getState())
     return user
@@ -138,13 +138,13 @@ export default function Hotels() {
       navigate('/admin/login')
     }
     await getAllHotels(user?.accessToken, dispatch, axiosJWT)
-    user = listener();
+    user = listener()
     axiosJWT = createAxios(user, dispatch, navigate)
-    await getRevenueLast12Month(user?.accessToken, dispatch, axiosJWT);
-    user = listener();
+    await getRevenueLast12Month(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
     axiosJWT = createAxios(user, dispatch, navigate)
-    await getLastMonthRevenueCategory(user?.accessToken, dispatch, axiosJWT);
-    user = listener();
+    await getLastMonthRevenueCategory(user?.accessToken, dispatch, axiosJWT)
+    user = listener()
     axiosJWT = createAxios(user, dispatch, navigate)
   }, [])
 
@@ -352,7 +352,7 @@ export default function Hotels() {
       </Popup>
       <Paper className={classes.overview}>
         <Container maxWidth="xl">
-          <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 2, md: 3}}>
+          <Grid container rowSpacing={3} columnSpacing={{xs: 1, sm: 2, md: 3}}>
             <Grid item xs={3}>
               <Sum
                 difference={
@@ -382,10 +382,10 @@ export default function Hotels() {
                 label="Income of all hotels last month"
               />
             </Grid>
+            {/* <Grid item xs={3}></Grid>
             <Grid item xs={3}></Grid>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={3}>
+            <Grid item xs={3}></Grid> */}
+            <Grid item xs={9}>
               <Circle
                 chartSeries={
                   lastMonthRevenueCategory
@@ -403,7 +403,7 @@ export default function Hotels() {
                 label="Income of each category"
               />
             </Grid>
-            <Grid xs={9}>
+            <Grid xs={12}>
               <ColumnChart
                 chartSeries={[
                   {
@@ -417,6 +417,10 @@ export default function Hotels() {
                 months={
                   revenueLast12Month &&
                   revenueLast12Month.map(item => item.MONTH)
+                }
+                years={
+                  revenueLast12Month &&
+                  revenueLast12Month.map(item => item.YEAR)
                 }
                 label="Income of all hotels last 12 months"
               />

@@ -74,7 +74,6 @@ class HotelModel {
       .input("Description", sql.VarChar, hotelData.Description)
       .query(sqlQuery, (err, data) => {
         if (err) {
-          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);
@@ -91,7 +90,6 @@ class HotelModel {
       .input("id", sql.VarChar, hotelId)
       .query(sqlQuery, (err, data) => {
         if (err) {
-          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);
