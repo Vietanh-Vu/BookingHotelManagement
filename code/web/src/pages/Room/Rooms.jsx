@@ -237,7 +237,7 @@ export default function Rooms() {
   }
 
   const openInPopup = item => {
-    console.log(item)
+    // console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
   }

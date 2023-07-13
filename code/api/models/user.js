@@ -52,7 +52,6 @@ class UserModel {
       .input("id", sql.VarChar, UsersId)
       .query(sqlQuery, (err, data) => {
         if (err) {
-          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);
@@ -68,7 +67,6 @@ class UserModel {
       .input("id", sql.VarChar, UsersId)
       .query(sqlQuery, (err, data) => {
         if (err) {
-          console.log(err);
           callback(true, null);
         } else {
           callback(null, data);

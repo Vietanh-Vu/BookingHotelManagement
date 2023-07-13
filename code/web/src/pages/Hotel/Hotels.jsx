@@ -210,7 +210,7 @@ export default function Hotels() {
   }
 
   const openInPopup = item => {
-    console.log(item)
+    // console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
   }

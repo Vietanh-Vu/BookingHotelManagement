@@ -50,7 +50,6 @@ class RoomModel {
       .query(sqlQuery, function (err, data) {
         if (err) {
           callback(true, null);
-          console.log(err);
         } else {
           callback(null, data);
         }
