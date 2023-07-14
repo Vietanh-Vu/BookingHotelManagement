@@ -21,7 +21,7 @@ const useChartOptions = months => {
       type: 'solid',
     },
     grid: {
-      borderColor: '#F2F4F7',
+      borderColor: '#919294',
       strokeDashArray: 2,
       xaxis: {
         lines: {
@@ -52,11 +52,11 @@ const useChartOptions = months => {
     },
     xaxis: {
       axisBorder: {
-        color: '#F2F4F7',
+        color: '#919294',
         show: true,
       },
       axisTicks: {
-        color: '#F2F4F7',
+        color: '#919294',
         show: true,
       },
       categories: months
