@@ -162,10 +162,10 @@ CREATE TABLE ReservationStatusEvents (
 
 --####################### InvoiceUsers
 
-DROP TABLE InvoiceUsers;
+
 CREATE TABLE InvoiceUsers (
     ID INT IDENTITY(1,1),
-    InvoiceId AS 'IV' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
+    InvoiceId AS 'IV' + RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) PERSISTED,
     UsersId VARCHAR(7),
     ReservationId VARCHAR(7),
     InvoiceAmount DECIMAL(10, 2) NOT NULL,
@@ -173,6 +173,7 @@ CREATE TABLE InvoiceUsers (
     TsPaid DATETIME NOT NULL,
     TsCanceled DATETIME NOT NULL,
     CONSTRAINT PK_InvoiceUsers PRIMARY KEY(InvoiceID),
-    CONSTRAINT FK_UsersInvoiceUsers FOREIGN KEY (UsersId) REFERENCES Users(UsersId)ON DELETE CASCADE,
+    CONSTRAINT FK_UsersInvoiceUsers FOREIGN KEY (UsersId) REFERENCES Users(UsersId) ON DELETE CASCADE,
     CONSTRAINT FK_ReservationInvoiceUsers FOREIGN KEY (ReservationId) REFERENCES Reservation(ReservationId)
 );
+
