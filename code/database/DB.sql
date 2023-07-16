@@ -18,13 +18,13 @@ CREATE TABLE Hotel (
     Description VARCHAR(MAX),
     CONSTRAINT PK_Hotel PRIMARY KEY(HotelId),
     -- CONSTRAINT FK_CityHotel FOREIGN KEY(CityId) REFERENCES City(CityId),
-    CONSTRAINT FK_CategoryHotel FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId)
+    CONSTRAINT FK_CategoryHotel FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId) ON DELETE CASCADE
 );
 --ALTER TABLE Hotel ALTER COLUMN IsActive BIT
 --ALTER TABLE Hotel ALTER COLUMN HotelImg VARCHAR(128)
 
 --############################ CATEGORY SECTION ##############################
-DROP TABLE Category;
+--DROP TABLE Category;
 CREATE TABLE Category (
     ID INT IDENTITY(1,1),
     CategoryId AS 'CA' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
@@ -34,7 +34,7 @@ CREATE TABLE Category (
 --select * from Category
 
 --############################## ROOM SECTION ##############################
-DROP TABLE Room;
+--DROP TABLE Room;
 CREATE TABLE Room (
     ID INT IDENTITY(1,1),
 	-- sửa lại đoạn này RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
@@ -47,8 +47,8 @@ CREATE TABLE Room (
     IsActive BIT,
     Description VARCHAR(MAX),
     CONSTRAINT PK_Room PRIMARY KEY(RoomId),
-    CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId),
-    CONSTRAINT FK_RoomTypeRoom FOREIGN KEY(RoomTypeId) REFERENCES RoomType(RoomTypeId)
+    CONSTRAINT FK_HotelRoom FOREIGN KEY(HotelId) REFERENCES Hotel(HotelId) ON DELETE CASCADE,
+    CONSTRAINT FK_RoomTypeRoom FOREIGN KEY(RoomTypeId) REFERENCES RoomType(RoomTypeId) ON DELETE CASCADE
 );
 
 --ALTER TABLE Room ALTER COLUMN IsAvailable BIT
@@ -56,7 +56,7 @@ CREATE TABLE Room (
 
 --########################### ROOM TYPE SECTION ###########################
 
-DROP TABLE RoomType;
+--DROP TABLE RoomType;
 CREATE TABLE RoomType (
     ID INT IDENTITY(1,1),
     RoomTypeId AS 'RT' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
@@ -67,7 +67,7 @@ CREATE TABLE RoomType (
 
 --############## RESERVATION ################
 
-DROP TABLE Reservation;
+--DROP TABLE Reservation;
 CREATE TABLE Reservation (
     ID INT IDENTITY(1,1),
 	--RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
@@ -80,12 +80,12 @@ CREATE TABLE Reservation (
     DiscountPercent DECIMAL(5, 2),
     TotalPrice DECIMAL(10, 2) DEFAULT 0.00,
     CONSTRAINT PK_Reservation PRIMARY KEY(ReservationID),
-    CONSTRAINT FK_UsersReservation FOREIGN KEY(UsersId) REFERENCES Users(UsersId)
+    CONSTRAINT FK_UsersReservation FOREIGN KEY(UsersId) REFERENCES Users(UsersId) ON DELETE CASCADE
 );
 
 --############################USER##################
 
-DROP TABLE Users;
+--DROP TABLE Users;
 CREATE TABLE Users (
     ID INT IDENTITY(1,1),
 	--RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
@@ -103,7 +103,7 @@ CREATE TABLE Users (
 --######################## RESERVATION ###############
 
 
-DROP TABLE RoomReserved;
+--DROP TABLE RoomReserved;
 CREATE TABLE RoomReserved (
     ID INT IDENTITY(1,1),
 	--RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
@@ -111,8 +111,8 @@ CREATE TABLE RoomReserved (
     ReservationID VARCHAR(7),
     RoomId VARCHAR(7),
     CONSTRAINT PK_RoomReserved PRIMARY KEY(RoomReservedID),
-    CONSTRAINT FK_ReservationRoomReserved FOREIGN KEY (ReservationID) REFERENCES Reservation(ReservationID),
-    CONSTRAINT FK_RoomRoomReserved FOREIGN KEY (RoomId) REFERENCES Room(RoomId)
+    CONSTRAINT FK_ReservationRoomReserved FOREIGN KEY (ReservationID) REFERENCES Reservation(ReservationID) ON DELETE CASCADE,
+    CONSTRAINT FK_RoomRoomReserved FOREIGN KEY (RoomId) REFERENCES Room(RoomId) ON DELETE CASCADE
 );
 
 -------------------TRIGGER FOR PRICE
@@ -155,8 +155,8 @@ CREATE TABLE ReservationStatusEvents (
     RSId VARCHAR(5),
     ReservationId VARCHAR(7),
     CONSTRAINT PK_RSE PRIMARY KEY(RSEId),
-    CONSTRAINT FK_RSCRSE FOREIGN KEY(RSId) REFERENCES ReservationStatus(RSId),
-    CONSTRAINT FK_ReservationRSE FOREIGN KEY(ReservationId) REFERENCES Reservation(ReservationId),
+    CONSTRAINT FK_RSCRSE FOREIGN KEY(RSId) REFERENCES ReservationStatus(RSId) ON DELETE CASCADE,
+    CONSTRAINT FK_ReservationRSE FOREIGN KEY(ReservationId) REFERENCES Reservation(ReservationId) ON DELETE CASCADE,
 );
 
 
@@ -173,6 +173,6 @@ CREATE TABLE InvoiceUsers (
     TsPaid DATETIME NOT NULL,
     TsCanceled DATETIME NOT NULL,
     CONSTRAINT PK_InvoiceUsers PRIMARY KEY(InvoiceID),
-    CONSTRAINT FK_UsersInvoiceUsers FOREIGN KEY (UsersId) REFERENCES Users(UsersId),
-    CONSTRAINT FK_ReservationInvoiceUsers FOREIGN KEY (ReservationId) REFERENCES Reservation(ReservationId),
+    CONSTRAINT FK_UsersInvoiceUsers FOREIGN KEY (UsersId) REFERENCES Users(UsersId)ON DELETE CASCADE,
+    CONSTRAINT FK_ReservationInvoiceUsers FOREIGN KEY (ReservationId) REFERENCES Reservation(ReservationId)
 );
