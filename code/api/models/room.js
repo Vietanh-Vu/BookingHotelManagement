@@ -84,7 +84,8 @@ class RoomModel {
   static async delete(roomId, callback) {
     // Logic kết nối và truy vấn cơ sở dữ liệu SQL Server để xóa phòng
     const pool = await connect;
-    let sqlQuery = "UPDATE Room SET IsActive = 0 WHERE RoomId = @id";
+    let sqlQuery =
+      "UPDATE Room SET IsActive = 0, IsAvailable = 0 WHERE RoomId = @id";
     const result = await pool
       .request()
       .input("id", sql.VarChar, roomId)

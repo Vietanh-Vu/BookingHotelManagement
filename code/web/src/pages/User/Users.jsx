@@ -199,7 +199,7 @@ export default function Users() {
     .reduce((partialSum, a) => partialSum + a, 0)
 
   const totalOld = totalOldUsersLastMonth
-    ?.map(item => item.OLD_Users)
+    ?.map(item => item.Old_Users)
     .reduce((partialSum, a) => partialSum + a, 0)
 
   return (

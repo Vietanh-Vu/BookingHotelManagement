@@ -165,7 +165,7 @@ CREATE TABLE ReservationStatusEvents (
 DROP TABLE InvoiceUsers;
 CREATE TABLE InvoiceUsers (
     ID INT IDENTITY(1,1),
-    InvoiceId AS 'IV' + RIGHT('0' + CAST(ID AS VARCHAR(3)), 3) PERSISTED,
+    InvoiceId AS 'IV' + RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) PERSISTED,
     UsersId VARCHAR(7),
     ReservationId VARCHAR(7),
     InvoiceAmount DECIMAL(10, 2) NOT NULL,
