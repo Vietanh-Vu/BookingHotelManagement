@@ -8,8 +8,7 @@ create database BookingHotel
 CREATE TABLE Hotel (
     ID INT IDENTITY(1,1),
 	--sửa đoạn này RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) 
-    HotelId AS 'HO' + RIGHT('0' + CAST(ID AS VARCHAR(4)), 5) PERSISTED,
-    -- CityId VARCHAR(5),
+`    -- CityId VARCHAR(5),
     CategoryId VARCHAR(5),
     HotelName VARCHAR(128) NOT NULL,
     IsActive BIT,
@@ -22,6 +21,7 @@ CREATE TABLE Hotel (
 );
 --ALTER TABLE Hotel ALTER COLUMN IsActive BIT
 --ALTER TABLE Hotel ALTER COLUMN HotelImg VARCHAR(128)
+--ALTER TABLE Hotel DROP ID
 
 --############################ CATEGORY SECTION ##############################
 --DROP TABLE Category;

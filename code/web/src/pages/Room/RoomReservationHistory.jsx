@@ -63,13 +63,13 @@ const headCells = [
   {
     id: 'StartDate',
     disablePadding: false,
-    disableSorting: true,
+    disableSorting: false,
     label: 'Start Date',
   },
   {
     id: 'EndDate',
     disablePadding: false,
-    disableSorting: true,
+    disableSorting: false,
     label: 'End Date',
   },
   {

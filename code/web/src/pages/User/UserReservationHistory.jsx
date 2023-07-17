@@ -63,13 +63,13 @@ const headCells = [
   {
     id: 'StartDate',
     disablePadding: false,
-    disableSorting: true,
+    disableSorting: false,
     label: 'Start Date',
   },
   {
     id: 'EndDate',
     disablePadding: false,
-    disableSorting: true,
+    disableSorting: false,
     label: 'End Date',
   },
   {
@@ -145,7 +145,7 @@ export default function UserReservationHistory() {
 
   return (
     <>
-      <NavBar page="Hotels" pages={pages} value={1} />
+      <NavBar page="Users" pages={pages} value={2} />
       <PageHeader
         title={`${userName}`}
         subTitle={`List of reservations of ${userName}`}
