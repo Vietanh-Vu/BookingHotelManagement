@@ -30,7 +30,7 @@ BEGIN
 END
 GO
 
--- sau khi insert xong data nho xoa trigger di 
+-- sau khi insert xong data nho xoa trigger va function di do backend da co ham xu ly hash mat khau 
 DROP TRIGGER trg_HashPassword
 DROP FUNCTION dbo.HashPassword
 
