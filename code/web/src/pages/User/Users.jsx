@@ -128,7 +128,7 @@ export default function Users() {
   function select(state) {
     return state.auth.login?.currentUser
   }
-  
+
   function listener() {
     let user = select(store.getState())
     return user
@@ -199,7 +199,7 @@ export default function Users() {
     .reduce((partialSum, a) => partialSum + a, 0)
 
   const totalOld = totalOldUsersLastMonth
-    ?.map(item => item.OLD_Users)
+    ?.map(item => item.Old_Users)
     .reduce((partialSum, a) => partialSum + a, 0)
 
   return (
@@ -298,14 +298,24 @@ export default function Users() {
                     <Controls.ActionButton
                       color="primary"
                       onClick={async () => {
-                        await setAdmin(user?.accessToken, dispatch, axiosJWT, item)
+                        await setAdmin(
+                          user?.accessToken,
+                          dispatch,
+                          axiosJWT,
+                          item,
+                        )
                       }}>
                       <AddIcon fontSize="small" />
                     </Controls.ActionButton>
                     <Controls.ActionButton
                       color="primary"
                       onClick={async () => {
-                        await deleteAdmin(user?.accessToken, dispatch, axiosJWT, item)
+                        await deleteAdmin(
+                          user?.accessToken,
+                          dispatch,
+                          axiosJWT,
+                          item,
+                        )
                       }}>
                       <CloseIcon fontSize="small" />
                     </Controls.ActionButton>
@@ -383,6 +393,10 @@ export default function Users() {
                 months={
                   totalMonthlyUsersLast12Month &&
                   totalMonthlyUsersLast12Month.map(item => item.Month)
+                }
+                years={
+                  totalMonthlyUsersLast12Month &&
+                  totalMonthlyUsersLast12Month.map(item => item.Year)
                 }
                 label="Number of guests last 12 month"
               />

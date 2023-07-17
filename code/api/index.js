@@ -30,6 +30,7 @@ app.use("/admin/dashboard", middlewareController.verifyToken, DashboardRouter);
 // app.use("/admin/hotel", HotelRouter);
 // app.use("/admin/users", UserRouter);
 // app.use("/admin/hotel/rooms", RoomRouter);
+// app.use("/admin/dashboard", DashboardRouter);
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");

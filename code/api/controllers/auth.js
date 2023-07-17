@@ -106,9 +106,9 @@ export const requestRefreshToken = async (req, res) => {
   }
 
   if (!refreshTokens.includes(refreshToken)) {
-    console.log(refreshTokens);
-    console.log('--------------------------')
-    console.log(refreshToken)
+    // console.log(refreshTokens);
+    // console.log('--------------------------')
+    // console.log(refreshToken)
     return res.status(403).json({ status: "Refresh token is not valid1." });
   }
 

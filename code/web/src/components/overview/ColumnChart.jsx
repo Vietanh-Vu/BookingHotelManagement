@@ -21,7 +21,7 @@ const useChartOptions = months => {
       type: 'solid',
     },
     grid: {
-      borderColor: '#F2F4F7',
+      borderColor: '#919294',
       strokeDashArray: 2,
       xaxis: {
         lines: {
@@ -52,11 +52,11 @@ const useChartOptions = months => {
     },
     xaxis: {
       axisBorder: {
-        color: '#F2F4F7',
+        color: '#919294',
         show: true,
       },
       axisTicks: {
-        color: '#F2F4F7',
+        color: '#919294',
         show: true,
       },
       categories: months
@@ -95,17 +95,14 @@ const useChartOptions = months => {
 }
 
 export const ColumnChart = props => {
-  const {chartSeries, sx, months, label} = props
+  const {chartSeries, sx, months, years, label} = props
 
-  function getMonthName(monthNumber) {
-    const date = new Date()
-    date.setMonth(monthNumber - 1)
-
-    return date.toLocaleString('en-US', {month: 'short'})
+  function matchMonthYear(month, year) {
+    return `${month}/${year}`
   }
 
   const chartOptions = useChartOptions(
-    months?.map(month => getMonthName(month)),
+    months?.map((month, index) => matchMonthYear(month, years.at(index))),
   )
 
   return (

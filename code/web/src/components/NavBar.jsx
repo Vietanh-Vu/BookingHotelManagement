@@ -19,7 +19,13 @@ function NavBar(props) {
   let axiosJWT = createAxios(user, dispatch, navigate)
 
   const handleLogOut = async () => {
-    await logOut(dispatch, navigate, user?.accessToken, user?.refreshToken, axiosJWT)
+    await logOut(
+      dispatch,
+      navigate,
+      user?.accessToken,
+      user?.refreshToken,
+      axiosJWT,
+    )
   }
 
   const edit = async (item, resetForm) => {
@@ -39,7 +45,7 @@ function NavBar(props) {
   }
 
   const openInPopup = item => {
-    console.log(item)
+    // console.log(item)
     setRecordForEdit(item)
     setOpenPopup(true)
   }

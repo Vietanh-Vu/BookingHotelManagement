@@ -50,12 +50,12 @@ HotelRouter.post("/add/image", upload.single("myImage"), (req, res) => {
   if (req.file) {
     const file = req.file;
     const targetPath = path.join(imgUploadPath, file.filename);
-    console.log(targetPath);
+    // console.log(targetPath);
 
     // Move uploaded file to img folder
     fs.rename(file.path, targetPath, (err) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
         return res.status(500).json({ error: "Lỗi khi lưu ảnh." });
       }
       res.json({ nameFile: file.filename, newAccessToken: newAccessToken });

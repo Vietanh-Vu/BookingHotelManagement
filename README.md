@@ -47,7 +47,7 @@ Follow the steps below to use the Booking Hotel Management System:
 
 2. Build the database:
 
-- Start the SQL server and build the database using the data provided in the `database` folder.
+- Start the SQL server and build the database using the data (data, trigger and function) provided in the `database` folder.
 - Update the database connection configuration in the `connectDB.js` file.
 
   ```javascript
@@ -103,7 +103,7 @@ Follow the steps below to use the Booking Hotel Management System:
 
 The Booking Hotel Management System utilizes the following technologies:
 
-- **Frontend**: ReactJS with the Material-UI library for building responsive and intuitive user interfaces.
+- **Frontend**: ReactJS with the Material-UI library for building UI and intuitive user interfaces.
 - **Backend**: Node.js, a JavaScript runtime environment, along with Express.js, a flexible web application framework, for handling server-side logic and API endpoints.
 - **Database**: SQL Server, a relational database management system, for storing and retrieving data efficiently.
 

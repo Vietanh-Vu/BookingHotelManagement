@@ -1,6 +1,7 @@
 
 -------------------TRIGGER FOR TOTALPRICE ------------------------
 
+
 CREATE TRIGGER addPrice
 ON RoomReserved
 AFTER INSERT
@@ -8,7 +9,7 @@ AS
 BEGIN
 UPDATE Reservation
     SET TotalPrice = TotalPrice + (
-        SELECT SUM(CurrentPrice) * (DAY(Reservation.EndDate)-DAY(Reservation.StartDate)+30*(MONTH(Reservation.EndDate)-MONTH(Reservation.StartDate)))
+        SELECT SUM(CurrentPrice) *(1 - Reservation.DiscountPercent) * (DAY(Reservation.EndDate)-DAY(Reservation.StartDate)+30*(MONTH(Reservation.EndDate)-MONTH(Reservation.StartDate)) + 365*(YEAR(Reservation.EndDate)-YEAR(Reservation.StartDate)))
         FROM RoomReserved rr
         INNER JOIN Room r ON rr.RoomId = r.RoomId
         INNER JOIN Reservation rv ON rv.ReservationId= rr.ReservationID
