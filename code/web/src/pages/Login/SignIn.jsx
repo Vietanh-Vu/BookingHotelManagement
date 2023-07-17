@@ -12,9 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
-import { loginUser } from '../../redux/apiRequest/loginApi'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import {loginUser} from '../../redux/apiRequest/loginApi'
+import {useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 
 function Copyright(props) {
   return (
@@ -38,10 +38,10 @@ function Copyright(props) {
 const defaultTheme = createTheme()
 
 export default function SignIn() {
-  const [acc, setAcc] = React.useState({Email: '', Password: ''});
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
- 
+  const [acc, setAcc] = React.useState({Email: '', Password: ''})
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const handleChange = event => {
     const {name, value} = event.target
     setAcc({
@@ -105,7 +105,10 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2" onClick={() => navigate("/admin/register")}>
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={() => navigate('/admin/register')}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
