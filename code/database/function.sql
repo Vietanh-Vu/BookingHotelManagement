@@ -5,22 +5,20 @@
 -- Cụ thể: Month(int), Income
 
 DROP FUNCTION Doanhthu_12_LATEST_MONTHS
-CREATE FUNCTION Doanhthu_12_LATEST_MONTHS
-()
-RETURNS TABLE
+CREATE FUNCTION Doanhthu_12_LATEST_MONTHS ()
+RETURNS TABLE 
 AS
-RETURN
+RETURN 
 (
-  SELECT
-    MONTH(EndDate) AS [MONTH],
-	YEAR(EndDate) AS [YEAR],
-    SUM(TotalPrice) AS REVENUE
-  FROM
-    Reservation
-  WHERE
-    EndDate >= DATEADD(MONTH, -12, GETDATE()) -- Lấy các đặt phòng trong 12 tháng gần nhất
-  GROUP BY
-    MONTH(EndDate), YEAR(EndDate)
+    SELECT 
+        MONTH(EndDate) AS [MONTH],
+        YEAR(EndDate) AS [YEAR],
+        SUM(TotalPrice) AS REVENUE 
+    FROM Reservation 
+    WHERE EndDate >= DATEADD(MONTH, -12, '2023-07-01') 
+    GROUP BY 
+        MONTH(EndDate),
+        YEAR(EndDate)
 );
 
 SELECT * FROM dbo.Doanhthu_12_LATEST_MONTHS() AS DOANHTHU ORDER BY REVENUE
@@ -46,7 +44,7 @@ RETURN
     JOIN Hotel ON Hotel.HotelId = Room.HotelId
     JOIN Category ON Category.CategoryId = Hotel.CategoryId
   WHERE
-    EndDate >= DATEADD(MONTH, -1, GETDATE()) 
+    EndDate >= DATEADD(MONTH, -1, '2023-07-01') 
   GROUP BY
     Category.CategoryName, Category.CategoryId
 );
@@ -67,7 +65,7 @@ AS
   JOIN RoomReserved ON Reservation.ReservationId = RoomReserved.ReservationID
   JOIN Room ON Room.RoomId = RoomReserved.RoomId
   JOIN Hotel ON Hotel.HotelId = Room.HotelId
-  WHERE EndDate >= DATEADD(MONTH, -12, GETDATE()) AND Hotel.HotelId = @HID
+  WHERE EndDate >= DATEADD(MONTH, -12, '2023-07-01') AND Hotel.HotelId = @HID
   GROUP BY Hotel.HotelName, MONTH(EndDate), YEAR(EndDate) 
 );
 
@@ -87,7 +85,7 @@ AS
   JOIN RoomReserved ON Reservation.ReservationId = RoomReserved.ReservationID
   JOIN Room ON Room.RoomId = RoomReserved.RoomId
   JOIN RoomType ON RoomType.RoomTypeId = Room.RoomTypeId
-  WHERE EndDate >= DATEADD(MONTH, -1, GETDATE())
+  WHERE EndDate >= DATEADD(MONTH, -1, '2023-07-01')
   GROUP BY RoomType.RoomTypeName,MONTH(EndDate) ,YEAR(EndDate));
 
 SELECT * FROM dbo.Doanhthu_ALL_RT_1month()
@@ -105,7 +103,7 @@ AS
   RETURN (SELECT  MONTH(EndDate) AS Month, YEAR(EndDate) AS Year , COUNT(Users.ID) AS NumberofUsers
   FROM Users
   JOIN Reservation ON Reservation.UsersId = Users.UsersId 
-  WHERE EndDate >= DATEADD(MONTH, -12, GETDATE())
+  WHERE EndDate >= DATEADD(MONTH, -12,'2023-07-01')
   GROUP BY MONTH(EndDate), YEAR(EndDate));
 
 SELECT * FROM dbo.USERS_12months() ORDER BY NumberofUsers
@@ -125,11 +123,11 @@ AS
 		JOIN Room ON Room.RoomId = RoomReserved.RoomId
 		JOIN Hotel ON Hotel.HotelId = Room.HotelId
         WHERE 
-		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
+		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, '2023-07-01') - 1, 0)
 		AND Reservation.UsersId NOT IN (
             SELECT DISTINCT UsersId
             FROM Reservation
-            WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0))
+            WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, '2023-07-01') - 1, 0))
         )
 
 	);
@@ -151,11 +149,11 @@ AS
 		JOIN Room ON Room.RoomId = RoomReserved.RoomId
 		JOIN Hotel ON Hotel.HotelId = Room.HotelId
         WHERE 
-		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0)
+		StartDate >= DATEADD(MONTH, DATEDIFF(MONTH, 0, '2023-07-01') - 1, 0)
 		AND Reservation.UsersId IN (
             SELECT DISTINCT UsersId
             FROM Reservation
-            WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0))
+            WHERE StartDate < (DATEADD(MONTH, DATEDIFF(MONTH, 0, '2023-07-01') - 1, 0))
         )
 	);
 
