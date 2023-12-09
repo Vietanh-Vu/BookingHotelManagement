@@ -47,7 +47,7 @@ Follow the steps below to use the Booking Hotel Management System:
 
 2. Build the database:
 
-- Start the SQL server and build the database using the data (data, trigger and function) provided in the `database` folder.
+- Start the SQL server and build the database using the `BookingHotelManagement.bak` file or `BookingHotelManagement.sql` provided in the `database` folder.
 - Update the database connection configuration in the `connectDB.js` file.
 
   ```javascript
@@ -98,6 +98,10 @@ Follow the steps below to use the Booking Hotel Management System:
      ```
 
    - Open the browser then connect to the link [http://localhost:8080/admin/login](http://localhost:8080/admin/login) to start using the web app.
+
+   - The admin account is:
+     - Email: vuvietanh@gmail.com
+     - Password: 123
 
 ## Technologies Used
 
