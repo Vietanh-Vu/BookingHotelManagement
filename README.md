@@ -31,9 +31,7 @@ The `code` folder contains the source code of the project.
 
 The `resources` folder contains additional resources related to the project.
 
-- **Slide**: This folder contains presentation slides used during the course.
-- **ER.img**: This image represents the database structure based on the Entity-Relationship (ER) diagram.
-- **database.pdf**: This document provides an explanation of the database design.
+- **Slide**: Introduction to the entire project: members, problems, database design, technology used and functions.
 
 ## Usage
 
