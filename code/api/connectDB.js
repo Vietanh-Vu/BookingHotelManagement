@@ -3,7 +3,7 @@ import sql from "mssql/msnodesqlv8.js";
 const config = {
   server: "localhost, 1433",
   user: "sa",
-  password: "Vva.fdtsom993@",
+  password: "",
   database: "BookingHotel",
   driver: "msnodesqlv8",
 };
